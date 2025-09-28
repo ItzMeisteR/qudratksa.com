@@ -171,25 +171,25 @@
                 <i data-lucide="brain-circuit" class="text-blue-600 w-8 h-8"></i>
                 <a href="#" class="text-2xl font-bold text-gray-800">دليل اختبار القدرات</a>
             </div>
-            <div class="hidden lg:flex items-baseline space-x-5 space-x-reverse text-sm">
-                <a href="#basics" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">أساسيات القدرات</a>
-                <a href="#grades" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">الدرجات والنسبة</a>
-                <a href="#resources" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">أفضل المصادر</a>
-                <a href="#planning" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">خطط المذاكرة</a>
-                <a href="#faq" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">أسئلة شائعة</a>
-                <a href="#ai-assistant" class="text-blue-600 font-bold hover:text-blue-700 transition-colors duration-300">مساعدك الذكي</a>
+            <div class="hidden lg:flex items-center space-x-6 space-x-reverse text-sm">
+                <a href="#basics" class="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors duration-300"><i data-lucide="graduation-cap" class="w-4 h-4"></i><span>الأساسيات</span></a>
+                <a href="#grades" class="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors duration-300"><i data-lucide="bar-chart-3" class="w-4 h-4"></i><span>الدرجات</span></a>
+                <a href="#resources" class="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors duration-300"><i data-lucide="book-marked" class="w-4 h-4"></i><span>المصادر</span></a>
+                <a href="#planning" class="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors duration-300"><i data-lucide="calendar-check" class="w-4 h-4"></i><span>الخطط</span></a>
+                <a href="#faq" class="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors duration-300"><i data-lucide="message-square-question" class="w-4 h-4"></i><span>الأسئلة</span></a>
+                <a href="#ai-assistant" class="flex items-center gap-2 text-blue-600 font-bold hover:text-blue-700 transition-colors duration-300"><i data-lucide="sparkles" class="w-4 h-4"></i><span>مساعدك الذكي</span></a>
             </div>
             <button id="mobile-menu-button" class="lg:hidden">
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
         </nav>
         <div id="mobile-menu" class="hidden lg:hidden bg-white py-4">
-            <a href="#basics" class="block text-center py-2 px-4 text-gray-600 hover:bg-blue-50">أساسيات القدرات</a>
-            <a href="#grades" class="block text-center py-2 px-4 text-gray-600 hover:bg-blue-50">الدرجات والنسبة</a>
-            <a href="#resources" class="block text-center py-2 px-4 text-gray-600 hover:bg-blue-50">أفضل المصادر</a>
-            <a href="#planning" class="block text-center py-2 px-4 text-gray-600 hover:bg-blue-50">خطط المذاكرة</a>
-            <a href="#faq" class="block text-center py-2 px-4 text-gray-600 hover:bg-blue-50">أسئلة شائعة</a>
-            <a href="#ai-assistant" class="block text-center py-2 px-4 text-blue-600 font-bold hover:bg-blue-50">مساعدك الذكي</a>
+            <a href="#basics" class="flex items-center justify-center gap-2 py-2 px-4 text-gray-600 hover:bg-blue-50"><i data-lucide="graduation-cap" class="w-5 h-5"></i><span>الأساسيات</span></a>
+            <a href="#grades" class="flex items-center justify-center gap-2 py-2 px-4 text-gray-600 hover:bg-blue-50"><i data-lucide="bar-chart-3" class="w-5 h-5"></i><span>الدرجات والنسبة</span></a>
+            <a href="#resources" class="flex items-center justify-center gap-2 py-2 px-4 text-gray-600 hover:bg-blue-50"><i data-lucide="book-marked" class="w-5 h-5"></i><span>أفضل المصادر</span></a>
+            <a href="#planning" class="flex items-center justify-center gap-2 py-2 px-4 text-gray-600 hover:bg-blue-50"><i data-lucide="calendar-check" class="w-5 h-5"></i><span>خطط المذاكرة</span></a>
+            <a href="#faq" class="flex items-center justify-center gap-2 py-2 px-4 text-gray-600 hover:bg-blue-50"><i data-lucide="message-square-question" class="w-5 h-5"></i><span>أسئلة شائعة</span></a>
+            <a href="#ai-assistant" class="flex items-center justify-center gap-2 py-2 px-4 text-blue-600 font-bold hover:bg-blue-50"><i data-lucide="sparkles" class="w-5 h-5"></i><span>مساعدك الذكي</span></a>
         </div>
     </header>
     <main>
@@ -225,71 +225,72 @@
                     </div>
                 </div>
 
-                <div id="grades" class="pt-16">
-                     <h2 class="section-title">
-                        <div class="flex items-center gap-4">
-                            <i data-lucide="bar-chart-3" class="w-10 h-10 text-blue-600"></i>
-                            <span>الدرجات ومتطلبات الجامعات</span>
-                        </div>
-                    </h2>
-                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <div class="bg-white p-6 rounded-lg shadow-sm"><h3 class="text-xl font-bold mb-3">كيف يتم حساب الدرجة؟</h3><p>الدرجة معيارية وصالحة لمدة 5 سنوات. للمسارات العلمية، الدرجة موزعة 50% للكمي و 50% للفظي. أما للمسارات الأدبية والإدارية، فيكون اللفظي 70% والكمي 30%.</p></div>
-                        <div class="bg-white p-6 rounded-lg shadow-sm"><h3 class="text-xl font-bold mb-3">ما هي الدرجة الجيدة؟</h3><ul class="space-y-1"><li><strong>+90:</strong> درجة ممتازة تضعك ضمن أعلى 5% من الطلاب.</li><li><strong>81-89:</strong> درجة عالية جدًا تؤهلك للتخصصات التنافسية.</li></ul><p class="mt-4 font-bold text-blue-600 border-r-4 border-blue-500 pr-3">هدف كل طالب يجب أن يكون فوق 90 ليضمن القبول في أقوى التخصصات.</p></div>
-                        <div class="bg-white p-6 rounded-lg shadow-sm"><h3 class="text-xl font-bold mb-3">متى تظهر نتائج القدرات؟</h3><p><strong>المحوسب:</strong> تظهر النتائج عادةً خلال يومين إلى 5 أيام عمل، وقد تمتد إلى أسبوعين. <br><strong>الورقي:</strong> تستغرق النتائج حوالي شهر للظهور.</p></div>
+                <div class="mt-16"><h3 class="text-3xl font-bold text-center mb-2">أيهما أفضل: قدرات ورقي أم محوسب؟</h3><p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">لا يوجد اختبار "أسهل" من الآخر، فمستوى الصعوبة موحد. لكن طبيعة كل اختبار مختلفة، والخيار الأفضل يعتمد على ما يناسبك شخصياً.</p><div class="grid md:grid-cols-2 gap-8"><div class="border-2 border-blue-500 rounded-lg p-6 bg-blue-50"><div class="flex items-center mb-4"><i data-lucide="monitor" class="w-8 h-8 text-blue-600 ml-3" alt="أيقونة اختبار القدرات المحوسب"></i><h4 class="text-2xl font-bold">اختبار القدرات المحوسب</h4></div><ul class="space-y-3 text-gray-700"><li class="flex items-start"><i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">مرونة المواعيد:</strong>متاح على مدار العام.</li><li class="flex items-start"><i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">نتائج سريعة:</strong>تظهر خلال 3 إلى 5 أيام عمل.</li><li class="flex items-start"><i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">بيئة هادئة:</strong>يُعقد في مقرات مجهزة وهادئة.</li><li class="flex items-start"><i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">نماذج متجددة:</strong>تتغير الأسئلة والنماذج باستمرار.</li></ul><div class="mt-6 bg-blue-100 p-4 rounded-md"><p class="font-bold text-blue-800">توصية: الخيار الأفضل والأكثر عملية لأكثر من 95% من الطلاب اليوم.</p></div></div><div class="border rounded-lg p-6 bg-white"><div class="flex items-center mb-4"><i data-lucide="clipboard-list" class="w-8 h-8 text-gray-600 ml-3" alt="أيقونة اختبار القدرات الورقي"></i><h4 class="text-2xl font-bold">اختبار القدرات الورقي</h4></div><ul class="space-y-3 text-gray-700"><li class="flex items-start"><i data-lucide="calendar-days" class="w-5 h-5 text-blue-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">مواعيد محدودة:</strong>يُعقد في فترات محددة خلال السنة.</li><li class="flex items-start"><i data-lucide="clock" class="w-5 h-5 text-blue-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">النتائج:</strong>تستغرق حوالي شهر للظهور.</li><li class="flex items-start"><i data-lucide="users" class="w-5 h-5 text-blue-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">بيئة تقليدية:</strong>يُعقد في قاعات دراسية كبيرة.</li><li class="flex items-start"><i data-lucide="edit-3" class="w-5 h-5 text-blue-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">تظليل الإجابات:</strong>تعتمد على ورقة الإجابة والتظليل.</li></ul><div class="mt-6 bg-gray-100 p-4 rounded-md"><p class="font-bold text-gray-800">توصية: خيار جيد لمن يرغب في تجربة الاختبار بأسلوب تقليدي، أو كفرصة إضافية لمن استنفد فرص المحوسب.</p></div></div></div>
+            </div>
+        </section>
+        <section id="grades" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                 <h2 class="section-title">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="bar-chart-3" class="w-10 h-10 text-blue-600"></i>
+                        <span>الدرجات ومتطلبات الجامعات</span>
                     </div>
-                    <div id="calculator-tool" class="grid lg:grid-cols-2 gap-8 mt-12 scroll-mt-24">
-                        <div class="bg-blue-50 border-r-4 border-blue-500 p-6 rounded-lg">
-                            <h3 class="text-xl font-bold mb-3">كم النسبة الموزونة المطلوبة للجامعات؟</h3>
-                            <p class="mb-4">هذه أرقام <strong>تقريبية وتتغير سنوياً</strong>. تحقق دائماً من المواقع الرسمية للجامعات:</p>
-                            <ul class="list-disc pr-6 space-y-2">
-                                <li><strong>المسارات الصحية والهندسية (جامعات كبرى):</strong> 85 - 95+</li>
-                                <li><strong>التخصصات العلمية والإدارية:</strong> 75 - 85+</li>
-                                <li><strong>الجامعات الأهلية:</strong> 65 - 80+</li>
-                            </ul>
-                        </div>
-                        <div class="bg-green-50 border-r-4 border-green-500 p-6 rounded-lg">
-                            <h3 class="text-xl font-bold mb-3">أداة حساب النسبة الموزونة</h3>
-                            <p class="mb-4 text-sm">أدخل نسب جامعتك ودرجاتك لحساب موزونتك فوراً بدقة.</p>
+                </h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-sm"><h3 class="text-xl font-bold mb-3">كيف يتم حساب الدرجة؟</h3><p>الدرجة معيارية وصالحة لمدة 5 سنوات. للمسارات العلمية، الدرجة موزعة 50% للكمي و 50% للفظي. أما للمسارات الأدبية والإدارية، فيكون اللفظي 70% والكمي 30%.</p></div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm"><h3 class="text-xl font-bold mb-3">ما هي الدرجة الجيدة؟</h3><ul class="space-y-1"><li><strong>+90:</strong> درجة ممتازة تضعك ضمن أعلى 5% من الطلاب.</li><li><strong>81-89:</strong> درجة عالية جدًا تؤهلك للتخصصات التنافسية.</li></ul><p class="mt-4 font-bold text-blue-600 border-r-4 border-blue-500 pr-3">هدف كل طالب يجب أن يكون فوق 90 ليضمن القبول في أقوى التخصصات.</p></div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm"><h3 class="text-xl font-bold mb-3">متى تظهر نتائج القدرات؟</h3><p><strong>المحوسب:</strong> تظهر النتائج عادةً خلال يومين إلى 5 أيام عمل، وقد تمتد إلى أسبوعين. <br><strong>الورقي:</strong> تستغرق النتائج حوالي شهر للظهور.</p></div>
+                </div>
+                <div id="calculator-tool" class="grid lg:grid-cols-2 gap-8 mt-12 scroll-mt-24">
+                    <div class="bg-blue-50 border-r-4 border-blue-500 p-6 rounded-lg">
+                        <h3 class="text-xl font-bold mb-3">كم النسبة الموزونة المطلوبة للجامعات؟</h3>
+                        <p class="mb-4">هذه أرقام <strong>تقريبية وتتغير سنوياً</strong>. تحقق دائماً من المواقع الرسمية للجامعات:</p>
+                        <ul class="list-disc pr-6 space-y-2">
+                            <li><strong>المسارات الصحية والهندسية (جامعات كبرى):</strong> 85 - 95+</li>
+                            <li><strong>التخصصات العلمية والإدارية:</strong> 75 - 85+</li>
+                            <li><strong>الجامعات الأهلية:</strong> 65 - 80+</li>
+                        </ul>
+                    </div>
+                    <div class="bg-green-50 border-r-4 border-green-500 p-6 rounded-lg">
+                        <h3 class="text-xl font-bold mb-3">أداة حساب النسبة الموزونة</h3>
+                        <p class="mb-4 text-sm">أدخل نسب جامعتك ودرجاتك لحساب موزونتك فوراً بدقة.</p>
 
-                            <div id="calculator-form" class="space-y-4">
-                                <div class="grid grid-cols-3 gap-2 sm:gap-4 font-bold text-center text-xs sm:text-base">
-                                    <span>المكون</span>
-                                    <span>النسبة (%)</span>
-                                    <span>الدرجة</span>
-                                </div>
-
-                                <div class="grid grid-cols-3 gap-2 sm:gap-4 items-center">
-                                    <label for="hs-score" class="font-semibold text-sm sm:text-base">الثانوية</label>
-                                    <input type="number" id="hs-percent" value="30" class="w-full p-2 text-center border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500" oninput="calculateWeightedScore()">
-                                    <input type="number" id="hs-score" placeholder="98.5" class="w-full p-2 text-center border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500" oninput="calculateWeightedScore()">
-                                </div>
-
-                                <div class="grid grid-cols-3 gap-2 sm:gap-4 items-center">
-                                    <label for="qu-score" class="font-semibold text-sm sm:text-base">القدرات</label>
-                                    <input type="number" id="qu-percent" value="30" class="w-full p-2 text-center border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500" oninput="calculateWeightedScore()">
-                                    <input type="number" id="qu-score" placeholder="88" class="w-full p-2 text-center border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500" oninput="calculateWeightedScore()">
-                                </div>
-
-                                <div class="grid grid-cols-3 gap-2 sm:gap-4 items-center">
-                                    <label for="ta-score" class="font-semibold text-sm sm:text-base">التحصيلي</label>
-                                    <input type="number" id="ta-percent" value="40" class="w-full p-2 text-center border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500" oninput="calculateWeightedScore()">
-                                    <input type="number" id="ta-score" placeholder="85" class="w-full p-2 text-center border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500" oninput="calculateWeightedScore()">
-                                </div>
-                                
-                                <p id="percent-warning" class="text-red-500 text-sm text-center hidden pt-2">تنبيه: يجب أن يكون مجموع النسب 100%.</p>
-
+                        <div id="calculator-form" class="space-y-4">
+                            <div class="grid grid-cols-3 gap-2 sm:gap-4 font-bold text-center text-xs sm:text-base">
+                                <span>المكون</span>
+                                <span>النسبة (%)</span>
+                                <span>الدرجة</span>
                             </div>
 
-                            <div class="mt-6 text-center bg-green-100 p-4 rounded-md">
-                                <p class="text-gray-700">النسبة الموزونة النهائية:</p>
-                                <p id="result" class="text-3xl font-bold text-green-700">0.00</p>
+                            <div class="grid grid-cols-3 gap-2 sm:gap-4 items-center">
+                                <label for="hs-score" class="font-semibold text-sm sm:text-base">الثانوية</label>
+                                <input type="number" id="hs-percent" value="30" class="w-full p-2 text-center border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500" oninput="calculateWeightedScore()">
+                                <input type="number" id="hs-score" placeholder="98.5" class="w-full p-2 text-center border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500" oninput="calculateWeightedScore()">
                             </div>
-                             <p class="mt-4 text-xs sm:text-sm font-bold text-center">تذكير: تحقق دائماً من الموقع الرسمي للجامعة لمعرفة النسب الدقيقة.</p>
+
+                            <div class="grid grid-cols-3 gap-2 sm:gap-4 items-center">
+                                <label for="qu-score" class="font-semibold text-sm sm:text-base">القدرات</label>
+                                <input type="number" id="qu-percent" value="30" class="w-full p-2 text-center border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500" oninput="calculateWeightedScore()">
+                                <input type="number" id="qu-score" placeholder="88" class="w-full p-2 text-center border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500" oninput="calculateWeightedScore()">
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-2 sm:gap-4 items-center">
+                                <label for="ta-score" class="font-semibold text-sm sm:text-base">التحصيلي</label>
+                                <input type="number" id="ta-percent" value="40" class="w-full p-2 text-center border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500" oninput="calculateWeightedScore()">
+                                <input type="number" id="ta-score" placeholder="85" class="w-full p-2 text-center border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500" oninput="calculateWeightedScore()">
+                            </div>
+                            
+                            <p id="percent-warning" class="text-red-500 text-sm text-center hidden pt-2">تنبيه: يجب أن يكون مجموع النسب 100%.</p>
+
                         </div>
+
+                        <div class="mt-6 text-center bg-green-100 p-4 rounded-md">
+                            <p class="text-gray-700">النسبة الموزونة النهائية:</p>
+                            <p id="result" class="text-3xl font-bold text-green-700">0.00</p>
+                        </div>
+                         <p class="mt-4 text-xs sm:text-sm font-bold text-center">تذكير: تحقق دائماً من الموقع الرسمي للجامعة لمعرفة النسب الدقيقة.</p>
                     </div>
                 </div>
-
-                <div class="mt-16"><h3 class="text-3xl font-bold text-center mb-2">أيهما أفضل: قدرات ورقي أم محوسب؟</h3><p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">لا يوجد اختبار "أسهل" من الآخر، فمستوى الصعوبة موحد. لكن طبيعة كل اختبار مختلفة، والخيار الأفضل يعتمد على ما يناسبك شخصياً.</p><div class="grid md:grid-cols-2 gap-8"><div class="border-2 border-blue-500 rounded-lg p-6 bg-blue-50"><div class="flex items-center mb-4"><i data-lucide="monitor" class="w-8 h-8 text-blue-600 ml-3" alt="أيقونة اختبار القدرات المحوسب"></i><h4 class="text-2xl font-bold">اختبار القدرات المحوسب</h4></div><ul class="space-y-3 text-gray-700"><li class="flex items-start"><i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">مرونة المواعيد:</strong>متاح على مدار العام.</li><li class="flex items-start"><i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">نتائج سريعة:</strong>تظهر خلال 3 إلى 5 أيام عمل.</li><li class="flex items-start"><i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">بيئة هادئة:</strong>يُعقد في مقرات مجهزة وهادئة.</li><li class="flex items-start"><i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">نماذج متجددة:</strong>تتغير الأسئلة والنماذج باستمرار.</li></ul><div class="mt-6 bg-blue-100 p-4 rounded-md"><p class="font-bold text-blue-800">توصية: الخيار الأفضل والأكثر عملية لأكثر من 95% من الطلاب اليوم.</p></div></div><div class="border rounded-lg p-6 bg-white"><div class="flex items-center mb-4"><i data-lucide="clipboard-list" class="w-8 h-8 text-gray-600 ml-3" alt="أيقونة اختبار القدرات الورقي"></i><h4 class="text-2xl font-bold">اختبار القدرات الورقي</h4></div><ul class="space-y-3 text-gray-700"><li class="flex items-start"><i data-lucide="calendar-days" class="w-5 h-5 text-blue-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">مواعيد محدودة:</strong>يُعقد في فترات محددة خلال السنة.</li><li class="flex items-start"><i data-lucide="clock" class="w-5 h-5 text-blue-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">النتائج:</strong>تستغرق حوالي شهر للظهور.</li><li class="flex items-start"><i data-lucide="users" class="w-5 h-5 text-blue-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">بيئة تقليدية:</strong>يُعقد في قاعات دراسية كبيرة.</li><li class="flex items-start"><i data-lucide="edit-3" class="w-5 h-5 text-blue-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">تظليل الإجابات:</strong>تعتمد على ورقة الإجابة والتظليل.</li></ul><div class="mt-6 bg-gray-100 p-4 rounded-md"><p class="font-bold text-gray-800">توصية: خيار جيد لمن يرغب في تجربة الاختبار بأسلوب تقليدي، أو كفرصة إضافية لمن استنفد فرص المحوسب.</p></div></div></div>
             </div>
         </section>
         <section id="resources" class="py-20 bg-gray-50 scroll-mt-20">
@@ -564,7 +565,7 @@
             <p class="text-gray-400 text-sm mt-2">تم تصميمه لمساعدة طلاب المملكة على تحقيق أحلامهم.</p>
             <p class="text-gray-400 text-sm mt-2">للتواصل: <a href="mailto:qudratksa2025@gmail.com" class="hover:underline">qudratksa2025@gmail.com</a></p>
             <p class="text-gray-500 text-xs mt-4 max-w-2xl mx-auto">
-                <strong>إخلاء مسؤولية:</strong> المعلومات الواردة في هذا الموقع هي لأغراض إرشادية فقط. نسعى جاهدين لدقة المحتوى، ولكن يجب على الطلاب دائمًا التحقق من المعلومات من المصادر الرسمية مثل موقع هيئة تقويم التعليم والتدريب (ETEC) والمواقع الرسمية للجامعات. لا يتحمل الموقع أي مسؤولية عن أي قرارات يتم اتخاذها بناء على المعلومات المقدمة هنا.
+                <strong>إخلاء مسؤولية:</strong> المعلومات الواردة في هذا الموقع هي لأغراض إرشادية فقط. نسعى جاهدين لدقة المحتوى، ولكن يجب على الطلاب دائمًا التحقق من المعلومات من المصادر الرسمية مثل موقع هيئة تقويم التعليم والتدريب (ETEC) والمواقع الرسمية للجامعات. لا يتحمل الموقع أي مسؤولية عن أي قرارات يتم اتخاذها بناءً على المعلومات المقدمة هنا.
             </p>
         </div>
     </footer>
