@@ -15,7 +15,11 @@
     <title>الدليل الشامل لاختبار القدرات العامة | مركز القدرات</title>
 
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A3 3 0 1 0 12 18V5Z'/%3E%3Cpath d='M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A3 3 0 1 1 12 18V5Z'/%3E%3Cpath d='M15 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z'/%3E%3Cpath d='M9 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z'/%3E%3C/svg%3E">
-    <meta name="description" content="دليلك الشامل لاجتياز اختبار القدرات العامة في السعودية. احصل على أفضل المصادر، خطط المذاكرة، أداة حساب النسبة الموزونة، ودعم نفسي لتحقيق أعلى الدرجات.">
+    
+    <meta name="description" content="كل ما تحتاجه لاجتياز اختبار القدرات العامة من قياس. دليلك لأفضل مصادر وتجميعات القدرات (كمي ولفظي)، مع خطط مذاكرة ونماذج اختبار محوسب لمساعدتك على تحقيق أعلى الدرجات.">
+    <meta name="keywords" content="قدرات, اختبار القدرات, قياس, قدرات محوسب, قدرات ورقي, تجميعات قدرات, شرح قدرات, نماذج اختبار محوسب, تسريبات قدرات, القسم الكمي, القسم اللفظي, التناظر اللفظي, الخطأ السياقي, استيعاب المقروء, أفضل كتب القدرات, دورات قدرات, مركز القدرات, كم باقي على اختبار القدرات, موعد اختبار القدرات">
+    <meta name="author" content="مركز القدرات">
+    <meta name="robots" content="index, follow">
     <script src="https://cdn.tailwindcss.com"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,12 +29,15 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
+        /* تحديد الخط الأساسي للصفحة */
         body {
             font-family: 'Cairo', sans-serif;
         }
+        /* تدرج لوني للخلفية في قسم الهيرو */
         .hero-gradient {
             background: linear-gradient(45deg, rgba(2,0,36,0.9) 0%, rgba(20,9,121,0.85) 35%, rgba(0,188,212,0.8) 100%);
         }
+        /* تنسيق عناوين الأقسام الرئيسية مع خط سفلي */
         .section-title {
             position: relative;
             padding-bottom: 0.75rem;
@@ -49,6 +56,7 @@
             background-color: #2563eb;
             border-radius: 2px;
         }
+        /* تنسيقات خاصة بالأكورديون (الأسئلة القابلة للفتح والإغلاق) */
         .accordion-content {
             max-height: 0;
             overflow: hidden;
@@ -62,6 +70,7 @@
         input:checked + label .accordion-icon {
             transform: rotate(180deg);
         }
+        /* تنسيق أزرار التبويب (عام) */
         .tab-button {
             padding: 0.75rem 1.5rem;
             font-weight: 600;
@@ -74,6 +83,7 @@
             color: #2563eb;
             border-bottom-color: #2563eb;
         }
+        /* تنسيق أزرار الفلترة في قسم المصادر */
         .filter-button {
             padding: 0.5rem 1.5rem;
             font-weight: 700;
@@ -87,6 +97,7 @@
             color: #ffffff;
             box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.3);
         }
+        /* تنسيق مؤشر التحميل (Loader) */
         .loader {
             border: 4px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
@@ -111,63 +122,47 @@
           "name": "كيف أسجل في اختبار القدرات؟",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "سجل عبر موقع هيئة تقويم التعليم والتدريب. بعد الدخول، أنشئ حساباً، اختر نوع الاختبار، حدد المدينة والمركز، ثم ادفع الرسوم."
+            "text": "سجل عبر موقع هيئة تقويم التعليم والتدريب (قياس). بعد الدخول، أنشئ حساباً، اختر نوع الاختبار (محوسب أو ورقي)، حدد المدينة والمركز، ثم ادفع الرسوم."
           }
         },
         {
           "@type": "Question",
-          "name": "كم رسوم الاختبار؟",
+          "name": "كم رسوم اختبار القدرات؟",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "الاختبار الورقي: 100 ريال سعودي (تسجيل مبكر) و 150 ريال (تسجيل متأخر). الاختبار المحوسب: 150 ريال سعودي. تحقق دائماً من الموقع الرسمي لأحدث الأسعار."
+            "text": "رسوم اختبار القدرات المحوسب هي 150 ريال سعودي. أما الورقي، فتكون 100 ريال للتسجيل المبكر و 150 ريال للمتأخر. الأسعار قد تتغير ويجب التأكد من موقع قياس الرسمي."
           }
         },
         {
           "@type": "Question",
-          "name": "متى تفتح فترات التسجيل؟",
+          "name": "متى يفتح التسجيل في قدرات محوسب؟",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "التسجيل في الاختبار المحوسب متاح طوال العام حسب توفر المقاعد. أما الاختبار الورقي، فيُعقد عادةً مرة واحدة في السنة ويتم الإعلان عن فترة التسجيل عبر موقع هيئة تقويم التعليم والتدريب."
+            "text": "التسجيل في اختبار القدرات المحوسب متاح طوال العام حسب توفر المقاعد في مراكز قياس المعتمدة."
           }
         },
         {
           "@type": "Question",
-          "name": "ماذا لو لم أجد مقعداً متاحاً؟",
+          "name": "ما هي أفضل التجميعات لاختبار القدرات؟",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "تابع الموقع باستمرار، فقد تُفتح مقاعد إضافية. جرب البحث في مدن مجاورة أو سجل في قائمة الانتظار إن كانت متاحة."
+            "text": "تعتبر تجميعات المنصف ونماذج المحوسب من المصادر الموثوقة والمهمة للتدريب على أسئلة اختبار القدرات للقسمين الكمي واللفظي. موقعنا يوفر روابط مباشرة لأهمها."
           }
         },
         {
           "@type": "Question",
-          "name": "هل يمكن تغيير موعد الاختبار؟",
+          "name": "هل اختبار القدرات صعب؟",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "حسب هيئة تقويم التعليم والتدريب، تعديل موعد الاختبارات المحوسبة لا يتطلب رسوم، بينما قد يتطلب تعديل موعد الاختبار الورقي سداد مقابل مالي."
+            "text": "صعوبة اختبار القدرات نسبية وتعتمد على مدى استعداد الطالب. مع التأسيس الجيد والتدريب على نماذج وتجميعات الاختبار، يمكن تحقيق درجة عالية. موقعنا يوفر لك خطة متكاملة للبدء."
           }
         },
         {
           "@type": "Question",
-          "name": "ماذا أحضر يوم الاختبار؟",
+          "name": "ماذا أحضر معي يوم اختبار القدرات؟",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "أحضر بطاقة الهوية الوطنية الأصلية أو جواز السفر. سيتم توفير مكان مخصص لحفظ أغراضك الشخصية."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "هل تختلف صعوبة الأسئلة بين المراكز؟",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "لا، مستوى الصعوبة موحد تماماً بين جميع المراكز والنماذج المختلفة لضمان العدالة."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "ما هو نظام نمر الجديد؟",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "هو تحديث لطريقة عرض أسئلة اختبار القدرات المحوسب على الشاشة لتحسين تجربة المختبرين. أبرز مميزاته تسهيل حل قسم استيعاب المقروء. لا داعي للقلق فهو لا يؤثر سلباً على أداء الطالب."
+            "text": "يجب إحضار أصل الهوية الوطنية أو جواز السفر. يتم توفير كل ما تحتاجه في قاعة الاختبار مثل الأقلام والمسودات."
           }
         }
       ]
@@ -184,42 +179,32 @@
                 <a href="#" class="text-2xl font-bold text-gray-800">مركز القدرات</a>
             </div>
             <div class="hidden lg:flex items-baseline space-x-5 space-x-reverse text-sm">
-                <a href="#basics" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">الأساسيات</a>
-                <a href="#grades" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">الدرجات</a>
-                <a href="#calculator-tool" class="relative text-green-600 hover:text-green-700 font-bold transition-colors duration-300">
-                    <i data-lucide="crown" class="absolute -top-3 left-1/2 -translate-x-1/2 w-4 h-4 text-yellow-500"></i>
-                    <span>أداة حساب الموزونة</span>
-                </a>
-                <a href="#resources" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">المصادر</a>
-                <a href="#planning" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">التخطيط</a>
-                <a href="#faq" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">الأسئلة الشائعة</a>
+                <a href="#basics" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">أساسيات القدرات</a>
+                <a href="#grades" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">الدرجات والنسبة</a>
+                <a href="#resources" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">أفضل المصادر</a>
+                <a href="#planning" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">خطط المذاكرة</a>
+                <a href="#faq" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">أسئلة شائعة</a>
                 <a href="#ai-assistant" class="text-blue-600 font-bold hover:text-blue-700 transition-colors duration-300">مساعدك الذكي</a>
-                <a href="#motivation" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">الدعم النفسي</a>
             </div>
             <button id="mobile-menu-button" class="lg:hidden">
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
         </nav>
         <div id="mobile-menu" class="hidden lg:hidden bg-white py-4">
-            <a href="#basics" class="block text-center py-2 px-4 text-gray-600 hover:bg-blue-50">الأساسيات</a>
-            <a href="#grades" class="block text-center py-2 px-4 text-gray-600 hover:bg-blue-50">الدرجات</a>
-            <a href="#calculator-tool" class="flex items-center justify-center text-center py-2 px-4 text-green-600 font-bold hover:bg-green-50">
-                <i data-lucide="crown" class="w-4 h-4 text-yellow-500 ml-2"></i>
-                <span>أداة حساب الموزونة</span>
-            </a>
-            <a href="#resources" class="block text-center py-2 px-4 text-gray-600 hover:bg-blue-50">المصادر</a>
-            <a href="#planning" class="block text-center py-2 px-4 text-gray-600 hover:bg-blue-50">التخطيط</a>
-            <a href="#faq" class="block text-center py-2 px-4 text-gray-600 hover:bg-blue-50">الأسئلة الشائعة</a>
+            <a href="#basics" class="block text-center py-2 px-4 text-gray-600 hover:bg-blue-50">أساسيات القدرات</a>
+            <a href="#grades" class="block text-center py-2 px-4 text-gray-600 hover:bg-blue-50">الدرجات والنسبة</a>
+            <a href="#resources" class="block text-center py-2 px-4 text-gray-600 hover:bg-blue-50">أفضل المصادر</a>
+            <a href="#planning" class="block text-center py-2 px-4 text-gray-600 hover:bg-blue-50">خطط المذاكرة</a>
+            <a href="#faq" class="block text-center py-2 px-4 text-gray-600 hover:bg-blue-50">أسئلة شائعة</a>
             <a href="#ai-assistant" class="block text-center py-2 px-4 text-blue-600 font-bold hover:bg-blue-50">مساعدك الذكي</a>
-            <a href="#motivation" class="block text-center py-2 px-4 text-gray-600 hover:bg-blue-50">الدعم النفسي</a>
         </div>
     </header>
     <main>
         <section class="relative h-[60vh] md:h-[80vh] flex items-center justify-center text-white text-center px-4" style="background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center;">
             <div class="absolute inset-0 hero-gradient"></div>
             <div class="relative z-10">
-                <h1 class="text-4xl md:text-6xl font-black mb-4 drop-shadow-lg">مستقبلك يبدأ من هنا: دليلك الشامل لاجتياز القدرات</h1>
-                <p class="text-lg md:text-2xl mb-8 max-w-3xl mx-auto drop-shadow-md">كل ما تحتاجه من شروحات، مصادر، وخطط دراسية لتحقيق أعلى الدرجات في اختبار القدرات العامة.</p>
+                <h1 class="text-4xl md:text-6xl font-black mb-4 drop-shadow-lg">مستقبلك يبدأ من هنا: دليلك الشامل لاختبار القدرات</h1>
+                <p class="text-lg md:text-2xl mb-8 max-w-3xl mx-auto drop-shadow-md">كل ما تحتاجه من شروحات، مصادر، وخطط دراسية لتحقيق أعلى الدرجات في اختبار القدرات العامة من قياس.</p>
                 <a href="#basics" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg transition-transform transform hover:scale-105 duration-300">
                     ابدأ رحلتك الآن
                 </a>
@@ -234,16 +219,16 @@
                     </div>
                 </h2>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="bg-gray-50 p-6 rounded-lg shadow-sm"><div class="flex items-center mb-4"><div class="bg-blue-100 p-3 rounded-full mr-4 ml-0"><i data-lucide="help-circle" class="w-6 h-6 text-blue-600"></i></div><h3 class="text-xl font-bold">ما هو اختبار القدرات؟</h3></div><p>هو اختبار موحد يقيس القدرة التحليلية والاستدلالية، ويعد شرطًا أساسيًا للقبول في الجامعات السعودية ويدخل ضمن النسبة الموزونة.</p></div>
-                    <div class="bg-gray-50 p-6 rounded-lg shadow-sm"><div class="flex items-center mb-4"><div class="bg-blue-100 p-3 rounded-full mr-4 ml-0"><i data-lucide="repeat" class="w-6 h-6 text-blue-600"></i></div><h3 class="text-xl font-bold">كم عدد المحاولات؟</h3></div><p>لكل طالب 5 محاولات بحد أقصى. يمكنك توزيعها بين الاختبار الورقي (فرصتان) والمحوسب.</p></div>
-                    <div class="bg-gray-50 p-6 rounded-lg shadow-sm"><div class="flex items-center mb-4"><div class="bg-blue-100 p-3 rounded-full mr-4 ml-0"><i data-lucide="calendar-clock" class="w-6 h-6 text-blue-600"></i></div><h3 class="text-xl font-bold">متى تبدأ التحضير؟</h3></div><p>يُنصح بالبدء في التأسيس من الصف الأول الثانوي، أما التحضير المكثف فيكون قبل الاختبار بشهرين إلى 3 أشهر.</p></div>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-sm"><div class="flex items-center mb-4"><div class="bg-blue-100 p-3 rounded-full mr-4 ml-0"><i data-lucide="help-circle" class="w-6 h-6 text-blue-600"></i></div><h3 class="text-xl font-bold">ما هو اختبار القدرات؟</h3></div><p>هو اختبار موحد من مركز قياس يقيس القدرة التحليلية والاستدلالية، ويعد شرطًا أساسيًا للقبول في الجامعات السعودية ويدخل ضمن النسبة الموزونة.</p></div>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-sm"><div class="flex items-center mb-4"><div class="bg-blue-100 p-3 rounded-full mr-4 ml-0"><i data-lucide="repeat" class="w-6 h-6 text-blue-600"></i></div><h3 class="text-xl font-bold">كم عدد المحاولات؟</h3></div><p>لكل طالب 5 محاولات بحد أقصى. يمكنك توزيعها بين اختبار القدرات الورقي (فرصتان) والمحوسب.</p></div>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-sm"><div class="flex items-center mb-4"><div class="bg-blue-100 p-3 rounded-full mr-4 ml-0"><i data-lucide="calendar-clock" class="w-6 h-6 text-blue-600"></i></div><h3 class="text-xl font-bold">متى تبدأ التحضير؟</h3></div><p>يُنصح بالبدء في التأسيس من الصف الأول الثانوي، أما التحضير المكثف فيكون قبل الاختبار بشهرين إلى 3 أشهر لضمان أفضل نتيجة.</p></div>
                 </div>
                 
                 <div class="mt-12 bg-gray-50 p-6 rounded-lg shadow-sm">
-                    <div class="flex items-center mb-4"><div class="bg-blue-100 p-3 rounded-full mr-4 ml-0"><i data-lucide="layout-list" class="w-6 h-6 text-blue-600"></i></div><h3 class="text-xl font-bold">ما هي أقسام الاختبار؟</h3></div>
+                    <div class="flex items-center mb-4"><div class="bg-blue-100 p-3 rounded-full mr-4 ml-0"><i data-lucide="layout-list" class="w-6 h-6 text-blue-600"></i></div><h3 class="text-xl font-bold">ما هي أقسام اختبار القدرات؟</h3></div>
                     <div class="grid md:grid-cols-2 gap-x-8 gap-y-4">
-                        <div><h4 class="font-semibold">🔹 الجزء اللفظي:</h4><p class="pr-6">استيعاب المقروء، التناظر اللفظي، إكمال الجمل، الخطأ السياقي.</p></div>
-                        <div><h4 class="font-semibold">🔹 الجزء الكمي:</h4><p class="pr-6">الحساب، الهندسة، الجبر، الإحصاء والاحتمالات.</p></div>
+                        <div><h4 class="font-semibold">🔹 القسم اللفظي:</h4><p class="pr-6">استيعاب المقروء، التناظر اللفظي، إكمال الجمل، والخطأ السياقي.</p></div>
+                        <div><h4 class="font-semibold">🔹 القسم الكمي:</h4><p class="pr-6">يشمل أسئلة الحساب، الهندسة، الجبر، والإحصاء والاحتمالات.</p></div>
                     </div>
                 </div>
 
@@ -255,23 +240,23 @@
                         </div>
                     </h2>
                     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <div class="bg-white p-6 rounded-lg shadow-sm"><h3 class="text-xl font-bold mb-3">كيف يتم حساب الدرجة؟</h3><p>الدرجة معيارية. للمسارات العلمية، الدرجة موزعة 50% للكمي و 50% للفظي. أما لمسارات إدارة الأعمال والشريعة، فيكون اللفظي 70% والكمي 30%. والدرجة صالحة لمدة 5 سنوات.</p></div>
-                        <div class="bg-white p-6 rounded-lg shadow-sm"><h3 class="text-xl font-bold mb-3">ما هي الدرجة الجيدة؟</h3><ul class="space-y-1"><li><strong>+90:</strong> ممتاز (أعلى 5%)</li><li><strong>65-74:</strong> مقبول (متوسط)، وتعتبر جيدة كأول محاولة بدون مذاكرة.</li></ul><p class="mt-4 font-bold text-blue-600 border-r-4 border-blue-500 pr-3">هدف كل طالب يجب أن يكون فوق 95 ليضمن القبول في التخصصات التنافسية.</p></div>
-                        <div class="bg-white p-6 rounded-lg shadow-sm"><h3 class="text-xl font-bold mb-3">متى تظهر النتائج؟</h3><p><strong>المحوسب:</strong> تظهر النتائج عادةً خلال يومين إلى 5 أيام عمل، وقد تمتد المدة إلى أسبوعين كحد أقصى في بعض الحالات.<br><strong>الورقي:</strong> تستغرق النتائج حوالي 4 أسابيع للظهور.</p></div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm"><h3 class="text-xl font-bold mb-3">كيف يتم حساب الدرجة؟</h3><p>الدرجة معيارية وصالحة لمدة 5 سنوات. للمسارات العلمية، الدرجة موزعة 50% للكمي و 50% للفظي. أما للمسارات الأدبية والإدارية، فيكون اللفظي 70% والكمي 30%.</p></div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm"><h3 class="text-xl font-bold mb-3">ما هي الدرجة الجيدة؟</h3><ul class="space-y-1"><li><strong>+90:</strong> درجة ممتازة تضعك ضمن أعلى 5% من الطلاب.</li><li><strong>81-89:</strong> درجة عالية جدًا تؤهلك للتخصصات التنافسية.</li></ul><p class="mt-4 font-bold text-blue-600 border-r-4 border-blue-500 pr-3">هدف كل طالب يجب أن يكون فوق 90 ليضمن القبول في أقوى التخصصات.</p></div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm"><h3 class="text-xl font-bold mb-3">متى تظهر نتائج القدرات؟</h3><p><strong>المحوسب:</strong> تظهر النتائج عادةً خلال يومين إلى 5 أيام عمل، وقد تمتد إلى أسبوعين. <br><strong>الورقي:</strong> تستغرق النتائج حوالي شهر للظهور.</p></div>
                     </div>
-                    <div class="grid lg:grid-cols-2 gap-8 mt-12">
+                    <div id="calculator-tool" class="grid lg:grid-cols-2 gap-8 mt-12 scroll-mt-24">
                         <div class="bg-blue-50 border-r-4 border-blue-500 p-6 rounded-lg">
-                            <h3 class="text-xl font-bold mb-3">ما هي الدرجات المطلوبة للجامعات؟ <span class="text-xs font-normal text-gray-500">(للسعوديين)</span></h3>
+                            <h3 class="text-xl font-bold mb-3">كم النسبة الموزونة المطلوبة للجامعات؟</h3>
                             <p class="mb-4">هذه أرقام <strong>تقريبية وتتغير سنوياً</strong>. تحقق دائماً من المواقع الرسمية للجامعات:</p>
                             <ul class="list-disc pr-6 space-y-2">
-                                <li><strong>المسارات الصحية والهندسية في الجامعات الكبرى:</strong> 85 - 95+</li>
+                                <li><strong>المسارات الصحية والهندسية (جامعات كبرى):</strong> 85 - 95+</li>
                                 <li><strong>التخصصات العلمية والإدارية:</strong> 75 - 85+</li>
                                 <li><strong>الجامعات الأهلية:</strong> 65 - 80+</li>
                             </ul>
                         </div>
-                        <div id="calculator-tool" class="bg-green-50 border-r-4 border-green-500 p-6 rounded-lg scroll-mt-24">
+                        <div class="bg-green-50 border-r-4 border-green-500 p-6 rounded-lg">
                             <h3 class="text-xl font-bold mb-3">أداة حساب النسبة الموزونة</h3>
-                            <p class="mb-4 text-sm">أدخل النسب المطلوبة من جامعتك ودرجاتك لحساب موزونتك فوراً.</p>
+                            <p class="mb-4 text-sm">أدخل نسب جامعتك ودرجاتك لحساب موزونتك فوراً بدقة.</p>
 
                             <div id="calculator-form" class="space-y-4">
                                 <div class="grid grid-cols-3 gap-2 sm:gap-4 font-bold text-center text-xs sm:text-base">
@@ -311,7 +296,7 @@
                     </div>
                 </div>
 
-                <div class="mt-16"><h3 class="text-3xl font-bold text-center mb-2">ورقي أم محوسب؟</h3><p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">لا يوجد اختبار "أسهل" من الآخر، ولكن طبيعة كل اختبار مختلفة. الخيار الأفضل يعتمد على ما يناسبك شخصياً.</p><div class="grid md:grid-cols-2 gap-8"><div class="border-2 border-blue-500 rounded-lg p-6 bg-blue-50"><div class="flex items-center mb-4"><i data-lucide="monitor" class="w-8 h-8 text-blue-600 ml-3"></i><h4 class="text-2xl font-bold">الاختبار المحوسب</h4></div><ul class="space-y-3 text-gray-700"><li class="flex items-start"><i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">مرونة المواعيد:</strong>متاح على مدار العام.</li><li class="flex items-start"><i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">نتائج سريعة:</strong>تظهر خلال 3 إلى 5 أيام عمل.</li><li class="flex items-start"><i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">بيئة هادئة:</strong>يُعقد في مراكز صغيرة وهادئة.</li><li class="flex items-start"><i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">120 سؤالاً:</strong>بنفس عدد أسئلة الورقي.</li></ul><div class="mt-6 bg-blue-100 p-4 rounded-md"><p class="font-bold text-blue-800">توصية: الخيار الأفضل والأكثر عملية لأكثر من 95% من الطلاب اليوم.</p></div></div><div class="border rounded-lg p-6 bg-white"><div class="flex items-center mb-4"><i data-lucide="clipboard-list" class="w-8 h-8 text-gray-600 ml-3"></i><h4 class="text-2xl font-bold">الاختبار الورقي</h4></div><ul class="space-y-3 text-gray-700"><li class="flex items-start"><i data-lucide="calendar-days" class="w-5 h-5 text-blue-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">مواعيد محدودة:</strong>مرة واحدة فقط في السنة.</li><li class="flex items-start"><i data-lucide="clock" class="w-5 h-5 text-blue-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">النتائج:</strong>تظهر بعد 4 أسابيع تقريباً.</li><li class="flex items-start"><i data-lucide="users" class="w-5 h-5 text-blue-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">بيئة مزدحمة:</strong>يُعقد في قاعات كبيرة.</li><li class="flex items-start"><i data-lucide="edit-3" class="w-5 h-5 text-blue-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">120 سؤالاً:</strong>تجيب بتظليل الدوائر.</li></ul><div class="mt-6 bg-gray-100 p-4 rounded-md"><p class="font-bold text-gray-800">توصية: خيار جيد لمن يرغب في تجربة الاختبار وفهم طريقة الأسئلة قبل المحوسب.</p></div></div></div>
+                <div class="mt-16"><h3 class="text-3xl font-bold text-center mb-2">أيهما أفضل: قدرات ورقي أم محوسب؟</h3><p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">لا يوجد اختبار "أسهل" من الآخر، فمستوى الصعوبة موحد. لكن طبيعة كل اختبار مختلفة، والخيار الأفضل يعتمد على ما يناسبك شخصياً.</p><div class="grid md:grid-cols-2 gap-8"><div class="border-2 border-blue-500 rounded-lg p-6 bg-blue-50"><div class="flex items-center mb-4"><i data-lucide="monitor" class="w-8 h-8 text-blue-600 ml-3" alt="أيقونة اختبار القدرات المحوسب"></i><h4 class="text-2xl font-bold">اختبار القدرات المحوسب</h4></div><ul class="space-y-3 text-gray-700"><li class="flex items-start"><i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">مرونة المواعيد:</strong>متاح على مدار العام.</li><li class="flex items-start"><i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">نتائج سريعة:</strong>تظهر خلال 3 إلى 5 أيام عمل.</li><li class="flex items-start"><i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">بيئة هادئة:</strong>يُعقد في مقرات مجهزة وهادئة.</li><li class="flex items-start"><i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">نماذج متجددة:</strong>تتغير الأسئلة والنماذج باستمرار.</li></ul><div class="mt-6 bg-blue-100 p-4 rounded-md"><p class="font-bold text-blue-800">توصية: الخيار الأفضل والأكثر عملية لأكثر من 95% من الطلاب اليوم.</p></div></div><div class="border rounded-lg p-6 bg-white"><div class="flex items-center mb-4"><i data-lucide="clipboard-list" class="w-8 h-8 text-gray-600 ml-3" alt="أيقونة اختبار القدرات الورقي"></i><h4 class="text-2xl font-bold">اختبار القدرات الورقي</h4></div><ul class="space-y-3 text-gray-700"><li class="flex items-start"><i data-lucide="calendar-days" class="w-5 h-5 text-blue-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">مواعيد محدودة:</strong>يُعقد في فترات محددة خلال السنة.</li><li class="flex items-start"><i data-lucide="clock" class="w-5 h-5 text-blue-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">النتائج:</strong>تستغرق حوالي شهر للظهور.</li><li class="flex items-start"><i data-lucide="users" class="w-5 h-5 text-blue-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">بيئة تقليدية:</strong>يُعقد في قاعات دراسية كبيرة.</li><li class="flex items-start"><i data-lucide="edit-3" class="w-5 h-5 text-blue-500 ml-2 mt-1 shrink-0"></i> <strong class="ml-2">تظليل الإجابات:</strong>تعتمد على ورقة الإجابة والتظليل.</li></ul><div class="mt-6 bg-gray-100 p-4 rounded-md"><p class="font-bold text-gray-800">توصية: خيار جيد لمن يرغب في تجربة الاختبار بأسلوب تقليدي، أو كفرصة إضافية لمن استنفد فرص المحوسب.</p></div></div></div>
             </div>
         </section>
         <section id="resources" class="py-20 bg-gray-50 scroll-mt-20">
@@ -319,7 +304,7 @@
                 <h2 class="section-title">
                     <div class="flex items-center gap-4">
                         <i data-lucide="book-marked" class="w-10 h-10 text-blue-600"></i>
-                        <span>أفضل مصادر المذاكرة (ورقي ومحوسب)</span>
+                        <span>أفضل مصادر وتجميعات القدرات</span>
                     </div>
                 </h2>
                 
@@ -346,7 +331,7 @@
                                 <div class="flex items-center mb-3">
                                     <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i><i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i><i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i><i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i><i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
                                 </div>
-                                <p class="text-gray-600 mb-4 flex-grow">يعتبر هذا الكتاب بمثابة حجر الأساس لكل طالب يطمح للتميز في القسم الكمي. شرحه المبسط والوافي يجعله الخيار الأمثل للانطلاق نحو درجة +95.</p>
+                                <p class="text-gray-600 mb-4 flex-grow">يعتبر هذا الكتاب أفضل كتب القدرات للتأسيس في القسم الكمي. شرحه المبسط والوافي يجعله الخيار الأمثل للانطلاق نحو درجة +95.</p>
                                 <p class="font-semibold mb-4">السعر: 120 ريال سعودي.</p>
                                 <div class="mt-auto grid grid-cols-2 gap-2">
                                     <a href="https://www.jarir.com/arabic-books-665503.html?country=sa" target="_blank" rel="noopener noreferrer" class="text-center w-full bg-blue-600 text-white font-bold py-2 px-3 rounded-lg hover:bg-blue-700 transition-colors duration-300 text-sm">شراء من جرير</a>
@@ -363,7 +348,7 @@
                                 <div class="flex items-center mb-3">
                                     <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i><i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i><i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i><i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i><i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
                                 </div>
-                                <p class="text-gray-600 mb-4 flex-grow">بوابة العبور نحو الـ 100% في القسم الكمي! تتميز هذه الدورة بشموليتها وتحديثاتها المستمرة، وهي الخيار الأول للمتفوقين.</p>
+                                <p class="text-gray-600 mb-4 flex-grow">من أقوى دورات القدرات للتدريب على نماذج المحوسب الحديثة. تتميز بشموليتها وتحديثاتها المستمرة، وهي الخيار الأول للمتفوقين.</p>
                                 <p class="font-semibold mb-4">السعر: 199 ريال سعودي.</p>
                                 <a href="https://elmonsf.com/Category/1" target="_blank" rel="noopener noreferrer" class="mt-auto text-center w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-300">رابط الدورة</a>
                             </div>
@@ -377,7 +362,7 @@
                                  <div class="flex items-center mb-3">
                                     <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i><i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i><i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i><i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i><i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
                                 </div>
-                                <p class="text-gray-600 mb-4 flex-grow">كنز مجاني حقيقي! يقدم "أينشتاين" شرحاً استثنائياً يفكك أعقد مفاهيم الكمي ويجعلها سهلة الفهم للجميع.</p>
+                                <p class="text-gray-600 mb-4 flex-grow">كنز مجاني حقيقي! يقدم "أينشتاين" شرح قدرات استثنائي يفكك أعقد مفاهيم الكمي ويجعلها سهلة الفهم للجميع.</p>
                                 <a href="https://youtube.com/playlist?list=PLbUZIC2wgSbC0FpJ0mVh2Ar-FHZpq0PKr&si=ZRX3iSYi_wZYTchZ" target="_blank" rel="noopener noreferrer" class="mt-auto text-center w-full bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors duration-300">رابط يوتيوب مقاطع الشرح</a>
                             </div>
                              <div class="resource-card relative bg-gray-50 p-6 pt-12 rounded-lg shadow-lg flex flex-col h-full" data-category="free">
@@ -390,7 +375,7 @@
                                  <div class="flex items-center mb-3">
                                     <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i><i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i><i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i><i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i><i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
                                 </div>
-                                <p class="text-gray-600 mb-4 flex-grow">السلاح السري للتدريب! لا يمكن الاستغناء عن حل التجميعات التي تمنحك تصوراً حقيقياً عن أسئلة الاختبار وتزيد من سرعتك وثقتك.</p>
+                                <p class="text-gray-600 mb-4 flex-grow">السلاح السري للتدريب! لا يمكن الاستغناء عن حل تجميعات قدرات التي تمنحك تصوراً حقيقياً عن أسئلة الاختبار وتزيد من سرعتك وثقتك.</p>
                                 <a href="https://drive.google.com/file/d/1ispc42x082FCEBm0Dn2diJ5qx9sKMpFK/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="mt-auto text-center w-full bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors duration-300 flex items-center justify-center gap-2"><i data-lucide="download" class="w-4 h-4"></i><span>تحميل تجميع المحوسب (PDF)</span></a>
                             </div>
                         </div>
@@ -414,7 +399,7 @@
                                      <div class="flex items-center mb-3">
                                         <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i><i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i><i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i><i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i><i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
                                     </div>
-                                    <p class="text-gray-600 mb-4">تعتبر هذه الدورة الأيقونية الخيار الأول والأقوى بلا منازع لإتقان القسم اللفظي. أسلوب الأستاذ إيهاب الفريد يضمن لك فهماً عميقاً واستراتيجيات حل ذكية.</p>
+                                    <p class="text-gray-600 mb-4">تعتبر هذه الدورة الأيقونية الخيار الأول والأقوى بلا منازع لإتقان القسم اللفظي (التناظر اللفظي, الخطأ السياقي, استيعاب المقروء). أسلوب الأستاذ إيهاب الفريد يضمن لك فهماً عميقاً واستراتيجيات حل ذكية.</p>
                                     <p class="font-semibold mb-6">السعر: 154 ريال سعودي.</p>
                                     <a href="https://hadafakvideos.com/" target="_blank" rel="noopener noreferrer" class="text-center w-full inline-block bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-300">رابط الدورة</a>
                                 </div>
@@ -423,7 +408,7 @@
                                         <i data-lucide="gift" class="w-5 h-5"></i>
                                         <span>مصدر مجاني</span>
                                     </div>
-                                    <p class="mt-2 text-yellow-800">يفتقر اللفظي لمصادر مجانية عالية الجودة، لذا الاستثمار في دورة مدفوعة هو الخيار الأفضل. كتدريب إضافي مجاني، ابحث عن ملفات التجميعات المتداولة.</p>
+                                    <p class="mt-2 text-yellow-800">يفتقر اللفظي لمصادر مجانية عالية الجودة، لذا الاستثمار في دورة مدفوعة هو الخيار الأفضل. كتدريب إضافي مجاني، ابحث عن ملفات التجميعات المتداولة للنماذج الحديثة.</p>
                                 </div>
                             </div>
                         </div>
@@ -436,20 +421,20 @@
                 <h2 class="section-title">
                      <div class="flex items-center gap-4">
                         <i data-lucide="calendar-check" class="w-10 h-10 text-blue-600"></i>
-                        <span>التخطيط وإدارة الوقت</span>
+                        <span>خطط وجداول مذاكرة القدرات</span>
                     </div>
                 </h2>
                 <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md mb-12">
                     <h3 class="text-2xl font-bold mb-4">كيف أضع خطة مذاكرة فعالة؟</h3>
                     <ul class="space-y-3">
-                        <li class="flex items-start"><i data-lucide="check-square" class="w-6 h-6 text-blue-600 ml-3 mt-1 shrink-0"></i><div><strong class="font-bold">1. حدد هدفك:</strong> متى موعد اختبارك والوقت المتاح لك.</div></li>
+                        <li class="flex items-start"><i data-lucide="check-square" class="w-6 h-6 text-blue-600 ml-3 mt-1 shrink-0"></i><div><strong class="font-bold">1. حدد هدفك:</strong> كم باقي على اختبار القدرات؟ وما هو الوقت المتاح لك يوميًا.</div></li>
                         <li class="flex items-start"><i data-lucide="check-square" class="w-6 h-6 text-blue-600 ml-3 mt-1 shrink-0"></i><div><strong class="font-bold">2. وزع الوقت:</strong> القاعدة العامة هي 60% للكمي، 40% للفظي.</div></li>
-                        <li class="flex items-start"><i data-lucide="check-square" class="w-6 h-6 text-blue-600 ml-3 mt-1 shrink-0"></i><div><strong class="font-bold">3. اتبع المراحل:</strong> ابدأ بالتأسيس الجيد، ثم استمر بالتدريب المكثف والمتواصل حتى يوم الاختبار.</div></li>
+                        <li class="flex items-start"><i data-lucide="check-square" class="w-6 h-6 text-blue-600 ml-3 mt-1 shrink-0"></i><div><strong class="font-bold">3. اتبع المراحل:</strong> ابدأ بالتأسيس الجيد، ثم استمر بالتدريب المكثف على نماذج المحوسب حتى يوم الاختبار.</div></li>
                     </ul>
                 </div>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="bg-white p-6 rounded-lg shadow-sm border-t-4 border-orange-500"><h3 class="text-xl font-bold mb-3">باقي شهر واحد فقط!</h3><p>الأسبوع الأول: تأسيس مكثف جداً للكمي واللفظي. الأسابيع الثلاثة المتبقية: تدريب متواصل ويومي على النماذج والتجميعات، مع مراجعة الأخطاء أولاً بأول.</p></div>
-                    <div class="bg-white p-6 rounded-lg shadow-sm border-t-4 border-red-500"><h3 class="text-xl font-bold mb-3">باقي أسبوعان فقط!</h3><p>الأيام الثلاثة الأولى: مراجعة سريعة جداً للأساسيات. باقي الأيام: تدريب يومي مكثف على التجميعات والنماذج الحديثة، مع التركيز على إدارة الوقت.</p></div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border-t-4 border-orange-500"><h3 class="text-xl font-bold mb-3">خطة مذاكرة في شهر</h3><p>الأسبوع الأول: تأسيس مكثف جداً للكمي واللفظي. الأسابيع الثلاثة المتبقية: تدريب متواصل ويومي على النماذج والتجميعات، مع مراجعة الأخطاء أولاً بأول.</p></div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border-t-4 border-red-500"><h3 class="text-xl font-bold mb-3">خطة مذاكرة في أسبوعين</h3><p>الأيام الثلاثة الأولى: مراجعة سريعة جداً للأساسيات. باقي الأيام: تدريب يومي مكثف على تجميعات المحوسب الحديثة، مع التركيز على إدارة الوقت.</p></div>
                     <div class="bg-white p-6 rounded-lg shadow-sm border-t-4 border-yellow-500"><h3 class="text-xl font-bold mb-3">اختباري غداً!</h3><p>لا تذاكر شيئاً جديداً. راجع القوانين مراجعة خفيفة، نم 8 ساعات، تناول فطوراً صحياً، واذهب للمركز مبكراً. توكل على الله.</p></div>
                 </div>
             </div>
@@ -459,16 +444,16 @@
                  <h2 class="section-title">
                     <div class="flex items-center gap-4">
                         <i data-lucide="message-square-question" class="w-10 h-10 text-blue-600"></i>
-                        <span>الأسئلة الشائعة</span>
+                        <span>الأسئلة الشائعة عن اختبار القدرات</span>
                     </div>
                 </h2>
                 <div class="max-w-4xl mx-auto">
-                    <div class="bg-white rounded-lg shadow-sm mb-4"><input type="checkbox" id="accordion-faq-1" class="hidden"><label for="accordion-faq-1" class="flex justify-between items-center p-5 cursor-pointer font-bold text-lg">كيف أسجل في اختبار القدرات؟<span class="accordion-icon text-blue-500 transition-transform duration-300 transform"><i data-lucide="chevron-down"></i></span></label><div class="accordion-content px-5 text-gray-600"><p>سجل عبر موقع هيئة تقويم التعليم والتدريب بالضغط على الرابط التالي: <a href="https://e-services.etec.gov.sa/Qiyas.TRAS.Web.Internet/Account/Index" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline font-bold">قياس - تسجيل الدخول</a>. بعد الدخول، أنشئ حساباً، اختر نوع الاختبار، حدد المدينة والمركز، ثم ادفع الرسوم.</p></div></div>
-                    <div class="bg-white rounded-lg shadow-sm mb-4"><input type="checkbox" id="accordion-faq-2" class="hidden"><label for="accordion-faq-2" class="flex justify-between items-center p-5 cursor-pointer font-bold text-lg">كم رسوم الاختبار؟<span class="accordion-icon text-blue-500 transition-transform duration-300 transform"><i data-lucide="chevron-down"></i></span></label><div class="accordion-content px-5 text-gray-600"><ul class="list-disc pr-5 space-y-2"><li>الاختبار الورقي: 100 ريال سعودي في حال التسجيل المبكر، و 150 ريال سعودي في حال التسجيل المتأخر.</li><li>الاختبار المحوسب: 150 ريال سعودي</li></ul><div class="mt-4 p-3 bg-yellow-100 border-r-4 border-yellow-400 text-yellow-800 rounded-md"><p><strong>تنبيه مهم:</strong> الرسوم قابلة للتغيير. تحقق دائماً من الموقع الرسمي لهيئة تقويم التعليم والتدريب للحصول على أحدث الأسعار.</p></div></div></div>
-                    <div class="bg-white rounded-lg shadow-sm mb-4"><input type="checkbox" id="accordion-faq-3" class="hidden"><label for="accordion-faq-3" class="flex justify-between items-center p-5 cursor-pointer font-bold text-lg">متى تفتح فترات التسجيل؟<span class="accordion-icon text-blue-500 transition-transform duration-300 transform"><i data-lucide="chevron-down"></i></span></label><div class="accordion-content px-5 text-gray-600"><p>التسجيل في الاختبار المحوسب متاح طوال العام حسب توفر المقاعد في المراكز. أما الاختبار الورقي، فيُعقد عادةً مرة واحدة في السنة، ويتم الإعلان عن فترة التسجيل المحددة له عبر موقع هيئة تقويم التعليم والتدريب.</p></div></div>
-                    <div class="bg-white rounded-lg shadow-sm mb-4"><input type="checkbox" id="accordion-faq-4" class="hidden"><label for="accordion-faq-4" class="flex justify-between items-center p-5 cursor-pointer font-bold text-lg">ماذا لو لم أجد مقعداً متاحاً؟<span class="accordion-icon text-blue-500 transition-transform duration-300 transform"><i data-lucide="chevron-down"></i></span></label><div class="accordion-content px-5 text-gray-600"><p>تابع الموقع باستمرار، فقد تُفتح مقاعد إضافية نتيجة الإلغاء. جرب البحث في مدن مجاورة. سجل في قائمة الانتظار إن كانت متاحة.</p></div></div>
-                    <div class="bg-white rounded-lg shadow-sm mb-4"><input type="checkbox" id="accordion-faq-5" class="hidden"><label for="accordion-faq-5" class="flex justify-between items-center p-5 cursor-pointer font-bold text-lg">هل يمكن تغيير موعد الاختبار؟<span class="accordion-icon text-blue-500 transition-transform duration-300 transform"><i data-lucide="chevron-down"></i></span></label><div class="accordion-content px-5 text-gray-600"><p>حسب إعلان هيئة تقويم التعليم والتدريب، تعديل موعد الاختبارات المحوسبة (الرقمية) لا يتطلب سداد أي رسوم، بينما قد يتطلب تعديل موعد الاختبار الورقي سداد مقابل مالي.</p></div></div>
-                    <div class="bg-white rounded-lg shadow-sm mb-4"><input type="checkbox" id="accordion-faq-6" class="hidden"><label for="accordion-faq-6" class="flex justify-between items-center p-5 cursor-pointer font-bold text-lg">ماذا أحضر يوم الاختبار؟<span class="accordion-icon text-blue-500 transition-transform duration-300 transform"><i data-lucide="chevron-down"></i></span></label><div class="accordion-content px-5 text-gray-600"><p><strong>بطاقة الهوية الوطنية الأصلية</strong> أو جواز السفر، وقلم رصاص من نوع HB مع ممحاة (للاختبار الورقي). يمكنك إحضار جوالك وباقي أغراضك الشخصية، وسيتم توفير مكان مخصص (خزانة) لحفظها قبل الدخول لقاعة الاختبار.</p></div></div>
+                    <div class="bg-white rounded-lg shadow-sm mb-4"><input type="checkbox" id="accordion-faq-1" class="hidden"><label for="accordion-faq-1" class="flex justify-between items-center p-5 cursor-pointer font-bold text-lg">كيف أسجل في اختبار القدرات؟<span class="accordion-icon text-blue-500 transition-transform duration-300 transform"><i data-lucide="chevron-down"></i></span></label><div class="accordion-content px-5 text-gray-600"><p>التسجيل يكون عبر موقع هيئة تقويم التعليم والتدريب (قياس) بالضغط على الرابط التالي: <a href="https://e-services.etec.gov.sa/Qiyas.TRAS.Web.Internet/Account/Index" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline font-bold">موقع قياس - تسجيل الدخول</a>. بعد الدخول، أنشئ حساباً، اختر نوع الاختبار، حدد المدينة والمركز، ثم ادفع الرسوم.</p></div></div>
+                    <div class="bg-white rounded-lg shadow-sm mb-4"><input type="checkbox" id="accordion-faq-2" class="hidden"><label for="accordion-faq-2" class="flex justify-between items-center p-5 cursor-pointer font-bold text-lg">كم رسوم اختبار القدرات؟<span class="accordion-icon text-blue-500 transition-transform duration-300 transform"><i data-lucide="chevron-down"></i></span></label><div class="accordion-content px-5 text-gray-600"><ul class="list-disc pr-5 space-y-2"><li>اختبار القدرات الورقي: 100 ريال سعودي (تسجيل مبكر)، و 150 ريال سعودي (تسجيل متأخر).</li><li>اختبار القدرات المحوسب: 150 ريال سعودي.</li></ul><div class="mt-4 p-3 bg-yellow-100 border-r-4 border-yellow-400 text-yellow-800 rounded-md"><p><strong>تنبيه مهم:</strong> الرسوم قابلة للتغيير. تحقق دائماً من الموقع الرسمي لهيئة تقويم التعليم والتدريب للحصول على أحدث الأسعار.</p></div></div></div>
+                    <div class="bg-white rounded-lg shadow-sm mb-4"><input type="checkbox" id="accordion-faq-3" class="hidden"><label for="accordion-faq-3" class="flex justify-between items-center p-5 cursor-pointer font-bold text-lg">متى تفتح فترات التسجيل؟<span class="accordion-icon text-blue-500 transition-transform duration-300 transform"><i data-lucide="chevron-down"></i></span></label><div class="accordion-content px-5 text-gray-600"><p>التسجيل في اختبار المحوسب متاح طوال العام حسب توفر المقاعد في المراكز. أما الاختبار الورقي، فيُعقد عادةً في فترات محددة تعلن عنها هيئة تقويم التعليم والتدريب.</p></div></div>
+                    <div class="bg-white rounded-lg shadow-sm mb-4"><input type="checkbox" id="accordion-faq-4" class="hidden"><label for="accordion-faq-4" class="flex justify-between items-center p-5 cursor-pointer font-bold text-lg">ماذا لو لم أجد مقعداً متاحاً؟<span class="accordion-icon text-blue-500 transition-transform duration-300 transform"><i data-lucide="chevron-down"></i></span></label><div class="accordion-content px-5 text-gray-600"><p>تابع موقع قياس باستمرار، فقد تُفتح مقاعد إضافية نتيجة الإلغاء. جرب البحث في مدن مجاورة. سجل في قائمة الانتظار إن كانت متاحة.</p></div></div>
+                    <div class="bg-white rounded-lg shadow-sm mb-4"><input type="checkbox" id="accordion-faq-5" class="hidden"><label for="accordion-faq-5" class="flex justify-between items-center p-5 cursor-pointer font-bold text-lg">هل يمكن تغيير موعد الاختبار؟<span class="accordion-icon text-blue-500 transition-transform duration-300 transform"><i data-lucide="chevron-down"></i></span></label><div class="accordion-content px-5 text-gray-600"><p>نعم، حسب هيئة تقويم التعليم والتدريب، يمكن تعديل موعد الاختبارات المحوسبة قبل 72 ساعة من موعد الاختبار. قد يتم تطبيق رسوم إضافية.</p></div></div>
+                    <div class="bg-white rounded-lg shadow-sm mb-4"><input type="checkbox" id="accordion-faq-6" class="hidden"><label for="accordion-faq-6" class="flex justify-between items-center p-5 cursor-pointer font-bold text-lg">ماذا أحضر يوم الاختبار؟<span class="accordion-icon text-blue-500 transition-transform duration-300 transform"><i data-lucide="chevron-down"></i></span></label><div class="accordion-content px-5 text-gray-600"><p><strong>أصل الهوية الوطنية</strong> أو جواز السفر. سيتم توفير مكان مخصص (خزانة) لحفظ أغراضك الشخصية قبل دخول قاعة الاختبار.</p></div></div>
                     <div class="bg-white rounded-lg shadow-sm mb-4"><input type="checkbox" id="accordion-faq-7" class="hidden"><label for="accordion-faq-7" class="flex justify-between items-center p-5 cursor-pointer font-bold text-lg">هل تختلف صعوبة الأسئلة بين المراكز؟<span class="accordion-icon text-blue-500 transition-transform duration-300 transform"><i data-lucide="chevron-down"></i></span></label><div class="accordion-content px-5 text-gray-600"><p>لا، مستوى الصعوبة موحد تماماً بين جميع المراكز والنماذج المختلفة. لكن، الأسئلة نفسها التي تظهر لك تكون عشوائية ومختلفة عن زميلك لضمان العدالة.</p></div></div>
                     <div class="bg-white rounded-lg shadow-sm mb-4">
                         <input type="checkbox" id="accordion-faq-8" class="hidden">
@@ -486,7 +471,7 @@
                                 
                                 <h4 class="font-bold text-base">2- خصائص نظام نمر:</h4>
                                 <ul class="list-disc pr-5 space-y-2">
-                                    <li>الاختبار مكوّن من 5 أقسام، كل قسم يحتوي على 11 سؤال كمي و 13 سؤال لفظي خلال 25 دقيقة.</li>
+                                    <li>الاختبار مكوّن من 5 أقسام، كل قسم يحتوي على أسئلة كمي ولفظي خلال 25 دقيقة.</li>
                                     <li>في كل قسم يبدأ بأسئلة الكمي أولًا ثم اللفظي.</li>
                                     <li>يظهر اسمك ورقم هويتك والوقت المتبقي أعلى يسار الشاشة.</li>
                                     <li>رقم هويتك يكون مكتوباً بلون شفاف على الشاشة كعلامة مائية.</li>
@@ -506,11 +491,11 @@
                 <h2 class="section-title">
                     <div class="flex items-center gap-4">
                         <i data-lucide="sparkles" class="w-10 h-10 text-blue-600"></i>
-                        <span>مساعدك الذكي</span>
+                        <span>مساعدك الذكي لشرح القدرات</span>
                     </div>
                 </h2>
                 <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
-                    هل لديك سؤال محير؟ هل تحتاج إلى شرح لمفهوم صعب أو تريد التدرب على أسئلة جديدة؟ استخدم مساعدنا الذكي للحصول على إجابات فورية ودعم مخصص في رحلة استعدادك.
+                    هل لديك سؤال محير؟ هل تحتاج إلى شرح لمفهوم صعب في الكمي أو اللفظي؟ استخدم مساعدنا الذكي للحصول على إجابات فورية ودعم مخصص في رحلة استعدادك.
                 </p>
 
                 <div class="max-w-4xl mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-2xl border border-gray-200">
