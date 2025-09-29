@@ -4,7 +4,29 @@
 document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
 
-    // Smooth scroll and remove hash from URL
+    // base page title (kept as original content)
+    const baseTitle = document.title || 'مركز القدرات';
+    // mapping section id -> readable title (used only for document.title)
+    const sectionTitles = {
+        'basics': 'أساسيات اختبار القدرات',
+        'grades': 'الدرجات ومتطلبات الجامعات',
+        'resources': 'أفضل مصادر وتجميعات القدرات',
+        'planning': 'خطط وجداول مذاكرة القدرات',
+        'faq': 'الأسئلة الشائعة عن اختبار القدرات',
+        'ai-assistant': 'مساعدك الذكي لشرح القدرات',
+        'motivation': 'التحفيز والدعم النفسي'
+    };
+
+    function updateTitleForSection(sectionId) {
+        const sTitle = sectionTitles[sectionId];
+        if (sTitle) {
+            document.title = sTitle + ' — ' + baseTitle;
+        } else {
+            document.title = baseTitle;
+        }
+    }
+
+    // Smooth scroll and set clean shareable query param (e.g. ?section=planning)
     document.querySelectorAll('a[href^="#"]').forEach(link => {
         link.addEventListener('click', function(e) {
             const targetId = this.getAttribute('href').replace('#', '');
@@ -12,13 +34,39 @@ document.addEventListener('DOMContentLoaded', () => {
             if (target) {
                 e.preventDefault();
                 target.scrollIntoView({ behavior: 'smooth' });
-                // Remove hash from URL
-                if (history.replaceState) {
-                    history.replaceState(null, '', window.location.pathname);
+                // Update URL with ?section=<id> so the link is shareable and clean (no #)
+                try {
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('section', targetId);
+                    // Use replaceState so navigation doesn't create history spam
+                    if (history.replaceState) history.replaceState(null, '', url.pathname + url.search);
+                } catch (err) {
+                    // Fallback for older browsers
+                    if (history.replaceState) history.replaceState(null, '', window.location.pathname + '?section=' + encodeURIComponent(targetId));
                 }
+                // Update the document title to reflect the selected section (non-visual change)
+                try { updateTitleForSection(targetId); } catch (e) { /* noop if function unavailable */ }
             }
         });
     });
+
+    // On load: if ?section=... is present, scroll to that section
+    try {
+        const initialUrl = new URL(window.location.href);
+        const initialSection = initialUrl.searchParams.get('section');
+        if (initialSection) {
+            const el = document.getElementById(initialSection);
+            if (el) {
+                // small timeout to allow layout to settle
+                setTimeout(() => {
+                    el.scrollIntoView({ behavior: 'smooth' });
+                    try { updateTitleForSection(initialSection); } catch (e) { /* noop */ }
+                }, 50);
+            }
+        }
+    } catch (err) {
+        // ignore URL parsing errors
+    }
 
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
