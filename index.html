@@ -772,6 +772,10 @@
 
         // --- AI assistant training & QA logic ---
         (function(){
+            // Admin toggle: set to true ONLY if you want the training/admin controls to appear.
+            // This is a code-level switch: edit this file and change to true, then deploy.
+            // Note: keeping this false hides and disables the admin controls for regular visitors.
+            const ADMIN_ENABLED = false;
             const QUESTIONS = [
                 'ما الفرق بين الاختبار المحوسب والورقي؟',
                 'كيف وأسجل في اختبار القدرات؟',
@@ -818,6 +822,18 @@
             const skipBtn = document.getElementById('skip-training');
             const trainingForm = document.getElementById('training-form');
             const clearBtn = document.getElementById('clear-training');
+
+            // If admin mode is not enabled at code-level, hide/disable admin-only controls.
+            if (!ADMIN_ENABLED) {
+                if (trainingForm) trainingForm.querySelectorAll('textarea[data-q-index]').forEach(t=>t.setAttribute('disabled','disabled'));
+                if (openBtn) { openBtn.classList.add('hidden'); openBtn.setAttribute('aria-hidden','true'); openBtn.disabled = true; }
+                if (clearBtn) { clearBtn.classList.add('hidden'); clearBtn.setAttribute('aria-hidden','true'); clearBtn.disabled = true; }
+                // hide add-answer button if present
+                const addAnswerBtnHide = document.getElementById('add-answer');
+                if (addAnswerBtnHide) { addAnswerBtnHide.classList.add('hidden'); addAnswerBtnHide.setAttribute('aria-hidden','true'); addAnswerBtnHide.disabled = true; }
+                // ensure the training modal is not visible
+                if (trainingModal) { trainingModal.classList.add('hidden'); trainingModal.classList.remove('flex'); }
+            }
 
             if (openBtn && trainingModal) openBtn.addEventListener('click', () => { trainingModal.classList.remove('hidden'); trainingModal.classList.add('flex'); });
             if (closeBtn && trainingModal) closeBtn.addEventListener('click', () => { trainingModal.classList.add('hidden'); trainingModal.classList.remove('flex'); });
