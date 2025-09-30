@@ -4,6 +4,123 @@
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-9HLP9MNWS9"></script>
     <script>
+        // ====== Admin passphrase unlock (Ctrl+Shift+A) ======
+        const ADMIN_PASSPHRASE_KEY = 'qudratksa_admin_pass_hash_v1';
+        const ADMIN_SESSION_KEY = 'qudratksa_admin_unlocked_v1';
+
+        async function sha256(text) {
+            const enc = new TextEncoder();
+            const data = enc.encode(text);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function tryRevealAdminWithPrompt() {
+            const existing = localStorage.getItem(ADMIN_PASSPHRASE_KEY);
+            const pass = prompt('Enter admin passphrase to unlock admin controls (this stores a local hash only).');
+            if (!pass) return;
+            const h = await sha256(pass);
+            if (existing) {
+                if (h === existing) {
+                    sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
+                    revealAdminUI(true);
+                    alert('Admin unlocked for this session.');
+                } else {
+                    alert('Passphrase does not match.');
+                }
+            } else {
+                // first-time: confirm and store hash locally
+                const ok = confirm('No local admin passphrase found. Save this passphrase locally (only its hash) so you can unlock later?');
+                if (ok) {
+                    localStorage.setItem(ADMIN_PASSPHRASE_KEY, h);
+                    sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
+                    revealAdminUI(true);
+                    alert('Passphrase saved locally and admin unlocked for this session.');
+                }
+            }
+        }
+
+        function revealAdminUI(show) {
+            document.querySelectorAll('.admin-only').forEach(el => {
+                el.style.display = show ? '' : 'none';
+            });
+        }
+
+        // On load, check session
+        if (sessionStorage.getItem(ADMIN_SESSION_KEY) === '1') {
+            revealAdminUI(true);
+        }
+
+        window.addEventListener('keydown', async (e) => {
+            if (e.ctrlKey && e.shiftKey && e.code === 'KeyA') {
+                e.preventDefault();
+                await tryRevealAdminWithPrompt();
+            }
+        });
+
+        // ====== Quiz and Summarize handlers ======
+        function summarizeText(text, maxSentences = 4) {
+            // naive summarization: pick first N sentences with length > 20
+            const sent = text.replace(/\s+/g, ' ').split(/[.؟!?]+\s+/).filter(s => s.trim().length > 20);
+            return sent.slice(0, maxSentences).map(s => s.trim()).join('. ') + (sent.length > maxSentences ? '...' : '');
+        }
+
+        function generateQuizFromText(text, count = 5) {
+            // very naive quiz generation: find declarative sentences and turn into questions
+            const sentences = text.replace(/\s+/g, ' ').split(/[.؟!?]+\s+/).filter(s => s.trim().length > 30);
+            const out = [];
+            for (let i = 0; i < sentences.length && out.length < count; i++) {
+                const s = sentences[i].trim();
+                // try simple transformations
+                if (/\b(هو|هي|هم|تكون|يكون|تساعد|يعمل)\b/.test(s)) {
+                    out.push({
+                        q: s.replace(/\b(هو|هي|هم|تكون|يكون|تساعد|يعمل)\b/, '؟ ما الذي $&') + '?',
+                        a: s
+                    });
+                } else if (/\b(الـ|ال|في|على|مع)\b/.test(s)) {
+                    // make a blank
+                    const words = s.split(' ');
+                    if (words.length > 6) {
+                        const idx = Math.min(3, words.length - 3);
+                        const answer = words.slice(idx, idx + 2).join(' ');
+                        words.splice(idx, 2, '____');
+                        out.push({ q: words.join(' ') + ' ?', a: answer });
+                    }
+                } else {
+                    // fallback: "What is ..." question
+                    const short = s.split(' ').slice(0, 8).join(' ');
+                    out.push({ q: `ما المقصود بـ: "${short}..."؟`, a: s });
+                }
+            }
+            // pad if necessary
+            while (out.length < count) {
+                out.push({ q: `سؤال تعبوي ${out.length + 1}`, a: 'إجابة نموذجية' });
+            }
+            return out;
+        }
+
+        // wire buttons
+        document.addEventListener('DOMContentLoaded', () => {
+            const genBtn = document.getElementById('generate-quiz');
+            const sumBtn = document.getElementById('summarize-page');
+
+            genBtn?.addEventListener('click', async () => {
+                const pageText = document.body.innerText || document.querySelector('main')?.innerText || '';
+                const quiz = generateQuizFromText(pageText, 5);
+                appendMessage({ role: 'assistant', text: 'توليد اختبار من الصفحة:' });
+                quiz.forEach((item, idx) => {
+                    appendMessage({ role: 'assistant', text: `${idx + 1}. ${item.q}\n
+الإجابة: ${item.a}` });
+                });
+            });
+
+            sumBtn?.addEventListener('click', async () => {
+                const pageText = document.body.innerText || document.querySelector('main')?.innerText || '';
+                const summary = summarizeText(pageText, 4);
+                appendMessage({ role: 'assistant', text: `ملخص الصفحة:\n${summary}` });
+            });
+        });
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
@@ -564,13 +681,17 @@
 
                             <div class="p-4 border-t bg-white">
                                     <div class="flex gap-3">
-                                    <textarea id="qa-input" rows="2" class="flex-1 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" placeholder="اكتب سؤالك هنا... مثال: كيف أراجع قبل الاختبار بأسبوع؟"></textarea>
-                                    <div class="flex flex-col gap-2">
-                                        <button id="qa-submit" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-md">أرسل</button>
-                                        <button id="add-answer" class="bg-green-600 text-white font-bold py-2 px-4 rounded-md admin-only" title="أضف إجابة مخصصة للسؤال الحالي" style="display:none">أضف إجابة</button>
+                                        <textarea id="qa-input" rows="2" class="flex-1 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" placeholder="اكتب سؤالك هنا... مثال: كيف أراجع قبل الاختبار بأسبوع؟"></textarea>
+                                        <div class="flex flex-col gap-2">
+                                            <button id="qa-submit" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-md">أرسل</button>
+                                            <button id="add-answer" class="bg-green-600 text-white font-bold py-2 px-4 rounded-md admin-only" title="أضف إجابة مخصصة للسؤال الحالي" style="display:none">أضف إجابة</button>
+                                        </div>
                                     </div>
-                                </div>
-                                <div id="chat-sources" class="mt-3 text-xs text-gray-500"></div>
+                                    <div class="flex gap-3 mt-3">
+                                        <button id="generate-quiz" class="bg-indigo-600 text-white py-2 px-3 rounded-md text-sm">توليد اختبار (5 أسئلة)</button>
+                                        <button id="summarize-page" class="bg-gray-100 text-gray-800 py-2 px-3 rounded-md text-sm">تلخيص الصفحة</button>
+                                    </div>
+                                    <div id="chat-sources" class="mt-3 text-xs text-gray-500"></div>
                             </div>
                         </div>
                     </div>
