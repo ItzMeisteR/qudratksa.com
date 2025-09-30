@@ -504,36 +504,54 @@
             <div class="container mx-auto px-6">
                 <h2 class="section-title">
                     <div class="flex items-center gap-4">
-                        <i data-lucide="sparkles" class="w-10 h-10 text-blue-600" alt="أيقونة مساعدك الذكي"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-blue-600" aria-hidden="true" role="img"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M9.09 9a3 3 0 1 1 5.82 0c0 1.657-3 2.5-3 4" /></svg>
                         <span>مساعدك الذكي لشرح القدرات</span>
                     </div>
                 </h2>
-                <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
-                    هل لديك سؤال محير؟ هل تحتاج إلى شرح لمفهوم صعب في الكمي أو اللفظي؟ استخدم مساعدنا الذكي للحصول على إجابات فورية ودعم مخصص في رحلة استعدادك.
-                </p>
+
+                <p class="text-center text-gray-600 mb-6 max-w-3xl mx-auto">هذا المساعد يجيب فقط استنادًا إلى معلومات الموقع وبياناتك التي تضيفها هنا. رجاءً أكمل نموذج الإعداد الأولي لتدريب المساعد على الإجابة بشكل أدق.</p>
 
                 <div class="max-w-4xl mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-2xl border border-gray-200">
-                    <div class="border-b border-gray-200 mb-6 overflow-x-auto">
-                        <div class="flex">
-                            <button id="tab-qa" class="tab-button ai-tab-button active">اسأل خبير</button>
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="text-sm text-gray-700">اضغط على "إعداد المساعد" لملء 20 سؤالًا شائعًا لدى طلاب القدرات. يمكن تعديل الإجابات لاحقًا.</div>
+                        <div class="flex gap-3">
+                            <button id="open-training" class="inline-block bg-yellow-400 text-black font-semibold py-2 px-4 rounded-md hover:brightness-95">إعداد المساعد</button>
+                            <button id="clear-training" class="inline-block bg-red-100 text-red-700 font-semibold py-2 px-4 rounded-md">مسح البيانات</button>
                         </div>
                     </div>
 
-                    <div id="ai-content">
-                        <div id="content-qa" class="ai-tab-content">
-                            <p class="text-sm text-gray-500 mb-4">اطرح أي سؤال يخطر ببالك حول اختبار القدرات، من مواعيد التسجيل إلى استراتيجيات الحل.</p>
-                            <textarea id="qa-input" class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" rows="3" placeholder="مثال: ما هي أفضل طريقة لمراجعة الجزء الكمي في الأسبوع الأخير؟"></textarea>
-                            <button id="qa-submit" class="w-full mt-4 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 flex items-center justify-center h-14">
-                                <span class="button-text">احصل على إجابة</span>
-                                <div class="loader hidden"></div>
-                            </button>
+                    <div id="qa-ui">
+                        <p class="text-sm text-gray-500 mb-4">اسأل أي شيء عن اختبار القدرات؛ المساعد سيبحث أولاً في إجاباتك المضافة ثم في محتوى الموقع.</p>
+                        <textarea id="qa-input" class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" rows="3" placeholder="مثال: ما الفرق بين الاختبار المحوسب والورقي؟"></textarea>
+                        <div class="flex gap-3 mt-4">
+                            <button id="qa-submit" class="flex-1 bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700">احصل على إجابة</button>
+                            <button id="add-answer" class="bg-green-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700" title="أضف إجابة مخصصة للسؤال الحالي">أضف إجابة</button>
                         </div>
-                        <!-- explain and generate features removed by request; only QA remains -->
-                    </div>
 
-                    <div id="ai-response-area" class="mt-6 border-t border-gray-200 pt-6">
-                        <h4 class="font-bold text-lg mb-4">إجابة المساعد الذكي:</h4>
-                        <div id="ai-response-content" class="bg-gray-50 p-4 rounded-md min-h-[100px] text-gray-700 whitespace-pre-wrap">...ستظهر الإجابة هنا</div>
+                        <div id="ai-response-area" class="mt-6 border-t border-gray-200 pt-6">
+                            <h4 class="font-bold text-lg mb-4">إجابة المساعد الذكي:</h4>
+                            <div id="ai-response-content" class="bg-gray-50 p-4 rounded-md min-h-[120px] text-gray-700 whitespace-pre-wrap">...ستظهر الإجابة هنا</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Training modal (hidden) -->
+                <div id="training-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+                    <div class="bg-white max-w-3xl w-full p-6 rounded-md shadow-lg mx-4 overflow-auto max-h-[80vh]">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-bold">نموذج إعداد المساعد — 20 سؤالاً شائعاً</h3>
+                            <button id="close-training" class="text-gray-500">إغلاق</button>
+                        </div>
+                        <form id="training-form" class="space-y-4">
+                            <p class="text-sm text-gray-600">أجب عن الأسئلة التالية إن وُجدت لديك إجابات. يمكنك ترك أي خانة فارغة للانتقال لاحقاً.</p>
+                            <div id="training-questions" class="grid grid-cols-1 gap-3">
+                                <!-- Questions will be injected here -->
+                            </div>
+                            <div class="flex gap-3 mt-4">
+                                <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-md">حفظ الإجابات</button>
+                                <button id="skip-training" type="button" class="bg-gray-100 text-gray-700 py-2 px-4 rounded-md">تخطي الآن</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -751,6 +769,143 @@
                 document.querySelectorAll('#mobile-menu a').forEach(link => { link.addEventListener('click', () => { mobileMenu.classList.add('hidden'); }); });
             }
         });
+
+        // --- AI assistant training & QA logic ---
+        (function(){
+            const QUESTIONS = [
+                'ما الفرق بين الاختبار المحوسب والورقي؟',
+                'كيف وأسجل في اختبار القدرات؟',
+                'ما هي أفضل المصادر للمذاكرة؟',
+                'ماذا أحضر يوم الاختبار؟',
+                'كم عدد المحاولات المتاحة؟',
+                'كيف أحسب النسبة الموزونة؟',
+                'متى تفتح فترات التسجيل؟',
+                'ما استراتيجية الوقت في الاختبار؟',
+                'كيف أتعامل مع استيعاب المقروء؟',
+                'ما هي أهم الأخطاء التي يجب تجنبها؟',
+                'هل توجد نماذج محوسب؟ أين أجدها؟',
+                'ما الفرق بين الأسئلة السهلة والصعبة؟',
+                'كيف أراجع قبل الاختبار بأسبوع؟',
+                'ما هي رسوم الاختبار؟',
+                'هل يمكن تغيير موعد الاختبار؟',
+                'أين أجد مواعيد ومراكز الاختبار؟',
+                'هل يوجد وقت مخصص للراحة أثناء الاختبار؟',
+                'كيف أحسب درجاتي بعد الاختبار؟',
+                'ما النصيحة للتركيز أثناء الاختبار؟',
+                'هل النتائج تظهر سريعا؟'
+            ];
+
+            function kbKey() { return 'qudratksa_kb_v1'; }
+            function loadKB() { try { return JSON.parse(localStorage.getItem(kbKey()) || '{}'); } catch(e){ return {}; } }
+            function saveKB(kb){ localStorage.setItem(kbKey(), JSON.stringify(kb)); }
+            function clearKB(){ localStorage.removeItem(kbKey()); }
+
+            // Populate the training questions in the modal
+            const trainingModal = document.getElementById('training-modal');
+            const trainingQuestionsDiv = document.getElementById('training-questions');
+            if (trainingQuestionsDiv) {
+                trainingQuestionsDiv.innerHTML = QUESTIONS.map((q,i) => `
+                    <div class="border p-3 rounded-md">
+                        <label class="font-semibold">${i+1}. ${q}</label>
+                        <textarea data-q-index="${i}" class="w-full mt-2 p-2 border rounded-md" rows="2" placeholder="أضف إجابتك أو اتركها فارغة"></textarea>
+                    </div>
+                `).join('');
+            }
+
+            // Open/close modal
+            const openBtn = document.getElementById('open-training');
+            const closeBtn = document.getElementById('close-training');
+            const skipBtn = document.getElementById('skip-training');
+            const trainingForm = document.getElementById('training-form');
+            const clearBtn = document.getElementById('clear-training');
+
+            if (openBtn && trainingModal) openBtn.addEventListener('click', () => { trainingModal.classList.remove('hidden'); trainingModal.classList.add('flex'); });
+            if (closeBtn && trainingModal) closeBtn.addEventListener('click', () => { trainingModal.classList.add('hidden'); trainingModal.classList.remove('flex'); });
+            if (skipBtn && trainingModal) skipBtn.addEventListener('click', () => { trainingModal.classList.add('hidden'); trainingModal.classList.remove('flex'); });
+            if (clearBtn) clearBtn.addEventListener('click', () => { if (confirm('مسح جميع بيانات المساعد؟')){ clearKB(); alert('تم المسح'); } });
+
+            if (trainingForm) trainingForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const kb = loadKB();
+                const areas = trainingForm.querySelectorAll('textarea[data-q-index]');
+                areas.forEach(area => {
+                    const idx = area.getAttribute('data-q-index');
+                    const q = QUESTIONS[idx];
+                    const ans = area.value && area.value.trim();
+                    if (ans) kb[q] = ans;
+                });
+                saveKB(kb);
+                trainingModal.classList.add('hidden'); trainingModal.classList.remove('flex');
+                alert('تم حفظ إجاباتك. المساعد الآن يستخدم هذه المعلومات عند الإجابة.');
+            });
+
+            // QA behavior: search KB first, then the page text (document.body.innerText)
+            function findInKB(question){
+                const kb = loadKB();
+                // simple exact or substring match
+                for (const q in kb){
+                    try{
+                        const norm = q.replace(/\s+/g,'').toLowerCase();
+                        const normQ = question.replace(/\s+/g,'').toLowerCase();
+                        if (normQ.includes(norm) || norm.includes(normQ) || normQ === norm) return kb[q];
+                    }catch(e){}
+                }
+                return null;
+            }
+
+            function findInSite(question){
+                try{
+                    const text = document.body.innerText || '';
+                    const q = question.split(/\s+/).slice(0,6).join(' ');
+                    const idx = text.indexOf(q);
+                    if (idx !== -1) {
+                        // return surrounding snippet
+                        const start = Math.max(0, idx-120);
+                        return text.substring(start, Math.min(text.length, idx+300)).trim();
+                    }
+                    // fallback: search sentence containing keywords
+                    const keywords = question.split(/\s+/).slice(0,3);
+                    for (const kw of keywords){
+                        const pos = text.indexOf(kw);
+                        if (pos>-1) return text.substring(Math.max(0,pos-120), Math.min(text.length,pos+300)).trim();
+                    }
+                }catch(e){}
+                return null;
+            }
+
+            // QA submit and add-answer
+            const qaSubmit = document.getElementById('qa-submit');
+            const qaInput = document.getElementById('qa-input');
+            const aiResponseContent = document.getElementById('ai-response-content');
+            const addAnswerBtn = document.getElementById('add-answer');
+
+            if (qaSubmit && qaInput && aiResponseContent){
+                qaSubmit.addEventListener('click', () => {
+                    const q = qaInput.value && qaInput.value.trim();
+                    if (!q){ aiResponseContent.textContent = 'الرجاء كتابة السؤال أولاً.'; return; }
+                    aiResponseContent.textContent = '';
+                    // 1) KB
+                    const kbAns = findInKB(q);
+                    if (kbAns){ aiResponseContent.textContent = kbAns; return; }
+                    // 2) site text
+                    const siteAns = findInSite(q);
+                    if (siteAns){ aiResponseContent.textContent = siteAns; return; }
+                    aiResponseContent.textContent = 'لم أجد إجابة في بياناتك أو في محتوى الموقع. يمكنك إضافة إجابة مخصصة بالضغط على "أضف إجابة".';
+                });
+            }
+
+            if (addAnswerBtn && qaInput){
+                addAnswerBtn.addEventListener('click', ()=>{
+                    const q = qaInput.value && qaInput.value.trim();
+                    if (!q){ alert('الرجاء كتابة السؤال أولا'); return; }
+                    const ans = prompt('أضف الإجابة التي تريد أن يتعلمها المساعد لهذا السؤال:');
+                    if (ans && ans.trim()){
+                        const kb = loadKB(); kb[q] = ans.trim(); saveKB(kb);
+                        alert('تمت الإضافة. المساعد سيستخدم هذه الإجابة لاحقاً.');
+                    }
+                });
+            }
+        })();
 
         function calculateWeightedScore() {
             const hsPercent = parseFloat(document.getElementById('hs-percent').value) || 0;
