@@ -667,12 +667,65 @@
                 } catch (err) { /* ignore */ }
             });
 
-            // --- AI assistant: simple QA handler (client-side fallback) ---
+            // --- AI assistant: improved rule-based QA handler (client-side fallback) ---
             try {
                 const qaSubmit = document.getElementById('qa-submit');
                 const qaInput = document.getElementById('qa-input');
                 const aiResponseContent = document.getElementById('ai-response-content');
                 const loader = qaSubmit ? qaSubmit.querySelector('.loader') : null;
+
+                const canned = [
+                    {
+                        patterns: [/\bمتى\b|\bمواعيد\b|\bمتى يفتح/i],
+                        answer: 'التسجيل للاختبار المحوسب متاح طوال العام حسب توفر المقاعد في المراكز. الاختبار الورقي يُعلن عنه بفترات محددة. تابع موقع هيئة تقويم التعليم والتدريب (قياس) لمعرفة المواعيد والمراكز.'
+                    },
+                    {
+                        patterns: [/مصادر|المصادر|كتب|دورات|تجميعات/i],
+                        answer: 'ابدأ بالتجميعات الحديثة ونماذج المحوسب، وراجع شروحات القواعد الأساسية في القسم اللفظي (تناظر، استيعاب) والقواعد الحسابية في الكمي. دورات قصيرة مركزة وحل نماذج فعّال جداً.'
+                    },
+                    {
+                        patterns: [/فرق بين|الفرق بين|محوسب و?ورقي|محوسب و ورقي/i],
+                        answer: 'الاختبار المحوسب يُعقد في مراكز مع أجهزة حاسوب وهو أكثر مرونة في المواعيد والنتائج أسرع، أما الاختبار الورقي فله مواعيد محددة ونتائجه قد تستغرق وقتاً أطول. صعوبة الأسئلة موحدة.'
+                    },
+                    {
+                        patterns: [/ماذا أحضر|ماذا احضر|ماذا آخذ|ما أحضر/i],
+                        answer: 'أحضر الأصل من الهوية الوطنية أو جواز السفر ونسخة من تأكيد التسجيل إن طُلب، واحضر أدواتك الشخصية وكن في المركز مبكراً.'
+                    },
+                    {
+                        patterns: [/نسبة|موزونة|حساب الموزونة|النسبة الموزونة/i],
+                        answer: 'اضرب كل درجة في وزنها (مثلاً 40% للقسم الكمي، 60% للقسم اللفظي) ثم اجمع النتائج لتحصل على الدرجة الموزونة. تأكد من أن مجموع النسب يساوي 100%.'
+                    },
+                    {
+                        patterns: [/استيعاب|تناظر|الكلمات المفتاحية|خطأ سياقي/i],
+                        answer: 'اقرأ الفقرة بالكامل، حدّد الجملة أو العبارة التي يرتبط بها السؤال، وابحث عن دلائل في النص تدعم الإجابة. تدرّب على اختصار الفقرة للعثور على الكلمات المفتاحية.'
+                    },
+                    {
+                        patterns: [/تسريبات|تسريب/i],
+                        answer: 'التسريبات غير موثوقة وغير قانونية. ركز على التحضير الصحيح بالمواد الموثوقة والتدريب على نماذج سابقة.'
+                    },
+                    {
+                        patterns: [/أحسن|أفضل طريقة|كيف أذاكر|كيف أراجع/i],
+                        answer: 'قسم وقتك، ابدأ بالتأسيس ثم حلّ نماذج محوسب؛ راجع الأخطاء، ركّز على إدارة الوقت، واستخدم ملخصات القواعد ونماذج المحوسب للتدريب.'
+                    }
+                ];
+
+                function findCannedAnswer(q) {
+                    const normalized = q.replace(/[\u064B-\u0652]/g, '').trim(); // remove Arabic diacritics
+                    for (const item of canned) {
+                        for (const pat of item.patterns) {
+                            try {
+                                if (pat.test(normalized)) return item.answer;
+                            } catch (e) { /* ignore */ }
+                        }
+                    }
+                    // try simple keyword matching
+                    const low = normalized.toLowerCase();
+                    if (low.includes('متى') || low.includes('مواعيد')) return canned[0].answer;
+                    if (low.includes('مصادر') || low.includes('كتب')) return canned[1].answer;
+                    if (low.includes('محوسب') && low.includes('ورقي')) return canned[2].answer;
+                    return null;
+                }
+
                 if (qaSubmit && qaInput && aiResponseContent) {
                     qaSubmit.addEventListener('click', async function() {
                         const q = qaInput.value.trim();
@@ -682,21 +735,9 @@
                         }
                         if (loader) loader.classList.remove('hidden');
                         aiResponseContent.textContent = '';
-                        // Simple keyword-based canned responses for offline/demo use
-                        await new Promise(r => setTimeout(r, 600));
-                        const low = q.toLowerCase();
-                        let answer = '';
-                        if (low.includes('متى') || low.includes('مواعيد')) {
-                            answer = 'التسجيل متاح للاختبار المحوسب طوال العام حسب توفر المقاعد. الاختبار الورقي يتم إعلانه بفترات محددة.';
-                        } else if (low.includes('المصادر') || low.includes('مصادر')) {
-                            answer = 'ننصح ببدء المراجعة من التجميعات الحديثة، ومتابعة دورات تركز على القسم الكمي واللفظي مع نماذج محوسب.';
-                        } else if (low.includes('نسبة') || low.includes('درجات')) {
-                            answer = 'لحساب النسبة الموزونة، اجمع نسب المكونات (مثل 40%+60%) وتأكد أن مجموعها 100%، ثم اضرب الدرجات بكل نسبة.';
-                        } else if (low.includes('استيعاب') || low.includes('تناظر')) {
-                            answer = 'اقرأ الفقرة كاملة ثم عد إلى السؤال؛ ابحث عن الكلمات المفتاحية والروابط المنطقية داخل الفقرة.';
-                        } else {
-                            answer = 'هذه إجابة عامة، إذا أردت إجابة أكثر دقة اذكر تفاصيل السؤال أو أضف مثالاً.';
-                        }
+                        // Small simulated processing delay
+                        await new Promise(r => setTimeout(r, 400));
+                        const answer = findCannedAnswer(q) || 'هذه إجابة عامة. لإجابة أدق أذكر سياق السؤال أو مثالاً محدداً (مثلاً: "كم يتبقى لي من الوقت للمذاكرة قبل الاختبار؟").';
                         aiResponseContent.textContent = answer;
                         if (loader) loader.classList.add('hidden');
                     });
