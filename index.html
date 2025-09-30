@@ -61,9 +61,15 @@
 
         // ====== Quiz and Summarize handlers ======
         function summarizeText(text, maxSentences = 4) {
-            // naive summarization: pick first N sentences with length > 20
-            const sent = text.replace(/\s+/g, ' ').split(/[.؟!?]+\s+/).filter(s => s.trim().length > 20);
-            return sent.slice(0, maxSentences).map(s => s.trim()).join('. ') + (sent.length > maxSentences ? '...' : '');
+            // naive summarization: pick up to N meaningful sentences (Arabic punctuation considered)
+            if (!text || !text.trim()) return '';
+            const normalized = text.replace(/\s+/g, ' ').trim();
+            const parts = normalized.split(/(?<=[.؟!\n])\s+/);
+            const sent = parts.map(p => p.trim()).filter(s => s.length > 30);
+            const chosen = sent.slice(0, maxSentences);
+            let out = chosen.join(' ');
+            if (!out && normalized.length > 120) out = normalized.substring(0, 200) + '...';
+            return out;
         }
 
         function generateQuizFromText(text, count = 5) {
@@ -860,11 +866,59 @@
                 const saveEndpointBtn = document.getElementById('save-endpoint');
                 const chatSources = document.getElementById('chat-sources');
 
-                // local storage helpers (KB)
+                // local storage helpers (KB) - structured entries: { answer: string, keywords: [str] }
                 function kbKey() { return 'qudratksa_kb_v1'; }
-                function loadKB() { try { return JSON.parse(localStorage.getItem(kbKey()) || '{}'); } catch(e){ return {}; } }
+                function loadKB() {
+                    try {
+                        const raw = JSON.parse(localStorage.getItem(kbKey()) || '{}');
+                        const out = {};
+                        for (const k of Object.keys(raw || {})) {
+                            const v = raw[k];
+                            if (v && typeof v === 'string') {
+                                out[k] = { answer: v, keywords: extractKeywordsFromQuestion(k) };
+                            } else if (v && v.answer) {
+                                out[k] = v;
+                            }
+                        }
+                        return out;
+                    } catch (e) { return {}; }
+                }
                 function saveKB(kb){ localStorage.setItem(kbKey(), JSON.stringify(kb)); }
                 function clearKB(){ localStorage.removeItem(kbKey()); }
+
+                // Tokenization & keyword helpers
+                function tokenize(text){
+                    if (!text) return [];
+                    const stop = ['في','من','على','و','ما','هل','كيف','لم','لن','الى','إلى','عن','أن','إن','الذي','التي','هذا','هذه','ذلك','تلك','مع','لـ','لا','يا','بعد','قبل','كما','قد','كل'];
+                    const cleaned = text.replace(/[\u064B-\u0652\u061F\u060C\u061B.,!?"'()\[\]«»<>:؛\-\/\\]/g,' ').toLowerCase();
+                    return cleaned.split(/\s+/).map(s=>s.trim()).filter(s=>s.length>2 && !stop.includes(s));
+                }
+
+                function extractKeywordsFromQuestion(q){
+                    const toks = tokenize(q || '');
+                    const uniq = [...new Set(toks)];
+                    return uniq.slice(0,6);
+                }
+
+                // fuzzy KB match based on keyword overlap
+                function findBestKBMatch(question){
+                    const kb = loadKB();
+                    const qKeys = extractKeywordsFromQuestion(question);
+                    if (!qKeys.length) return null;
+                    let best = null; let bestScore = 0;
+                    for (const k of Object.keys(kb)){
+                        try{
+                            const entry = kb[k];
+                            const entryKeys = entry.keywords || extractKeywordsFromQuestion(k);
+                            const common = entryKeys.filter(x=>qKeys.includes(x)).length;
+                            const denom = Math.max(1, Math.round((entryKeys.length + qKeys.length)/2));
+                            const score = common/denom;
+                            if (score > bestScore){ bestScore = score; best = {question: k, entry, score}; }
+                        }catch(e){}
+                    }
+                    if (best && (best.score >= 0.3 || question.replace(/\s+/g,'').toLowerCase().includes(best.question.replace(/\s+/g,'').toLowerCase()))) return best;
+                    return null;
+                }
 
                 // endpoint persistence (client-side only)
                 const endpointKey = 'qudratksa_ai_endpoint_v1';
@@ -982,7 +1036,7 @@
                             return;
                         }
 
-                        // second: site
+                        // second: site (clean, user-friendly summary + source)
                         const siteHit = findInSite(q);
                         if (siteHit){
                             const endpoint = loadEndpoint();
@@ -993,7 +1047,14 @@
                                     return;
                                 }
                             }
-                            replaceAssistantPlaceholder(siteHit.answer, [siteHit.source]);
+                            // create a short, clean Arabic summary from the snippet
+                            try {
+                                const short = summarizeText(siteHit.answer, 2).trim();
+                                const formatted = (short ? short : siteHit.answer) + '\n\nالمصدر: الموقع';
+                                replaceAssistantPlaceholder(formatted, [siteHit.source]);
+                            } catch(e){
+                                replaceAssistantPlaceholder(siteHit.answer, [siteHit.source]);
+                            }
                             return;
                         }
 
@@ -1007,21 +1068,24 @@
                             }
                         }
 
-                        // last resort: heuristic fallback
-                        replaceAssistantPlaceholder('لم أجد إجابة محددة في الموقع أو في بياناتك. يمكنك إضافة إجابة مخصصة أو تزويد المساعد بسياق إضافي.', []);
+                        // last resort: friendly fallback with next-step suggestion
+                        replaceAssistantPlaceholder('لم أجد إجابة مباشرة في بياناتك أو في محتوى الموقع. يمكنك:\n1) إضافة إجابة مخصصة الآن عبر زر "أضف إجابة" (للإجابة القادمة)،\n2) أو السماح لي بتجربة توليد إجابة أعمق باستخدام نموذج خارجي إذا قمت بتوصيل نقطة نهاية خادم في الإعدادات.', []);
                     });
                 }
 
-                // add-answer quick flow (store to KB)
+                // add-answer quick flow (store to KB) with optional keywords
                 if (addAnswerBtn && qaInput){
                     addAnswerBtn.addEventListener('click', ()=>{
                         const q = qaInput.value && qaInput.value.trim();
                         if (!q){ alert('الرجاء كتابة السؤال أولا'); return; }
                         const ans = prompt('أضف الإجابة التي تريد أن يتعلمها المساعد لهذا السؤال:');
-                        if (ans && ans.trim()){
-                            const kb = loadKB(); kb[q] = ans.trim(); saveKB(kb);
-                            alert('تمت الإضافة. المساعد سيستخدم هذه الإجابة لاحقاً.');
-                        }
+                        if (!ans || !ans.trim()) return;
+                        let kws = prompt('اكتب كلمات مفتاحية مفصولة بفواصل (اختياري)، أو اتركها لاقتراح تلقائي:');
+                        let kwList = [];
+                        if (kws && kws.trim()) kwList = kws.split(',').map(s=>s.trim()).filter(Boolean);
+                        else kwList = extractKeywordsFromQuestion(q);
+                        const kb = loadKB(); kb[q] = { answer: ans.trim(), keywords: kwList }; saveKB(kb);
+                        alert('تمت الإضافة. المساعد سيستخدم هذه الإجابة لاحقاً.');
                     });
                 }
 
@@ -1030,15 +1094,23 @@
                         const kb = loadKB();
                         const keys = Object.keys(kb);
                         if (!keys.length){ alert('لا توجد إجابات محفوظة.'); return; }
-                        // open small editor modal (using prompt loop for simplicity)
                         let idx = 0;
                         function editNext(){
                             if (idx >= keys.length) return alert('انتهى التحرير.');
                             const k = keys[idx];
-                            const cur = kb[k];
-                            const updated = prompt(`سؤال:\n${k}\n\nالإجابة الحالية:\n${cur}\n\nضع الإجابة الجديدة أو اضغط إلغاء للحفاظ عليها`);
-                            if (updated === null){ idx++; editNext(); return; }
-                            kb[k] = updated.trim(); idx++; editNext();
+                            const curEntry = kb[k];
+                            const curAns = curEntry && curEntry.answer ? curEntry.answer : '';
+                            const curKws = (curEntry && curEntry.keywords) ? curEntry.keywords.join(', ') : '';
+                            const updated = prompt(`سؤال:\n${k}\n\nالإجابة الحالية:\n${curAns}\n\nكلمات مفتاحية:\n${curKws}\n\nضع الإجابة الجديدة أو اضغط إلغاء للحفاظ عليها`);
+                            if (updated === null){
+                                const kwUpdated = prompt('ضع كلمات مفتاحية جديدة مفصولة بفواصل (إترك فارغاً للحفاظ):', curKws);
+                                if (kwUpdated !== null && kwUpdated.trim()) { curEntry.keywords = kwUpdated.split(',').map(s=>s.trim()).filter(Boolean); saveKB(kb); }
+                                idx++; editNext(); return;
+                            }
+                            curEntry.answer = updated.trim();
+                            const kwAsk = prompt('ضع كلمات مفتاحية جديدة مفصولة بفواصل (اختياري):', curKws);
+                            if (kwAsk !== null && kwAsk.trim()) curEntry.keywords = kwAsk.split(',').map(s=>s.trim()).filter(Boolean);
+                            kb[k] = curEntry; idx++; editNext();
                         }
                         editNext();
                         saveKB(kb);
@@ -1147,7 +1219,7 @@
                     const idx = area.getAttribute('data-q-index');
                     const q = QUESTIONS[idx];
                     const ans = area.value && area.value.trim();
-                    if (ans) kb[q] = ans;
+                    if (ans) kb[q] = { answer: ans, keywords: extractKeywordsFromQuestion(q) };
                 });
                 saveKB(kb);
                 trainingModal.classList.add('hidden'); trainingModal.classList.remove('flex');
