@@ -108,11 +108,11 @@
             genBtn?.addEventListener('click', async () => {
                 const pageText = document.body.innerText || document.querySelector('main')?.innerText || '';
                 const quiz = generateQuizFromText(pageText, 5);
-                appendMessage({ role: 'assistant', text: 'توليد اختبار من الصفحة:' });
+                let out = 'توليد اختبار من الصفحة:\n\n';
                 quiz.forEach((item, idx) => {
-                    appendMessage({ role: 'assistant', text: `${idx + 1}. ${item.q}\n
-الإجابة: ${item.a}` });
+                    out += `${idx + 1}. ${item.q}\nالإجابة: ${item.a}\n\n`;
                 });
+                appendMessage({ role: 'assistant', text: out });
             });
 
             sumBtn?.addEventListener('click', async () => {
@@ -226,9 +226,11 @@
             /* Modern chat styles for AI assistant */
             .chat-card { border-radius: 12px; overflow: hidden; box-shadow: 0 8px 30px rgba(2,6,23,0.08); }
             #chat-messages { padding: 18px; display:flex; flex-direction:column; gap:12px; }
-            .msg { max-width: 78%; padding:12px 14px; border-radius:12px; line-height:1.45; }
-            .msg.user { margin-left:auto; background:linear-gradient(90deg,#2563eb,#4f46e5); color:white; }
-            .msg.assistant { margin-right:auto; background: white; border:1px solid #e6e6ee; color:#0f172a; }
+            .msg { max-width: 86%; padding:12px 14px; border-radius:12px; line-height:1.45; word-break:break-word; }
+            /* use flex alignment so RTL/LTR behave correctly */
+            .msg.user { align-self: flex-end; background:linear-gradient(90deg,#2563eb,#4f46e5); color:white; }
+            .msg.assistant { align-self: flex-start; background: white; border:1px solid #e6e6ee; color:#0f172a; }
+            .msg .content { white-space: pre-wrap; }
             .msg .sources { font-size:11px; color:#6b7280; margin-top:6px; }
             .loader-dot { width:8px; height:8px; background:#c7d2fe; border-radius:50%; display:inline-block; margin-right:6px; animation: loaderPulse 1s infinite ease-in-out; }
             @keyframes loaderPulse { 0% { transform: scale(1); opacity:1 } 50% { transform: scale(0.7); opacity:0.6 } 100% { transform: scale(1); opacity:1 } }
