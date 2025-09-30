@@ -622,9 +622,10 @@
                 });
             });
 
-            // If page opened with a hash (e.g. /#planning), convert to path and scroll.
+            // If page opened with a hash (e.g. /#planning), or query (?section=planning), convert/scroll accordingly.
             (function handleInitialHashOrPath() {
                 try {
+                    // 1) If there's a hash fragment, prefer that
                     if (window.location.hash) {
                         const frag = window.location.hash.replace('#', '').replace(/\/$/, '');
                         if (frag) {
@@ -643,6 +644,22 @@
                             }
                         }
                     }
+
+                    // 2) Support query parameter fallback: ?section=<id>
+                    try {
+                        const params = new URLSearchParams(window.location.search);
+                        const section = params.get('section');
+                        if (section) {
+                            const frag = section.replace(/\/$/, '');
+                            const el = document.getElementById(frag);
+                            if (el) {
+                                setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 50);
+                                return;
+                            }
+                        }
+                    } catch (err) { /* ignore */ }
+
+                    // 3) If path-style (e.g. /planning) is used and server served index.html, scroll to it
                     const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
                     if (path) {
                         const el = document.getElementById(path);

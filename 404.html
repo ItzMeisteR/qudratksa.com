@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Redirecting…</title>
+    <script>
+      // If the host serves 404 for unknown paths, this page will capture the path
+      // and redirect to the homepage with ?section=<path> so the SPA can scroll.
+      (function(){
+        try {
+          var path = location.pathname.replace(/^\//,'').replace(/\/$/,'');
+          if (path) {
+            var target = '/' + (location.search || '') + '?section=' + encodeURIComponent(path);
+            // If there's already a query string, prefer preserving it and appending section
+            var search = location.search || '';
+            var params = new URLSearchParams(search);
+            params.set('section', path);
+            location.replace('/?' + params.toString());
+          } else {
+            location.replace('/');
+          }
+        } catch (e) {
+          location.replace('/');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <p>Redirecting… If you are not redirected, <a href="/">click here</a>.</p>
+  </body>
+</html>
