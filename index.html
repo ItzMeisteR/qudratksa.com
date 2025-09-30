@@ -4,129 +4,6 @@
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-9HLP9MNWS9"></script>
     <script>
-        // ====== Admin passphrase unlock (Ctrl+Shift+A) ======
-        const ADMIN_PASSPHRASE_KEY = 'qudratksa_admin_pass_hash_v1';
-        const ADMIN_SESSION_KEY = 'qudratksa_admin_unlocked_v1';
-
-        async function sha256(text) {
-            const enc = new TextEncoder();
-            const data = enc.encode(text);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-
-        async function tryRevealAdminWithPrompt() {
-            const existing = localStorage.getItem(ADMIN_PASSPHRASE_KEY);
-            const pass = prompt('Enter admin passphrase to unlock admin controls (this stores a local hash only).');
-            if (!pass) return;
-            const h = await sha256(pass);
-            if (existing) {
-                if (h === existing) {
-                    sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
-                    revealAdminUI(true);
-                    alert('Admin unlocked for this session.');
-                } else {
-                    alert('Passphrase does not match.');
-                }
-            } else {
-                // first-time: confirm and store hash locally
-                const ok = confirm('No local admin passphrase found. Save this passphrase locally (only its hash) so you can unlock later?');
-                if (ok) {
-                    localStorage.setItem(ADMIN_PASSPHRASE_KEY, h);
-                    sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
-                    revealAdminUI(true);
-                    alert('Passphrase saved locally and admin unlocked for this session.');
-                }
-            }
-        }
-
-        function revealAdminUI(show) {
-            document.querySelectorAll('.admin-only').forEach(el => {
-                el.style.display = show ? '' : 'none';
-            });
-        }
-
-        // On load, check session
-        if (sessionStorage.getItem(ADMIN_SESSION_KEY) === '1') {
-            revealAdminUI(true);
-        }
-
-        window.addEventListener('keydown', async (e) => {
-            if (e.ctrlKey && e.shiftKey && e.code === 'KeyA') {
-                e.preventDefault();
-                await tryRevealAdminWithPrompt();
-            }
-        });
-
-        // ====== Quiz and Summarize handlers ======
-        function summarizeText(text, maxSentences = 4) {
-            // naive summarization: pick up to N meaningful sentences (Arabic punctuation considered)
-            if (!text || !text.trim()) return '';
-            const normalized = text.replace(/\s+/g, ' ').trim();
-            const parts = normalized.split(/(?<=[.؟!\n])\s+/);
-            const sent = parts.map(p => p.trim()).filter(s => s.length > 30);
-            const chosen = sent.slice(0, maxSentences);
-            let out = chosen.join(' ');
-            if (!out && normalized.length > 120) out = normalized.substring(0, 200) + '...';
-            return out;
-        }
-
-        function generateQuizFromText(text, count = 5) {
-            // very naive quiz generation: find declarative sentences and turn into questions
-            const sentences = text.replace(/\s+/g, ' ').split(/[.؟!?]+\s+/).filter(s => s.trim().length > 30);
-            const out = [];
-            for (let i = 0; i < sentences.length && out.length < count; i++) {
-                const s = sentences[i].trim();
-                // try simple transformations
-                if (/\b(هو|هي|هم|تكون|يكون|تساعد|يعمل)\b/.test(s)) {
-                    out.push({
-                        q: s.replace(/\b(هو|هي|هم|تكون|يكون|تساعد|يعمل)\b/, '؟ ما الذي $&') + '?',
-                        a: s
-                    });
-                } else if (/\b(الـ|ال|في|على|مع)\b/.test(s)) {
-                    // make a blank
-                    const words = s.split(' ');
-                    if (words.length > 6) {
-                        const idx = Math.min(3, words.length - 3);
-                        const answer = words.slice(idx, idx + 2).join(' ');
-                        words.splice(idx, 2, '____');
-                        out.push({ q: words.join(' ') + ' ?', a: answer });
-                    }
-                } else {
-                    // fallback: "What is ..." question
-                    const short = s.split(' ').slice(0, 8).join(' ');
-                    out.push({ q: `ما المقصود بـ: "${short}..."؟`, a: s });
-                }
-            }
-            // pad if necessary
-            while (out.length < count) {
-                out.push({ q: `سؤال تعبوي ${out.length + 1}`, a: 'إجابة نموذجية' });
-            }
-            return out;
-        }
-
-        // wire buttons
-        document.addEventListener('DOMContentLoaded', () => {
-            const genBtn = document.getElementById('generate-quiz');
-            const sumBtn = document.getElementById('summarize-page');
-
-            genBtn?.addEventListener('click', async () => {
-                const pageText = document.body.innerText || document.querySelector('main')?.innerText || '';
-                const quiz = generateQuizFromText(pageText, 5);
-                let out = 'توليد اختبار من الصفحة:\n\n';
-                quiz.forEach((item, idx) => {
-                    out += `${idx + 1}. ${item.q}\nالإجابة: ${item.a}\n\n`;
-                });
-                appendMessage({ role: 'assistant', text: out });
-            });
-
-            sumBtn?.addEventListener('click', async () => {
-                const pageText = document.body.innerText || document.querySelector('main')?.innerText || '';
-                const summary = summarizeText(pageText, 4);
-                appendMessage({ role: 'assistant', text: `ملخص الصفحة:\n${summary}` });
-            });
-        });
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
@@ -226,20 +103,6 @@
                         0% { transform: rotate(0deg); }
                         100% { transform: rotate(360deg); }
                 }
-        </style>
-
-        <style>
-            /* Modern chat styles for AI assistant */
-            .chat-card { border-radius: 12px; overflow: hidden; box-shadow: 0 8px 30px rgba(2,6,23,0.08); }
-            #chat-messages { padding: 18px; display:flex; flex-direction:column; gap:12px; }
-            .msg { max-width: 86%; padding:12px 14px; border-radius:12px; line-height:1.45; word-break:break-word; }
-            /* use flex alignment so RTL/LTR behave correctly */
-            .msg.user { align-self: flex-end; background:linear-gradient(90deg,#2563eb,#4f46e5); color:white; }
-            .msg.assistant { align-self: flex-start; background: white; border:1px solid #e6e6ee; color:#0f172a; }
-            .msg .content { white-space: pre-wrap; }
-            .msg .sources { font-size:11px; color:#6b7280; margin-top:6px; }
-            .loader-dot { width:8px; height:8px; background:#c7d2fe; border-radius:50%; display:inline-block; margin-right:6px; animation: loaderPulse 1s infinite ease-in-out; }
-            @keyframes loaderPulse { 0% { transform: scale(1); opacity:1 } 50% { transform: scale(0.7); opacity:0.6 } 100% { transform: scale(1); opacity:1 } }
         </style>
 
         <script type="application/ld+json">
@@ -594,7 +457,7 @@
             <div class="container mx-auto px-6">
                  <h2 class="section-title">
                     <div class="flex items-center gap-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-blue-600" aria-hidden="true" role="img"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M9.09 9a3 3 0 1 1 5.82 0c0 1.657-3 2.5-3 4" /></svg>
+                        <i data-lucide="message-square-question" class="w-10 h-10 text-blue-600" alt="أيقونة الأسئلة"></i>
                         <span>الأسئلة الشائعة عن اختبار القدرات</span>
                     </div>
                 </h2>
@@ -641,87 +504,56 @@
             <div class="container mx-auto px-6">
                 <h2 class="section-title">
                     <div class="flex items-center gap-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-blue-600" aria-hidden="true" role="img"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M9.09 9a3 3 0 1 1 5.82 0c0 1.657-3 2.5-3 4" /></svg>
-                        <span>مساعدك الذكي — دردشة مدعومة بمحتوى الموقع</span>
+                        <i data-lucide="sparkles" class="w-10 h-10 text-blue-600" alt="أيقونة مساعدك الذكي"></i>
+                        <span>مساعدك الذكي لشرح القدرات</span>
                     </div>
                 </h2>
+                <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
+                    هل لديك سؤال محير؟ هل تحتاج إلى شرح لمفهوم صعب في الكمي أو اللفظي؟ استخدم مساعدنا الذكي للحصول على إجابات فورية ودعم مخصص في رحلة استعدادك.
+                </p>
 
-                <p class="text-center text-gray-600 mb-6 max-w-3xl mx-auto">مساعد ذكي مُعاد تصميمه: يتفحص محتوى الموقع والإجابات التي تضيفها ثم يولّد إجابات ذكية. لمزامنة مع نموذج قوي عبر الإنترنت، قم بتوصيل نقطة نهاية خوادم (لن يتم تضمين أي مفاتيح في الكود).</p>
-
-             <!-- ADMIN NOTES: To enable admin/training controls, edit this file.
-                 1) Open this file and locate "ADMIN_ENABLED" (near the AI script). Set it to true.
-                 2) Optionally set your secure server endpoint in the ai-endpoint input (or via code) on the server side.
-                 3) After editing, deploy the changed file. These controls remain hidden by default so normal visitors only see the simple chat.
-             -->
-             <div class="max-w-6xl mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-2xl border border-gray-200">
-                    <div class="grid lg:grid-cols-3 gap-6">
-                        <div class="lg:col-span-1 p-4 border rounded-lg admin-only" style="display:none">
-                            <h3 class="font-bold text-lg mb-3">عن المساعد</h3>
-                            <p class="text-sm text-gray-600 mb-4">يجمع المساعد الأدلة من صفحات الموقع والإجابات التي تضيفها. لإجابات أعمق وذكاء محادثي متقدم، اربط خدمة AI آمنة عبر الخادم.</p>
-                                <div class="mt-4 space-y-3">
-                                <button id="open-training" class="w-full inline-block bg-yellow-400 text-black font-semibold py-2 px-4 rounded-md hover:brightness-95 admin-only" style="display:none">إعداد المساعد</button>
-                                <button id="clear-training" class="w-full inline-block bg-red-100 text-red-700 font-semibold py-2 px-4 rounded-md admin-only" style="display:none">مسح البيانات</button>
-                                <button id="show-kb" class="w-full inline-block bg-gray-100 text-gray-800 font-semibold py-2 px-4 rounded-md admin-only" style="display:none">عرض/تعديل الإجابات المضافة</button>
-                            </div>
-                            <div id="ai-settings" class="mt-6 text-sm text-gray-600 admin-only" style="display:none">
-                                <label class="font-semibold">نقطة نهاية AI (اختياري)</label>
-                                <input id="ai-endpoint" placeholder="https://example.com/api/ai" class="w-full mt-2 p-2 border rounded-md text-sm" />
-                                <p class="text-xs text-gray-400 mt-2">أدخل نقطة نهاية الخادم التي تستدعي نموذج LLM بأمان (الخادم يجب أن يحمل مفتاح الـ API).</p>
-                                <button id="save-endpoint" class="mt-3 w-full bg-blue-600 text-white py-2 rounded-md">حفظ الإعداد</button>
-                            </div>
-                        </div>
-
-                        <div class="lg:col-span-2 p-0 rounded-lg overflow-hidden flex flex-col" style="min-height:420px;">
-                            <div class="flex items-center justify-between p-4 border-b bg-white">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">م</div>
-                                    <div>
-                                        <div class="font-bold">مساعد القدرات</div>
-                                        <div class="text-xs text-gray-500">يجيب اعتماداً على محتوى الموقع وبياناتك المضافة</div>
-                                    </div>
-                                </div>
-                                <div class="text-sm text-gray-500">مصدر: الموقع المحلي + KB</div>
-                            </div>
-
-                            <div id="chat-messages" class="flex-1 p-4 overflow-auto bg-gray-50 space-y-4">
-                                <!-- messages go here -->
-                            </div>
-
-                            <div class="p-4 border-t bg-white">
-                                    <div class="flex gap-3">
-                                        <textarea id="qa-input" rows="2" class="flex-1 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" placeholder="اكتب سؤالك هنا... مثال: كيف أراجع قبل الاختبار بأسبوع؟"></textarea>
-                                        <div class="flex flex-col gap-2">
-                                            <button id="qa-submit" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-md">أرسل</button>
-                                            <button id="add-answer" class="bg-green-600 text-white font-bold py-2 px-4 rounded-md admin-only" title="أضف إجابة مخصصة للسؤال الحالي" style="display:none">أضف إجابة</button>
-                                        </div>
-                                    </div>
-                                    <div class="flex gap-3 mt-3">
-                                        <button id="generate-quiz" class="bg-indigo-600 text-white py-2 px-3 rounded-md text-sm">توليد اختبار (5 أسئلة)</button>
-                                        <button id="summarize-page" class="bg-gray-100 text-gray-800 py-2 px-3 rounded-md text-sm">تلخيص الصفحة</button>
-                                    </div>
-                                    <div id="chat-sources" class="mt-3 text-xs text-gray-500"></div>
-                            </div>
+                <div class="max-w-4xl mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-2xl border border-gray-200">
+                    <div class="border-b border-gray-200 mb-6 overflow-x-auto">
+                        <div class="flex">
+                            <button id="tab-qa" class="tab-button ai-tab-button active" onclick="switchAITab('qa')">اسأل خبير</button>
+                            <button id="tab-explain" class="tab-button ai-tab-button" onclick="switchAITab('explain')">اشرح لي مفهوم</button>
+                            <button id="tab-generate" class="tab-button ai-tab-button" onclick="switchAITab('generate')">أنشئ أسئلة</button>
                         </div>
                     </div>
-                </div>
 
-                <!-- Training modal (hidden) -->
-                <div id="training-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-                    <div class="bg-white max-w-3xl w-full p-6 rounded-md shadow-lg mx-4 overflow-auto max-h-[80vh]">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-xl font-bold">نموذج إعداد المساعد — 20 سؤالاً شائعاً</h3>
-                            <button id="close-training" class="text-gray-500">إغلاق</button>
+                    <div id="ai-content">
+                        <div id="content-qa" class="ai-tab-content">
+                            <p class="text-sm text-gray-500 mb-4">اطرح أي سؤال يخطر ببالك حول اختبار القدرات، من مواعيد التسجيل إلى استراتيجيات الحل.</p>
+                            <textarea id="qa-input" class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" rows="3" placeholder="مثال: ما هي أفضل طريقة لمراجعة الجزء الكمي في الأسبوع الأخير؟"></textarea>
+                            <button id="qa-submit" class="w-full mt-4 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 flex items-center justify-center h-14">
+                                <span class="button-text">احصل على إجابة</span>
+                                <div class="loader hidden"></div>
+                            </button>
                         </div>
-                        <form id="training-form" class="space-y-4">
-                            <p class="text-sm text-gray-600">أجب عن الأسئلة التالية إن وُجدت لديك إجابات. يمكنك ترك أي خانة فارغة للانتقال لاحقاً.</p>
-                            <div id="training-questions" class="grid grid-cols-1 gap-3">
-                                <!-- Questions will be injected here -->
+                        <div id="content-explain" class="ai-tab-content hidden">
+                            <p class="text-sm text-gray-500 mb-4">أدخل اسم المفهوم أو الموضوع الذي تجد صعوبة في فهمه وسيقوم المساعد الذكي بتبسيطه لك مع أمثلة.</p>
+                            <input type="text" id="explain-input" class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="مثال: التناظر اللفظي أو النسبة المئوية">
+                            <button id="explain-submit" class="w-full mt-4 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 flex items-center justify-center h-14">
+                                <span class="button-text">اشرح الآن</span>
+                                <div class="loader hidden"></div>
+                            </button>
+                        </div>
+                        <div id="content-generate" class="ai-tab-content hidden">
+                             <p class="text-sm text-gray-500 mb-4">حدد الموضوع وعدد الأسئلة التي تريدها، وسينشئ لك المساعد الذكي اختباراً تدريبياً قصيراً.</p>
+                            <div class="grid sm:grid-cols-3 gap-4">
+                                <input type="text" id="generate-topic" class="sm:col-span-2 w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="الموضوع، مثال: الهندسة، إكمال الجمل">
+                                <input type="number" id="generate-count" class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" value="5" min="1" max="10">
                             </div>
-                            <div class="flex gap-3 mt-4">
-                                <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-md">حفظ الإجابات</button>
-                                <button id="skip-training" type="button" class="bg-gray-100 text-gray-700 py-2 px-4 rounded-md">تخطي الآن</button>
-                            </div>
-                        </form>
+                            <button id="generate-submit" class="w-full mt-4 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 flex items-center justify-center h-14">
+                                <span class="button-text">أنشئ الأسئلة</span>
+                                <div class="loader hidden"></div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="ai-response-area" class="mt-6 border-t border-gray-200 pt-6">
+                        <h4 class="font-bold text-lg mb-4">إجابة المساعد الذكي:</h4>
+                        <div id="ai-response-content" class="bg-gray-50 p-4 rounded-md min-h-[100px] text-gray-700 whitespace-pre-wrap">...ستظهر الإجابة هنا</div>
                     </div>
                 </div>
             </div>
@@ -855,274 +687,6 @@
                 } catch (err) { /* ignore */ }
             });
 
-            // --- AI assistant: Hybrid retrieval + optional remote AI scaffold ---
-            try {
-                const chatMessages = document.getElementById('chat-messages');
-                const qaSubmit = document.getElementById('qa-submit');
-                const qaInput = document.getElementById('qa-input');
-                const addAnswerBtn = document.getElementById('add-answer');
-                const showKbBtn = document.getElementById('show-kb');
-                const aiEndpointInput = document.getElementById('ai-endpoint');
-                const saveEndpointBtn = document.getElementById('save-endpoint');
-                const chatSources = document.getElementById('chat-sources');
-
-                // local storage helpers (KB) - structured entries: { answer: string, keywords: [str] }
-                function kbKey() { return 'qudratksa_kb_v1'; }
-                function loadKB() {
-                    try {
-                        const raw = JSON.parse(localStorage.getItem(kbKey()) || '{}');
-                        const out = {};
-                        for (const k of Object.keys(raw || {})) {
-                            const v = raw[k];
-                            if (v && typeof v === 'string') {
-                                out[k] = { answer: v, keywords: extractKeywordsFromQuestion(k) };
-                            } else if (v && v.answer) {
-                                out[k] = v;
-                            }
-                        }
-                        return out;
-                    } catch (e) { return {}; }
-                }
-                function saveKB(kb){ localStorage.setItem(kbKey(), JSON.stringify(kb)); }
-                function clearKB(){ localStorage.removeItem(kbKey()); }
-
-                // Tokenization & keyword helpers
-                function tokenize(text){
-                    if (!text) return [];
-                    const stop = ['في','من','على','و','ما','هل','كيف','لم','لن','الى','إلى','عن','أن','إن','الذي','التي','هذا','هذه','ذلك','تلك','مع','لـ','لا','يا','بعد','قبل','كما','قد','كل'];
-                    const cleaned = text.replace(/[\u064B-\u0652\u061F\u060C\u061B.,!?"'()\[\]«»<>:؛\-\/\\]/g,' ').toLowerCase();
-                    return cleaned.split(/\s+/).map(s=>s.trim()).filter(s=>s.length>2 && !stop.includes(s));
-                }
-
-                function extractKeywordsFromQuestion(q){
-                    const toks = tokenize(q || '');
-                    const uniq = [...new Set(toks)];
-                    return uniq.slice(0,6);
-                }
-
-                // fuzzy KB match based on keyword overlap
-                function findBestKBMatch(question){
-                    const kb = loadKB();
-                    const qKeys = extractKeywordsFromQuestion(question);
-                    if (!qKeys.length) return null;
-                    let best = null; let bestScore = 0;
-                    for (const k of Object.keys(kb)){
-                        try{
-                            const entry = kb[k];
-                            const entryKeys = entry.keywords || extractKeywordsFromQuestion(k);
-                            const common = entryKeys.filter(x=>qKeys.includes(x)).length;
-                            const denom = Math.max(1, Math.round((entryKeys.length + qKeys.length)/2));
-                            const score = common/denom;
-                            if (score > bestScore){ bestScore = score; best = {question: k, entry, score}; }
-                        }catch(e){}
-                    }
-                    if (best && (best.score >= 0.3 || question.replace(/\s+/g,'').toLowerCase().includes(best.question.replace(/\s+/g,'').toLowerCase()))) return best;
-                    return null;
-                }
-
-                // endpoint persistence (client-side only)
-                const endpointKey = 'qudratksa_ai_endpoint_v1';
-                function saveEndpoint(url){ localStorage.setItem(endpointKey, url || ''); }
-                function loadEndpoint(){ return localStorage.getItem(endpointKey) || ''; }
-                // initialize endpoint input
-                if (aiEndpointInput) aiEndpointInput.value = loadEndpoint();
-                if (saveEndpointBtn && aiEndpointInput) saveEndpointBtn.addEventListener('click', ()=>{ saveEndpoint(aiEndpointInput.value.trim()); alert('تم حفظ نقطة النهاية محلياً. تأكد من أن الخادم يحتوي مفتاح API ولا تكشفه في المتصفح.'); });
-
-                // utility: render a message into chat
-                function appendMessage({role='assistant', text='', sources=[]}){
-                    const container = document.createElement('div');
-                    container.className = role === 'user' ? 'msg user' : 'msg assistant';
-                    container.innerHTML = `<div class="content">${escapeHtml(text)}</div>`;
-                    if (sources && sources.length){
-                        const src = document.createElement('div');
-                        src.className = 'sources';
-                        src.textContent = 'المصادر: ' + sources.join(' • ');
-                        container.appendChild(src);
-                    }
-                    chatMessages.appendChild(container);
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                    return container;
-                }
-
-                // escape basic HTML to avoid injection
-                function escapeHtml(str){
-                    return String(str).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m]; });
-                }
-
-                // show a single assistant placeholder (returns the element)
-                function showAssistantPlaceholder(){
-                    // remove existing placeholder if any
-                    const existing = chatMessages.querySelector('.msg.assistant.placeholder');
-                    if (existing) existing.remove();
-                    const el = document.createElement('div');
-                    el.className = 'msg assistant placeholder';
-                    el.innerHTML = '<div class="content"><span class="loader-dot"></span><span class="loader-dot"></span><span class="loader-dot"></span> جاري التفكير...</div>';
-                    chatMessages.appendChild(el);
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                    return el;
-                }
-
-                function replaceAssistantPlaceholder(text, sources){
-                    const ph = chatMessages.querySelector('.msg.assistant.placeholder');
-                    if (ph) ph.remove();
-                    return appendMessage({role:'assistant', text, sources});
-                }
-
-                // Retrieval: KB then site
-                function findInKB(question){
-                    const kb = loadKB();
-                    const normQ = question.replace(/\s+/g,'').toLowerCase();
-                    // exact or substring
-                    for (const k of Object.keys(kb)){
-                        try{
-                            const normK = k.replace(/\s+/g,'').toLowerCase();
-                            if (normK === normQ || normQ.includes(normK) || normK.includes(normQ)) return {answer: kb[k], source: 'KB'};
-                        }catch(e){}
-                    }
-                    return null;
-                }
-
-                function findInSite(question){
-                    const text = document.body.innerText || '';
-                    const qWords = question.split(/\s+/).slice(0,6).join(' ');
-                    let idx = text.indexOf(qWords);
-                    if (idx>-1){
-                        const start = Math.max(0, idx-120);
-                        const snippet = text.substring(start, Math.min(text.length, idx+300)).trim();
-                        return {answer: snippet, source: 'الموقع'};
-                    }
-                    // fallback: keyword sentences
-                    const kws = question.split(/\s+/).slice(0,3);
-                    for (const kw of kws){
-                        const pos = text.indexOf(kw);
-                        if (pos>-1){
-                            const start = Math.max(0, pos-120);
-                            const snippet = text.substring(start, Math.min(text.length, pos+300)).trim();
-                            return {answer: snippet, source: 'الموقع'};
-                        }
-                    }
-                    return null;
-                }
-
-                // optional remote call: server should accept JSON { question, context } and return { answer }
-                async function callRemoteAI(question, contextText){
-                    const endpoint = loadEndpoint();
-                    if (!endpoint) return null;
-                    try{
-                        const res = await fetch(endpoint, {
-                            method: 'POST',
-                            headers: {'Content-Type':'application/json'},
-                            body: JSON.stringify({ question, context: contextText })
-                        });
-                        if (!res.ok) throw new Error('Server returned ' + res.status);
-                        const data = await res.json();
-                        if (data && data.answer) return {answer: data.answer, source: 'نموذج'};
-                    }catch(e){ console.warn('AI endpoint error', e); }
-                    return null;
-                }
-
-                // Chat submit
-                if (qaSubmit && qaInput){
-                    qaSubmit.addEventListener('click', async ()=>{
-                        const q = qaInput.value && qaInput.value.trim();
-                        if (!q) return;
-                        appendMessage({role:'user', text:q});
-                        const placeholder = showAssistantPlaceholder();
-
-                        // first: KB
-                        const kbHit = findInKB(q);
-                        if (kbHit){
-                            replaceAssistantPlaceholder(kbHit.answer, [kbHit.source]);
-                            return;
-                        }
-
-                        // second: site (clean, user-friendly summary + source)
-                        const siteHit = findInSite(q);
-                        if (siteHit){
-                            const endpoint = loadEndpoint();
-                            if (endpoint){
-                                const aiRes = await callRemoteAI(q, siteHit.answer);
-                                if (aiRes){
-                                    replaceAssistantPlaceholder(aiRes.answer, [siteHit.source, aiRes.source]);
-                                    return;
-                                }
-                            }
-                            // create a short, clean Arabic summary from the snippet
-                            try {
-                                const short = summarizeText(siteHit.answer, 2).trim();
-                                const formatted = (short ? short : siteHit.answer) + '\n\nالمصدر: الموقع';
-                                replaceAssistantPlaceholder(formatted, [siteHit.source]);
-                            } catch(e){
-                                replaceAssistantPlaceholder(siteHit.answer, [siteHit.source]);
-                            }
-                            return;
-                        }
-
-                        // third: fallback to remote AI if available
-                        const endpoint = loadEndpoint();
-                        if (endpoint){
-                            const aiRes = await callRemoteAI(q, '');
-                            if (aiRes){
-                                replaceAssistantPlaceholder(aiRes.answer, [aiRes.source]);
-                                return;
-                            }
-                        }
-
-                        // last resort: friendly fallback with next-step suggestion
-                        replaceAssistantPlaceholder('لم أجد إجابة مباشرة في بياناتك أو في محتوى الموقع. يمكنك:\n1) إضافة إجابة مخصصة الآن عبر زر "أضف إجابة" (للإجابة القادمة)،\n2) أو السماح لي بتجربة توليد إجابة أعمق باستخدام نموذج خارجي إذا قمت بتوصيل نقطة نهاية خادم في الإعدادات.', []);
-                    });
-                }
-
-                // add-answer quick flow (store to KB) with optional keywords
-                if (addAnswerBtn && qaInput){
-                    addAnswerBtn.addEventListener('click', ()=>{
-                        const q = qaInput.value && qaInput.value.trim();
-                        if (!q){ alert('الرجاء كتابة السؤال أولا'); return; }
-                        const ans = prompt('أضف الإجابة التي تريد أن يتعلمها المساعد لهذا السؤال:');
-                        if (!ans || !ans.trim()) return;
-                        let kws = prompt('اكتب كلمات مفتاحية مفصولة بفواصل (اختياري)، أو اتركها لاقتراح تلقائي:');
-                        let kwList = [];
-                        if (kws && kws.trim()) kwList = kws.split(',').map(s=>s.trim()).filter(Boolean);
-                        else kwList = extractKeywordsFromQuestion(q);
-                        const kb = loadKB(); kb[q] = { answer: ans.trim(), keywords: kwList }; saveKB(kb);
-                        alert('تمت الإضافة. المساعد سيستخدم هذه الإجابة لاحقاً.');
-                    });
-                }
-
-                if (showKbBtn){
-                    showKbBtn.addEventListener('click', ()=>{
-                        const kb = loadKB();
-                        const keys = Object.keys(kb);
-                        if (!keys.length){ alert('لا توجد إجابات محفوظة.'); return; }
-                        let idx = 0;
-                        function editNext(){
-                            if (idx >= keys.length) return alert('انتهى التحرير.');
-                            const k = keys[idx];
-                            const curEntry = kb[k];
-                            const curAns = curEntry && curEntry.answer ? curEntry.answer : '';
-                            const curKws = (curEntry && curEntry.keywords) ? curEntry.keywords.join(', ') : '';
-                            const updated = prompt(`سؤال:\n${k}\n\nالإجابة الحالية:\n${curAns}\n\nكلمات مفتاحية:\n${curKws}\n\nضع الإجابة الجديدة أو اضغط إلغاء للحفاظ عليها`);
-                            if (updated === null){
-                                const kwUpdated = prompt('ضع كلمات مفتاحية جديدة مفصولة بفواصل (إترك فارغاً للحفاظ):', curKws);
-                                if (kwUpdated !== null && kwUpdated.trim()) { curEntry.keywords = kwUpdated.split(',').map(s=>s.trim()).filter(Boolean); saveKB(kb); }
-                                idx++; editNext(); return;
-                            }
-                            curEntry.answer = updated.trim();
-                            const kwAsk = prompt('ضع كلمات مفتاحية جديدة مفصولة بفواصل (اختياري):', curKws);
-                            if (kwAsk !== null && kwAsk.trim()) curEntry.keywords = kwAsk.split(',').map(s=>s.trim()).filter(Boolean);
-                            kb[k] = curEntry; idx++; editNext();
-                        }
-                        editNext();
-                        saveKB(kb);
-                    });
-                }
-
-                // ensure chat scroll exists
-                if (!chatMessages) {
-                    console.warn('chat-messages container not found');
-                }
-            } catch (err) { console.error(err); }
-
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
             if (mobileMenuButton && mobileMenu) {
@@ -1130,169 +694,6 @@
                 document.querySelectorAll('#mobile-menu a').forEach(link => { link.addEventListener('click', () => { mobileMenu.classList.add('hidden'); }); });
             }
         });
-
-        // --- AI assistant training & QA logic ---
-        (function(){
-            // Admin toggle: set to true ONLY if you want the training/admin controls to appear.
-            // This is a code-level switch: edit this file and change to true, then deploy.
-            // Note: keeping this false hides and disables the admin controls for regular visitors.
-            const ADMIN_ENABLED = false;
-            const QUESTIONS = [
-                'ما الفرق بين الاختبار المحوسب والورقي؟',
-                'كيف وأسجل في اختبار القدرات؟',
-                'ما هي أفضل المصادر للمذاكرة؟',
-                'ماذا أحضر يوم الاختبار؟',
-                'كم عدد المحاولات المتاحة؟',
-                'كيف أحسب النسبة الموزونة؟',
-                'متى تفتح فترات التسجيل؟',
-                'ما استراتيجية الوقت في الاختبار؟',
-                'كيف أتعامل مع استيعاب المقروء؟',
-                'ما هي أهم الأخطاء التي يجب تجنبها؟',
-                'هل توجد نماذج محوسب؟ أين أجدها؟',
-                'ما الفرق بين الأسئلة السهلة والصعبة؟',
-                'كيف أراجع قبل الاختبار بأسبوع؟',
-                'ما هي رسوم الاختبار؟',
-                'هل يمكن تغيير موعد الاختبار؟',
-                'أين أجد مواعيد ومراكز الاختبار؟',
-                'هل يوجد وقت مخصص للراحة أثناء الاختبار؟',
-                'كيف أحسب درجاتي بعد الاختبار؟',
-                'ما النصيحة للتركيز أثناء الاختبار؟',
-                'هل النتائج تظهر سريعا؟'
-            ];
-
-            function kbKey() { return 'qudratksa_kb_v1'; }
-            function loadKB() { try { return JSON.parse(localStorage.getItem(kbKey()) || '{}'); } catch(e){ return {}; } }
-            function saveKB(kb){ localStorage.setItem(kbKey(), JSON.stringify(kb)); }
-            function clearKB(){ localStorage.removeItem(kbKey()); }
-
-            // Populate the training questions in the modal
-            const trainingModal = document.getElementById('training-modal');
-            const trainingQuestionsDiv = document.getElementById('training-questions');
-            if (trainingQuestionsDiv) {
-                trainingQuestionsDiv.innerHTML = QUESTIONS.map((q,i) => `
-                    <div class="border p-3 rounded-md">
-                        <label class="font-semibold">${i+1}. ${q}</label>
-                        <textarea data-q-index="${i}" class="w-full mt-2 p-2 border rounded-md" rows="2" placeholder="أضف إجابتك أو اتركها فارغة"></textarea>
-                    </div>
-                `).join('');
-            }
-
-            // Open/close modal
-            const openBtn = document.getElementById('open-training');
-            const closeBtn = document.getElementById('close-training');
-            const skipBtn = document.getElementById('skip-training');
-            const trainingForm = document.getElementById('training-form');
-            const clearBtn = document.getElementById('clear-training');
-
-            // Admin code-level toggle: reveal admin-only elements only when enabled in code
-            if (ADMIN_ENABLED) {
-                // show admin-only elements
-                document.querySelectorAll('.admin-only').forEach(el => {
-                    el.style.display = '';
-                    el.removeAttribute('aria-hidden');
-                    if (el.tagName === 'BUTTON') el.disabled = false;
-                });
-                // enable training textareas
-                if (trainingForm) trainingForm.querySelectorAll('textarea[data-q-index]').forEach(t=>t.removeAttribute('disabled'));
-            } else {
-                // hide/disable admin-only controls for visitors
-                document.querySelectorAll('.admin-only').forEach(el => {
-                    el.style.display = 'none';
-                    el.setAttribute('aria-hidden','true');
-                    if (el.tagName === 'BUTTON') el.disabled = true;
-                });
-                if (trainingForm) trainingForm.querySelectorAll('textarea[data-q-index]').forEach(t=>t.setAttribute('disabled','disabled'));
-                // ensure the training modal is not visible
-                if (trainingModal) { trainingModal.classList.add('hidden'); trainingModal.classList.remove('flex'); }
-            }
-
-            if (openBtn && trainingModal) openBtn.addEventListener('click', () => { trainingModal.classList.remove('hidden'); trainingModal.classList.add('flex'); });
-            if (closeBtn && trainingModal) closeBtn.addEventListener('click', () => { trainingModal.classList.add('hidden'); trainingModal.classList.remove('flex'); });
-            if (skipBtn && trainingModal) skipBtn.addEventListener('click', () => { trainingModal.classList.add('hidden'); trainingModal.classList.remove('flex'); });
-            if (clearBtn) clearBtn.addEventListener('click', () => { if (confirm('مسح جميع بيانات المساعد؟')){ clearKB(); alert('تم المسح'); } });
-
-            if (trainingForm) trainingForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const kb = loadKB();
-                const areas = trainingForm.querySelectorAll('textarea[data-q-index]');
-                areas.forEach(area => {
-                    const idx = area.getAttribute('data-q-index');
-                    const q = QUESTIONS[idx];
-                    const ans = area.value && area.value.trim();
-                    if (ans) kb[q] = { answer: ans, keywords: extractKeywordsFromQuestion(q) };
-                });
-                saveKB(kb);
-                trainingModal.classList.add('hidden'); trainingModal.classList.remove('flex');
-                alert('تم حفظ إجاباتك. المساعد الآن يستخدم هذه المعلومات عند الإجابة.');
-            });
-
-            // QA behavior: search KB first, then the page text (document.body.innerText)
-            function findInKB(question){
-                const kb = loadKB();
-                // simple exact or substring match
-                for (const q in kb){
-                    try{
-                        const norm = q.replace(/\s+/g,'').toLowerCase();
-                        const normQ = question.replace(/\s+/g,'').toLowerCase();
-                        if (normQ.includes(norm) || norm.includes(normQ) || normQ === norm) return kb[q];
-                    }catch(e){}
-                }
-                return null;
-            }
-
-            function findInSite(question){
-                try{
-                    const text = document.body.innerText || '';
-                    const q = question.split(/\s+/).slice(0,6).join(' ');
-                    const idx = text.indexOf(q);
-                    if (idx !== -1) {
-                        // return surrounding snippet
-                        const start = Math.max(0, idx-120);
-                        return text.substring(start, Math.min(text.length, idx+300)).trim();
-                    }
-                    // fallback: search sentence containing keywords
-                    const keywords = question.split(/\s+/).slice(0,3);
-                    for (const kw of keywords){
-                        const pos = text.indexOf(kw);
-                        if (pos>-1) return text.substring(Math.max(0,pos-120), Math.min(text.length,pos+300)).trim();
-                    }
-                }catch(e){}
-                return null;
-            }
-
-            // QA submit and add-answer
-            const qaSubmit = document.getElementById('qa-submit');
-            const qaInput = document.getElementById('qa-input');
-            const aiResponseContent = document.getElementById('ai-response-content');
-            const addAnswerBtn = document.getElementById('add-answer');
-
-            if (qaSubmit && qaInput && aiResponseContent){
-                qaSubmit.addEventListener('click', () => {
-                    const q = qaInput.value && qaInput.value.trim();
-                    if (!q){ aiResponseContent.textContent = 'الرجاء كتابة السؤال أولاً.'; return; }
-                    aiResponseContent.textContent = '';
-                    // 1) KB
-                    const kbAns = findInKB(q);
-                    if (kbAns){ aiResponseContent.textContent = kbAns; return; }
-                    // 2) site text
-                    const siteAns = findInSite(q);
-                    if (siteAns){ aiResponseContent.textContent = siteAns; return; }
-                    aiResponseContent.textContent = 'لم أجد إجابة في بياناتك أو في محتوى الموقع. يمكنك إضافة إجابة مخصصة بالضغط على "أضف إجابة".';
-                });
-            }
-
-            if (addAnswerBtn && qaInput){
-                addAnswerBtn.addEventListener('click', ()=>{
-                    const q = qaInput.value && qaInput.value.trim();
-                    if (!q){ alert('الرجاء كتابة السؤال أولا'); return; }
-                    const ans = prompt('أضف الإجابة التي تريد أن يتعلمها المساعد لهذا السؤال:');
-                    if (ans && ans.trim()){
-                        const kb = loadKB(); kb[q] = ans.trim(); saveKB(kb);
-                        alert('تمت الإضافة. المساعد سيستخدم هذه الإجابة لاحقاً.');
-                    }
-                });
-            }
-        })();
 
         function calculateWeightedScore() {
             const hsPercent = parseFloat(document.getElementById('hs-percent').value) || 0;
