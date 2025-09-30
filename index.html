@@ -585,16 +585,91 @@
     </footer>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
+            if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+
+            // Intercept any link that contains a hash (fragment) and convert to path-style /id
+            document.querySelectorAll('a[href*="#"]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    try {
+                        const href = this.getAttribute('href');
+                        if (!href || href === '#') return;
+
+                        let fragment = null;
+                        if (/^https?:\/\//i.test(href)) {
+                            // absolute URL: ensure same site (allow www vs non-www)
+                            const parsed = new URL(href, window.location.href);
+                            const stripWWW = h => h.replace(/^www\./i, '');
+                            if (stripWWW(parsed.hostname) !== stripWWW(window.location.hostname)) return; // external
+                            fragment = parsed.hash.replace('#', '').trim();
+                        } else {
+                            fragment = href.split('#').pop().trim();
+                        }
+                        if (!fragment) return;
+                        const target = document.getElementById(fragment);
+                        if (!target) return;
+                        e.preventDefault();
+                        target.scrollIntoView({ behavior: 'smooth' });
+                        // Update URL to /fragment (clear hash)
+                        try {
+                            const url = new URL(window.location.href);
+                            url.pathname = '/' + fragment;
+                            url.hash = '';
+                            if (history.replaceState) history.replaceState(null, '', url.pathname + url.search);
+                        } catch (err) {
+                            if (history.replaceState) history.replaceState(null, '', '/' + encodeURIComponent(fragment));
+                        }
+                    } catch (err) { /* ignore */ }
+                });
+            });
+
+            // If page opened with a hash (e.g. /#planning), convert to path and scroll.
+            (function handleInitialHashOrPath() {
+                try {
+                    if (window.location.hash) {
+                        const frag = window.location.hash.replace('#', '').replace(/\/$/, '');
+                        if (frag) {
+                            const el = document.getElementById(frag);
+                            if (el) {
+                                try {
+                                    const url = new URL(window.location.href);
+                                    url.pathname = '/' + frag;
+                                    url.hash = '';
+                                    if (history.replaceState) history.replaceState(null, '', url.pathname + url.search);
+                                } catch (err) {
+                                    if (history.replaceState) history.replaceState(null, '', '/' + encodeURIComponent(frag));
+                                }
+                                setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 50);
+                                return;
+                            }
+                        }
+                    }
+                    const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
+                    if (path) {
+                        const el = document.getElementById(path);
+                        if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 50);
+                    }
+                } catch (err) { /* ignore */ }
+            })();
+
+            // Handle Back/Forward navigation
+            window.addEventListener('popstate', () => {
+                try {
+                    const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
+                    if (path) {
+                        const el = document.getElementById(path);
+                        if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                } catch (err) { /* ignore */ }
+            });
 
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-            document.querySelectorAll('#mobile-menu a').forEach(link => {
-                link.addEventListener('click', () => { mobileMenu.classList.add('hidden'); });
-            });
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
+                document.querySelectorAll('#mobile-menu a').forEach(link => { link.addEventListener('click', () => { mobileMenu.classList.add('hidden'); }); });
+            }
         });
 
         function calculateWeightedScore() {
@@ -606,37 +681,46 @@
             const taScore = parseFloat(document.getElementById('ta-score').value) || 0;
             const totalPercent = hsPercent + quPercent + taPercent;
             const percentWarning = document.getElementById('percent-warning');
-            if (Math.round(totalPercent) !== 100 && totalPercent > 0) {
-                percentWarning.classList.remove('hidden');
-            } else {
-                percentWarning.classList.add('hidden');
+            if (percentWarning) {
+                if (Math.round(totalPercent) !== 100 && totalPercent > 0) {
+                    percentWarning.classList.remove('hidden');
+                } else {
+                    percentWarning.classList.add('hidden');
+                }
             }
             const weightedScore = (hsScore * hsPercent / 100) + (quScore * quPercent / 100) + (taScore * taPercent / 100);
-            document.getElementById('result').textContent = weightedScore.toFixed(2);
+            const resultEl = document.getElementById('result');
+            if (resultEl) resultEl.textContent = weightedScore.toFixed(2);
         }
 
         function filterResources(filter, clickedButton) {
             const quantResourceCards = document.querySelectorAll('#quantitative-resources-grid .resource-card');
             const quantFilterButtons = document.querySelectorAll('#resources .filter-button');
             quantFilterButtons.forEach(button => button.classList.remove('active'));
-            clickedButton.classList.add('active');
+            if (clickedButton) clickedButton.classList.add('active');
             quantResourceCards.forEach(card => {
                 const category = card.dataset.category;
                 card.style.display = (filter === 'all' || category === filter) ? 'flex' : 'none';
             });
         }
-        
+
         function switchAITab(tabName) {
-            const aiTabs = { qa: document.getElementById('content-qa'), explain: document.getElementById('content-explain'), generate: document.getElementById('content-generate') };
+            const aiTabs = {
+                qa: document.getElementById('content-qa'),
+                explain: document.getElementById('content-explain'),
+                generate: document.getElementById('content-generate')
+            };
             const aiTabButtons = document.querySelectorAll('.ai-tab-button');
-            Object.values(aiTabs).forEach(tab => tab.classList.add('hidden'));
+            Object.values(aiTabs).forEach(tab => { if (tab) tab.classList.add('hidden'); });
             aiTabButtons.forEach(btn => btn.classList.remove('active'));
-            aiTabs[tabName].classList.remove('hidden');
-            event.currentTarget.classList.add('active');
+            if (aiTabs[tabName]) aiTabs[tabName].classList.remove('hidden');
+            const activeBtn = document.getElementById('tab-' + tabName);
+            if (activeBtn) activeBtn.classList.add('active');
         }
 
         function toggleNimrDetails(button) {
             const detailsDiv = button.nextElementSibling;
+            if (!detailsDiv) return;
             const isHidden = detailsDiv.classList.contains('hidden');
 
             if (isHidden) {
@@ -646,7 +730,7 @@
                 detailsDiv.classList.add('hidden');
                 button.innerHTML = 'اقرأ التفاصيل الكاملة <i data-lucide="arrow-down" class="inline-block w-4 h-4 transition-transform"></i>';
             }
-            lucide.createIcons();
+            if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
         }
     </script>
     </body>
