@@ -28,7 +28,6 @@
         <script src="https://unpkg.com/lucide@latest"></script>
 
         <style>
-                /* Your CSS styles here... */
                 body {
                         font-family: 'Cairo', sans-serif;
                 }
@@ -66,18 +65,6 @@
                 input:checked + label .accordion-icon {
                         transform: rotate(180deg);
                 }
-                .tab-button {
-                        padding: 0.75rem 1.5rem;
-                        font-weight: 600;
-                        color: #4b5563;
-                        border-bottom: 2px solid transparent;
-                        transition: all 0.3s;
-                        white-space: nowrap;
-                }
-                .tab-button.active {
-                        color: #2563eb;
-                        border-bottom-color: #2563eb;
-                }
                 .filter-button {
                         padding: 0.5rem 1.5rem;
                         font-weight: 700;
@@ -102,6 +89,16 @@
                 @keyframes spin {
                         0% { transform: rotate(0deg); }
                         100% { transform: rotate(360deg); }
+                }
+                /* New AI Assistant Styles */
+                .ai-mode-button {
+                    transition: all 0.3s ease;
+                    border: 1px solid transparent;
+                }
+                .ai-mode-button.active {
+                    background-color: #3b82f6 !important;
+                    color: white !important;
+                    border-color: #1d4ed8;
                 }
         </style>
 
@@ -500,6 +497,10 @@
                 </div>
             </div>
         </section>
+        
+        <!-- ================================================= -->
+        <!--        START: New AI Assistant Section UI         -->
+        <!-- ================================================= -->
         <section id="ai-assistant" class="py-20 bg-white">
             <div class="container mx-auto px-6">
                 <h2 class="section-title">
@@ -512,52 +513,56 @@
                     هل لديك سؤال محير؟ هل تحتاج إلى شرح لمفهوم صعب في الكمي أو اللفظي؟ استخدم مساعدنا الذكي للحصول على إجابات فورية ودعم مخصص في رحلة استعدادك.
                 </p>
 
-                <div class="max-w-4xl mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-2xl border border-gray-200">
-                    <div class="border-b border-gray-200 mb-6 overflow-x-auto">
-                        <div class="flex">
-                            <button id="tab-qa" class="tab-button ai-tab-button active" onclick="switchAITab('qa')">اسأل خبير</button>
-                            <button id="tab-explain" class="tab-button ai-tab-button" onclick="switchAITab('explain')">اشرح لي مفهوم</button>
-                            <button id="tab-generate" class="tab-button ai-tab-button" onclick="switchAITab('generate')">أنشئ أسئلة</button>
-                        </div>
-                    </div>
-
-                    <div id="ai-content">
-                        <div id="content-qa" class="ai-tab-content">
-                            <p class="text-sm text-gray-500 mb-4">اطرح أي سؤال يخطر ببالك حول اختبار القدرات، من مواعيد التسجيل إلى استراتيجيات الحل.</p>
-                            <textarea id="qa-input" class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" rows="3" placeholder="مثال: ما هي أفضل طريقة لمراجعة الجزء الكمي في الأسبوع الأخير؟"></textarea>
-                            <button id="qa-submit" class="w-full mt-4 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 flex items-center justify-center h-14">
-                                <span class="button-text">احصل على إجابة</span>
-                                <div class="loader hidden"></div>
-                            </button>
-                        </div>
-                        <div id="content-explain" class="ai-tab-content hidden">
-                            <p class="text-sm text-gray-500 mb-4">أدخل اسم المفهوم أو الموضوع الذي تجد صعوبة في فهمه وسيقوم المساعد الذكي بتبسيطه لك مع أمثلة.</p>
-                            <input type="text" id="explain-input" class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="مثال: التناظر اللفظي أو النسبة المئوية">
-                            <button id="explain-submit" class="w-full mt-4 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 flex items-center justify-center h-14">
-                                <span class="button-text">اشرح الآن</span>
-                                <div class="loader hidden"></div>
-                            </button>
-                        </div>
-                        <div id="content-generate" class="ai-tab-content hidden">
-                             <p class="text-sm text-gray-500 mb-4">حدد الموضوع وعدد الأسئلة التي تريدها، وسينشئ لك المساعد الذكي اختباراً تدريبياً قصيراً.</p>
-                            <div class="grid sm:grid-cols-3 gap-4">
-                                <input type="text" id="generate-topic" class="sm:col-span-2 w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="الموضوع، مثال: الهندسة، إكمال الجمل">
-                                <input type="number" id="generate-count" class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" value="5" min="1" max="10">
+                <div class="max-w-4xl mx-auto bg-gradient-to-br from-gray-50 to-blue-100 p-4 sm:p-6 rounded-2xl shadow-2xl border border-gray-200 flex flex-col" style="height: 600px;">
+                    <!-- Response Area -->
+                    <div id="ai-response-area" class="flex-1 overflow-y-auto mb-4 pr-2">
+                        <div id="ai-response-content" class="h-full p-4 rounded-md text-gray-700 whitespace-pre-wrap flex items-center justify-center break-words">
+                            <div class="text-center text-gray-500">
+                                <i data-lucide="bot" class="w-16 h-16 mx-auto mb-4"></i>
+                                <h4 class="font-bold text-lg mb-2">أهلاً بك! كيف يمكنني مساعدتك اليوم؟</h4>
+                                <p>اختر وضعاً من الأسفل وابدأ بطرح سؤالك.</p>
                             </div>
-                            <button id="generate-submit" class="w-full mt-4 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 flex items-center justify-center h-14">
-                                <span class="button-text">أنشئ الأسئلة</span>
-                                <div class="loader hidden"></div>
-                            </button>
                         </div>
                     </div>
 
-                    <div id="ai-response-area" class="mt-6 border-t border-gray-200 pt-6">
-                        <h4 class="font-bold text-lg mb-4">إجابة المساعد الذكي:</h4>
-                        <div id="ai-response-content" class="bg-gray-50 p-4 rounded-md min-h-[100px] text-gray-700 whitespace-pre-wrap">...ستظهر الإجابة هنا</div>
+                    <!-- Input Area -->
+                    <div class="mt-auto border-t border-gray-300 pt-4">
+                        <!-- Mode Selection -->
+                        <div id="ai-mode-selector" class="flex items-center justify-center gap-2 mb-3">
+                            <button data-mode="qa" class="ai-mode-button active flex items-center gap-2 bg-white text-gray-700 font-semibold py-2 px-4 rounded-full text-sm shadow-sm hover:bg-gray-100">
+                                <i data-lucide="help-circle" class="w-4 h-4"></i>
+                                <span>اسأل خبير</span>
+                            </button>
+                             <button data-mode="explain" class="ai-mode-button flex items-center gap-2 bg-white text-gray-700 font-semibold py-2 px-4 rounded-full text-sm shadow-sm hover:bg-gray-100">
+                                <i data-lucide="book-open-text" class="w-4 h-4"></i>
+                                <span>اشرح لي</span>
+                            </button>
+                             <button data-mode="generate" class="ai-mode-button flex items-center gap-2 bg-white text-gray-700 font-semibold py-2 px-4 rounded-full text-sm shadow-sm hover:bg-gray-100">
+                                <i data-lucide="file-plus-2" class="w-4 h-4"></i>
+                                <span>أنشئ أسئلة</span>
+                            </button>
+                        </div>
+
+                        <!-- Text Input and Submit -->
+                        <div class="flex items-center gap-2">
+                             <div id="ai-generate-options" class="hidden flex items-center gap-2">
+                                <label for="ai-generate-count" class="text-sm font-semibold text-gray-600">العدد:</label>
+                                <input type="number" id="ai-generate-count" class="w-20 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" value="5" min="1" max="10">
+                            </div>
+                            <textarea id="ai-input" class="flex-1 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition resize-none" rows="1" placeholder="اطرح سؤالاً..."></textarea>
+                            <button id="ai-submit" class="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                                <span class="button-text"><i data-lucide="send" class="w-6 h-6"></i></span>
+                                <div class="loader hidden"></div>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
+        <!-- ================================================= -->
+        <!--         END: New AI Assistant Section UI          -->
+        <!-- ================================================= -->
+
         <section id="motivation" class="py-20 bg-gray-50">
             <div class="container mx-auto px-6">
                 <h2 class="section-title">
@@ -590,10 +595,201 @@
         </div>
     </footer>
     <script>
+        // --- AI Assistant Logic (NEW and REFACTORED) ---
+        let currentAIMode = 'qa'; // 'qa', 'explain', or 'generate'
+        
+        const aiResponseContent = document.getElementById('ai-response-content');
+        const aiSubmitButton = document.getElementById('ai-submit');
+        const aiInputField = document.getElementById('ai-input');
+        const aiModeSelector = document.getElementById('ai-mode-selector');
+        const aiGenerateOptions = document.getElementById('ai-generate-options');
+        const aiGenerateCount = document.getElementById('ai-generate-count');
+
+        const aiPlaceholders = {
+            qa: 'اطرح أي سؤال حول القدرات...',
+            explain: 'أدخل مفهوماً لشرحه، مثل "التناظر اللفظي"...',
+            generate: 'أدخل موضوعاً لإنشاء أسئلة عنه، مثل "الهندسة"...'
+        };
+
+        function setupAIModeSwitcher() {
+            if (!aiModeSelector) return;
+            aiModeSelector.addEventListener('click', (e) => {
+                const button = e.target.closest('.ai-mode-button');
+                if (button && button.dataset.mode) {
+                    currentAIMode = button.dataset.mode;
+                    
+                    // Update button styles
+                    aiModeSelector.querySelectorAll('.ai-mode-button').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    // Update placeholder
+                    if(aiInputField) aiInputField.placeholder = aiPlaceholders[currentAIMode];
+
+                    // Show/hide generate options
+                    if(aiGenerateOptions) {
+                        aiGenerateOptions.classList.toggle('hidden', currentAIMode !== 'generate');
+                    }
+                }
+            });
+        }
+        
+        function showLoadingAI() {
+            if (!aiSubmitButton) return;
+            aiSubmitButton.disabled = true;
+            const buttonText = aiSubmitButton.querySelector('.button-text');
+            const loader = aiSubmitButton.querySelector('.loader');
+            if (buttonText) buttonText.classList.add('hidden');
+            if (loader) loader.classList.remove('hidden');
+            if (aiResponseContent && aiResponseContent.querySelector('.text-center')) {
+                // First time use, replace placeholder
+                aiResponseContent.innerHTML = '<div class="flex items-center justify-center h-full"><div class="loader" style="border-top-color: #3b82f6;"></div></div>';
+            }
+        }
+
+        function hideLoadingAI() {
+            if (!aiSubmitButton) return;
+            aiSubmitButton.disabled = false;
+            const buttonText = aiSubmitButton.querySelector('.button-text');
+            const loader = aiSubmitButton.querySelector('.loader');
+            if (buttonText) buttonText.classList.remove('hidden');
+            if (loader) loader.classList.add('hidden');
+        }
+        
+        function getWebsiteContext() {
+            const sectionIds = ['basics', 'resources', 'planning', 'grades', 'faq', 'motivation'];
+            let context = '';
+            sectionIds.forEach(id => {
+                const section = document.getElementById(id);
+                if (section) {
+                    const titleEl = section.querySelector('h2');
+                    const title = titleEl ? titleEl.innerText : 'قسم';
+                    context += `\n\n--- قسم: ${title} ---\n`;
+                    context += section.innerText;
+                }
+            });
+            return context;
+        }
+
+        async function callApi(userPrompt, systemPromptText, fullUserPromptOverride = null) {
+             const apiKey = ""; // Leave this as is.
+             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent`;
+             const finalUserPrompt = fullUserPromptOverride || userPrompt;
+             const payload = {
+                 contents: [{ parts: [{ text: finalUserPrompt }] }],
+                 systemInstruction: { parts: [{ text: systemPromptText }] }
+             };
+
+             try {
+                 const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                 
+                 if (!response.ok) {
+                    const errorText = await response.text();
+                    let errorMessage = `API Error: ${response.status}`;
+                    try {
+                        const errorJson = JSON.parse(errorText);
+                        if (errorJson.error && errorJson.error.message) {
+                            errorMessage += `: ${errorJson.error.message}`;
+                        } else {
+                            errorMessage += ' - حدث خطأ غير معروف من الخادم.';
+                        }
+                    } catch (e) {
+                        errorMessage += ` - استجابة غير صالحة من الخادم.`;
+                    }
+                    throw new Error(errorMessage);
+                 }
+
+                 const result = await response.json();
+                 const candidate = result.candidates?.[0];
+
+                 if (candidate && candidate.content?.parts?.[0]?.text) {
+                     let formattedText = candidate.content.parts[0].text;
+                     
+                     // Escape HTML to prevent injection, but do it carefully
+                     formattedText = formattedText.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+                     // Format Markdown (Bold and Italic)
+                     formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                     formattedText = formattedText.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+                     // Convert URLs to clickable links
+                     const urlRegex = /(https?:\/\/[^\s"'<>`]+)/g;
+                     formattedText = formattedText.replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">$1</a>');
+
+                     return formattedText;
+                 } else if (candidate && candidate.finishReason === 'SAFETY') {
+                    return "تم حظر الإجابة لأسباب تتعلق بالسلامة. يرجى تعديل سؤالك والمحاولة مرة أخرى.";
+                 } 
+                 else {
+                     return "لم أتمكن من العثور على إجابة. الرجاء المحاولة مرة أخرى.";
+                 }
+             } catch (error) {
+                 console.error("Gemini API call failed:", error);
+                 return `حدث خطأ أثناء الاتصال بالمساعد الذكي. الخطأ: ${error.message}`;
+             }
+        }
+        
+        async function handleAISubmit() {
+            if (!aiInputField) return;
+            const input = aiInputField.value;
+            if (!input.trim()) return;
+
+            showLoadingAI();
+            aiInputField.value = ''; // Clear input field
+
+            let userPrompt, systemPrompt, fullUserPrompt;
+            const websiteContext = getWebsiteContext();
+
+            switch (currentAIMode) {
+                case 'qa':
+                    systemPrompt = "أنت خبير في اختبار القدرات العامة السعودي. أجب على أسئلة الطلاب بشكل واضح ومختصر ومشجع. حلل المحتوى المقدم لك من الموقع واستخلص الإجابة الأكثر صلة بالسؤال. لا تقم بنسخ فقرات كاملة بشكل عشوائي، بل أعد صياغة الإجابة بأسلوبك لتركز على جوهر السؤال. **مهم جداً: عندما تذكر مصدراً (مثل كتاب، دورة، أو قناة) مذكوراً في الموقع وله رابط، يجب عليك دائماً تضمين الرابط مع اسم المصدر في إجابتك.** يجب أن تستند في إجاباتك حصراً وفقط على المحتوى المقدم. لا تستخدم أي معلومات خارجية. إذا لم تجد الإجابة في المحتوى، أجب بـ 'هذه المعلومة غير متوفرة حالياً في الدليل'.";
+                    fullUserPrompt = `--- محتوى الموقع ---\n${websiteContext}\n--- نهاية المحتوى ---\n\nبناءً على المحتوى أعلاه فقط، أجب على السؤال التالي: "${input}"`;
+                    break;
+                
+                case 'explain':
+                    systemPrompt = "أنت معلم متخصص في تبسيط المفاهيم الصعبة لاختبار القدرات. عندما يعطيك الطالب مفهوماً، اشرحه له بطريقة سهلة الفهم مع أمثلة واضحة ومناسبة لمستوى طالب في المرحلة الثانوية. استخدم المعلومات المتوفرة في الموقع كأساس لشرحك، ولكن قدمه بأسلوب تعليمي مبسط خاص بك. **مهم جداً: عندما تذكر مصدراً (مثل كتاب، دورة، أو قناة) مذكوراً في الموقع وله رابط، يجب عليك دائماً تضمين الرابط مع اسم المصدر في إجابتك.** إذا كان المفهوم غير مشروح في الموقع، وضح ذلك.";
+                    fullUserPrompt = `--- محتوى الموقع ---\n${websiteContext}\n--- نهاية المحتوى ---\n\nبناءً على المحتوى أعلاه فقط، اشرح لي هذا المفهوم: "${input}"`;
+                    break;
+
+                case 'generate':
+                    const count = aiGenerateCount ? aiGenerateCount.value : 5;
+                    systemPrompt = "أنت متخصص في وضع أسئلة اختبار القدرات العامة السعودي. قم بإنشاء العدد المطلوب من الأسئلة حول الموضوع المحدد من قبل الطالب. يجب أن تكون الأسئلة بنفس نمط وصعوبة الاختبار الحقيقي. قدم الأسئلة أولاً، ثم قدم الإجابات الصحيحة مع شرح موجز في قسم منفصل بعنوان 'الإجابات والشرح'. استخدم Markdown للتنسيق.";
+                    userPrompt = `أنشئ لي ${count} أسئلة تدريبية في موضوع: "${input}"`;
+                    break;
+            }
+
+            const response = await callApi(userPrompt, systemPrompt, fullUserPrompt);
+            if(aiResponseContent) {
+                aiResponseContent.classList.remove('flex', 'items-center', 'justify-center');
+                aiResponseContent.innerHTML = response;
+                aiResponseContent.parentElement.scrollTop = 0; // Scroll to top of response
+            }
+            hideLoadingAI();
+        }
+
+
+        // --- General Page Logic ---
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+            
+            // --- AI Assistant Listeners ---
+            setupAIModeSwitcher();
+            if (aiSubmitButton) aiSubmitButton.addEventListener('click', handleAISubmit);
+            if (aiInputField) {
+                aiInputField.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault(); // Prevent new line
+                        handleAISubmit();
+                    }
+                });
+                 // Auto-resize textarea
+                aiInputField.addEventListener('input', () => {
+                    aiInputField.style.height = 'auto';
+                    aiInputField.style.height = (aiInputField.scrollHeight) + 'px';
+                });
+            }
 
-            // Intercept any link that contains a hash (fragment) and convert to path-style /id
+
+            // --- SPA-like Scrolling Logic ---
             document.querySelectorAll('a[href*="#"]').forEach(link => {
                 link.addEventListener('click', function(e) {
                     try {
@@ -602,10 +798,9 @@
 
                         let fragment = null;
                         if (/^https?:\/\//i.test(href)) {
-                            // absolute URL: ensure same site (allow www vs non-www)
                             const parsed = new URL(href, window.location.href);
                             const stripWWW = h => h.replace(/^www\./i, '');
-                            if (stripWWW(parsed.hostname) !== stripWWW(window.location.hostname)) return; // external
+                            if (stripWWW(parsed.hostname) !== stripWWW(window.location.hostname)) return;
                             fragment = parsed.hash.replace('#', '').trim();
                         } else {
                             fragment = href.split('#').pop().trim();
@@ -615,7 +810,6 @@
                         if (!target) return;
                         e.preventDefault();
                         target.scrollIntoView({ behavior: 'smooth' });
-                        // Update URL to /fragment (clear hash)
                         try {
                             const url = new URL(window.location.href);
                             url.pathname = '/' + fragment;
@@ -628,10 +822,8 @@
                 });
             });
 
-            // If page opened with a hash (e.g. /#planning), or query (?section=planning), convert/scroll accordingly.
             (function handleInitialHashOrPath() {
                 try {
-                    // 1) If there's a hash fragment, prefer that
                     if (window.location.hash) {
                         const frag = window.location.hash.replace('#', '').replace(/\/$/, '');
                         if (frag) {
@@ -650,8 +842,6 @@
                             }
                         }
                     }
-
-                    // 2) Support query parameter fallback: ?section=<id>
                     try {
                         const params = new URLSearchParams(window.location.search);
                         const section = params.get('section');
@@ -665,7 +855,6 @@
                         }
                     } catch (err) { /* ignore */ }
 
-                    // 3) If path-style (e.g. /planning) is used and server served index.html, scroll to it
                     const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
                     if (path) {
                         const el = document.getElementById(path);
@@ -674,7 +863,6 @@
                 } catch (err) { /* ignore */ }
             })();
 
-            // Handle Back/Forward navigation
             window.addEventListener('popstate', () => {
                 try {
                     const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
@@ -727,20 +915,6 @@
             });
         }
 
-        function switchAITab(tabName) {
-            const aiTabs = {
-                qa: document.getElementById('content-qa'),
-                explain: document.getElementById('content-explain'),
-                generate: document.getElementById('content-generate')
-            };
-            const aiTabButtons = document.querySelectorAll('.ai-tab-button');
-            Object.values(aiTabs).forEach(tab => { if (tab) tab.classList.add('hidden'); });
-            aiTabButtons.forEach(btn => btn.classList.remove('active'));
-            if (aiTabs[tabName]) aiTabs[tabName].classList.remove('hidden');
-            const activeBtn = document.getElementById('tab-' + tabName);
-            if (activeBtn) activeBtn.classList.add('active');
-        }
-
         function toggleNimrDetails(button) {
             const detailsDiv = button.nextElementSibling;
             if (!detailsDiv) return;
@@ -758,5 +932,4 @@
     </script>
     </body>
 </html>
-
 
