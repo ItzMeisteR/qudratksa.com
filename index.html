@@ -670,11 +670,21 @@
             return context;
         }
 
-        async function callApi(userPrompt, systemPromptText, fullUserPromptOverride = null) {
-             // This is the correct implementation for the Canvas environment.
-             // It calls Google's API directly. The API key is left empty ("")
-             // because the Canvas environment securely injects it at runtime.
-             const apiKey = ""; // Leave this as is.
+       async function callApi(userPrompt, systemPromptText, fullUserPromptOverride = null) {
+            /*
+                ملاحظة هامة جداً لموقعك الخاص:
+                لكي يعمل هذا الكود على موقعك الحقيقي، يجب أن تحصل على مفتاح API من Google AI Studio
+                وتقوم بلصقه في السطر التالي مكان "ضع مفتاح API الخاص بك هنا".
+                
+                تحذير أمني: وضع المفتاح مباشرة هنا قد يعرضه للسرقة. 
+                هذا الحل هو للتبسيط فقط. الحل الأكثر أماناً يتطلب خادم وسيط.
+             */
+             const apiKey = "AIzaSyCqPjiiK0zAWFJWAf5rus8YOhxXPMSeY4k"; // <-- تم وضع مفتاحك هنا
+
+             if (apiKey === "ضع مفتاح API الخاص بك هنا" || !apiKey) {
+                 return "خطأ: لم يتم العثور على مفتاح API. يرجى مراجعة الكود وإضافة المفتاح الخاص بك.";
+             }
+             
              const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
              
              const finalUserPrompt = fullUserPromptOverride || userPrompt;
