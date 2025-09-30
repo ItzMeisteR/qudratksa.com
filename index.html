@@ -105,6 +105,18 @@
                 }
         </style>
 
+        <style>
+            /* Modern chat styles for AI assistant */
+            .chat-card { border-radius: 12px; overflow: hidden; box-shadow: 0 8px 30px rgba(2,6,23,0.08); }
+            #chat-messages { padding: 18px; display:flex; flex-direction:column; gap:12px; }
+            .msg { max-width: 78%; padding:12px 14px; border-radius:12px; line-height:1.45; }
+            .msg.user { margin-left:auto; background:linear-gradient(90deg,#2563eb,#4f46e5); color:white; }
+            .msg.assistant { margin-right:auto; background: white; border:1px solid #e6e6ee; color:#0f172a; }
+            .msg .sources { font-size:11px; color:#6b7280; margin-top:6px; }
+            .loader-dot { width:8px; height:8px; background:#c7d2fe; border-radius:50%; display:inline-block; margin-right:6px; animation: loaderPulse 1s infinite ease-in-out; }
+            @keyframes loaderPulse { 0% { transform: scale(1); opacity:1 } 50% { transform: scale(0.7); opacity:0.6 } 100% { transform: scale(1); opacity:1 } }
+        </style>
+
         <script type="application/ld+json">
         {
             "@context": "https://schema.org",
@@ -742,19 +754,41 @@
                 // utility: render a message into chat
                 function appendMessage({role='assistant', text='', sources=[]}){
                     const container = document.createElement('div');
-                    container.className = role === 'user' ? 'text-right' : 'text-left';
-                    const bubble = document.createElement('div');
-                    bubble.className = role === 'user' ? 'inline-block bg-blue-600 text-white p-3 rounded-lg max-w-[80%]' : 'inline-block bg-white p-3 rounded-lg border max-w-[80%]';
-                    bubble.textContent = text;
-                    container.appendChild(bubble);
+                    container.className = role === 'user' ? 'msg user' : 'msg assistant';
+                    container.innerHTML = `<div class="content">${escapeHtml(text)}</div>`;
                     if (sources && sources.length){
                         const src = document.createElement('div');
-                        src.className = 'text-xs text-gray-500 mt-1';
+                        src.className = 'sources';
                         src.textContent = 'المصادر: ' + sources.join(' • ');
                         container.appendChild(src);
                     }
                     chatMessages.appendChild(container);
                     chatMessages.scrollTop = chatMessages.scrollHeight;
+                    return container;
+                }
+
+                // escape basic HTML to avoid injection
+                function escapeHtml(str){
+                    return String(str).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m]; });
+                }
+
+                // show a single assistant placeholder (returns the element)
+                function showAssistantPlaceholder(){
+                    // remove existing placeholder if any
+                    const existing = chatMessages.querySelector('.msg.assistant.placeholder');
+                    if (existing) existing.remove();
+                    const el = document.createElement('div');
+                    el.className = 'msg assistant placeholder';
+                    el.innerHTML = '<div class="content"><span class="loader-dot"></span><span class="loader-dot"></span><span class="loader-dot"></span> جاري التفكير...</div>';
+                    chatMessages.appendChild(el);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    return el;
+                }
+
+                function replaceAssistantPlaceholder(text, sources){
+                    const ph = chatMessages.querySelector('.msg.assistant.placeholder');
+                    if (ph) ph.remove();
+                    return appendMessage({role:'assistant', text, sources});
                 }
 
                 // Retrieval: KB then site
@@ -816,32 +850,27 @@
                         const q = qaInput.value && qaInput.value.trim();
                         if (!q) return;
                         appendMessage({role:'user', text:q});
-                        appendMessage({role:'assistant', text:'...جاري البحث والتوليد', sources:[]});
+                        const placeholder = showAssistantPlaceholder();
 
                         // first: KB
                         const kbHit = findInKB(q);
                         if (kbHit){
-                            // replace last assistant placeholder
-                            chatMessages.lastElementChild.remove();
-                            appendMessage({role:'assistant', text: kbHit.answer, sources:[kbHit.source]});
+                            replaceAssistantPlaceholder(kbHit.answer, [kbHit.source]);
                             return;
                         }
 
                         // second: site
                         const siteHit = findInSite(q);
                         if (siteHit){
-                            chatMessages.lastElementChild.remove();
-                            // offer to call remote AI for better phrasing if endpoint exists
                             const endpoint = loadEndpoint();
                             if (endpoint){
-                                // prepare context
                                 const aiRes = await callRemoteAI(q, siteHit.answer);
                                 if (aiRes){
-                                    appendMessage({role:'assistant', text: aiRes.answer, sources:[siteHit.source, aiRes.source]});
+                                    replaceAssistantPlaceholder(aiRes.answer, [siteHit.source, aiRes.source]);
                                     return;
                                 }
                             }
-                            appendMessage({role:'assistant', text: siteHit.answer, sources:[siteHit.source]});
+                            replaceAssistantPlaceholder(siteHit.answer, [siteHit.source]);
                             return;
                         }
 
@@ -849,16 +878,14 @@
                         const endpoint = loadEndpoint();
                         if (endpoint){
                             const aiRes = await callRemoteAI(q, '');
-                            chatMessages.lastElementChild.remove();
                             if (aiRes){
-                                appendMessage({role:'assistant', text: aiRes.answer, sources:[aiRes.source]});
+                                replaceAssistantPlaceholder(aiRes.answer, [aiRes.source]);
                                 return;
                             }
                         }
 
-                        // last resort: heuristic canned fallback
-                        chatMessages.lastElementChild.remove();
-                        appendMessage({role:'assistant', text: 'لم أجد إجابة محددة في الموقع أو في بياناتك. يمكنك إضافة إجابة مخصصة أو تزويد المساعد بسياق إضافي.'});
+                        // last resort: heuristic fallback
+                        replaceAssistantPlaceholder('لم أجد إجابة محددة في الموقع أو في بياناتك. يمكنك إضافة إجابة مخصصة أو تزويد المساعد بسياق إضافي.', []);
                     });
                 }
 
