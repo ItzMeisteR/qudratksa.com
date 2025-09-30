@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl" class="scroll-smooth">
 
 <head>
-    <script async src="https://www.googleleapis.com/gtag/js?id=G-9HLP9MNWS9"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9HLP9MNWS9"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -671,64 +671,65 @@
         }
 
         async function callApi(userPrompt, systemPromptText, fullUserPromptOverride = null) {
-            /*
-                ملاحظة هامة للمطور:
-                أنت محق تماماً، في بيئة الإنتاج الحقيقية (موقع ويب مباشر)، لا يجب أبداً وضع مفتاح API مباشرة في كود الواجهة الأمامية (client-side). 
-                سيؤدي ذلك إلى سرقة المفتاح الخاص بك.
+             // This is the correct implementation for the Canvas environment.
+             // It calls Google's API directly. The API key is left empty ("")
+             // because the Canvas environment securely injects it at runtime.
+             const apiKey = ""; // Leave this as is.
+             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+             
+             const finalUserPrompt = fullUserPromptOverride || userPrompt;
+             const payload = {
+                 contents: [{ parts: [{ text: finalUserPrompt }] }],
+                 systemInstruction: { parts: [{ text: systemPromptText }] }
+             };
 
-                الحل الآمن والصحيح هو إنشاء "وسيط" على الخادم الخاص بك (backend function or serverless function). 
-                الكود الموجود في المتصفح يرسل السؤال إلى الخادم الخاص بك، ومن ثم يقوم الخادم (الذي يحتوي على المفتاح بأمان) بالاتصال بـ Google API وإعادة الإجابة إلى المتصفح.
-
-                الكود التالي تم تعديله ليعكس هذه الطريقة الآمنة. 
-                سيتم الآن إرسال الطلب إلى '/api/ask-gemini' وهو مسار وهمي يجب أن تقوم ببرمجته على الخادم الخاص بك.
-            */
-            
-            // The NEW, secure way: Call your own backend
-            const backendApiUrl = '/api/ask-gemini'; // This is an endpoint on YOUR server
-
-            const finalUserPrompt = fullUserPromptOverride || userPrompt;
-            const requestBody = {
-                prompt: finalUserPrompt,
-                systemInstruction: systemPromptText
-            };
-
-            try {
-                const response = await fetch(backendApiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(requestBody)
-                });
-
-                if (!response.ok) {
+             try {
+                 const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                 
+                 if (!response.ok) {
                     const errorText = await response.text();
-                    throw new Error(`Error from backend server: ${response.status} - ${errorText}`);
-                }
+                    let errorMessage = `API Error: ${response.status}`;
+                    try {
+                        const errorJson = JSON.parse(errorText);
+                        if (errorJson.error && errorJson.error.message) {
+                            errorMessage += `: ${errorJson.error.message}`;
+                        } else {
+                            errorMessage += ' - حدث خطأ غير معروف من الخادم.';
+                        }
+                    } catch (e) {
+                        errorMessage += ` - استجابة غير صالحة من الخادم.`;
+                    }
+                    throw new Error(errorMessage);
+                 }
 
-                const result = await response.json();
-                
-                // Assuming your backend sends back the formatted text in a 'text' property
-                if (result && result.text) {
-                    return result.text; 
-                } else {
-                    return "استجابة غير متوقعة من الخادم.";
-                }
+                 const result = await response.json();
+                 const candidate = result.candidates?.[0];
 
-            } catch (error) {
-                console.error("Failed to call backend API:", error);
-                return `حدث خطأ أثناء الاتصال بالخادم الوسيط. الخطأ: ${error.message}`;
-            }
+                 if (candidate && candidate.content?.parts?.[0]?.text) {
+                     let formattedText = candidate.content.parts[0].text;
+                     
+                     // Escape HTML to prevent injection, but do it carefully
+                     formattedText = formattedText.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-            /*
-                // --- الكود القديم (غير آمن للإنتاج) ---
-                // This old code calls Google's API directly from the browser, which is insecure.
-                const apiKey = ""; // Insecure: Your key would be visible here.
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent`;
-                const payload = {
-                    contents: [{ parts: [{ text: finalUserPrompt }] }],
-                    systemInstruction: { parts: [{ text: systemPromptText }] }
-                };
-                // ... rest of the old try/catch block ...
-            */
+                     // Format Markdown (Bold and Italic)
+                     formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                     formattedText = formattedText.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+                     // Convert URLs to clickable links
+                     const urlRegex = /(https?:\/\/[^\s"'<>`]+)/g;
+                     formattedText = formattedText.replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">$1</a>');
+
+                     return formattedText;
+                 } else if (candidate && candidate.finishReason === 'SAFETY') {
+                    return "تم حظر الإجابة لأسباب تتعلق بالسلامة. يرجى تعديل سؤالك والمحاولة مرة أخرى.";
+                 } 
+                 else {
+                     return "لم أتمكن من العثور على إجابة. الرجاء المحاولة مرة أخرى.";
+                 }
+             } catch (error) {
+                 console.error("Gemini API call failed:", error);
+                 return `حدث خطأ أثناء الاتصال بالمساعد الذكي. الخطأ: ${error.message}`;
+             }
         }
         
         async function handleAISubmit() {
