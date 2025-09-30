@@ -511,17 +511,22 @@
 
                 <p class="text-center text-gray-600 mb-6 max-w-3xl mx-auto">مساعد ذكي مُعاد تصميمه: يتفحص محتوى الموقع والإجابات التي تضيفها ثم يولّد إجابات ذكية. لمزامنة مع نموذج قوي عبر الإنترنت، قم بتوصيل نقطة نهاية خوادم (لن يتم تضمين أي مفاتيح في الكود).</p>
 
-                <div class="max-w-6xl mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-2xl border border-gray-200">
+             <!-- ADMIN NOTES: To enable admin/training controls, edit this file.
+                 1) Open this file and locate "ADMIN_ENABLED" (near the AI script). Set it to true.
+                 2) Optionally set your secure server endpoint in the ai-endpoint input (or via code) on the server side.
+                 3) After editing, deploy the changed file. These controls remain hidden by default so normal visitors only see the simple chat.
+             -->
+             <div class="max-w-6xl mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-2xl border border-gray-200">
                     <div class="grid lg:grid-cols-3 gap-6">
-                        <div class="lg:col-span-1 p-4 border rounded-lg">
+                        <div class="lg:col-span-1 p-4 border rounded-lg admin-only" style="display:none">
                             <h3 class="font-bold text-lg mb-3">عن المساعد</h3>
                             <p class="text-sm text-gray-600 mb-4">يجمع المساعد الأدلة من صفحات الموقع والإجابات التي تضيفها. لإجابات أعمق وذكاء محادثي متقدم، اربط خدمة AI آمنة عبر الخادم.</p>
-                            <div class="mt-4 space-y-3">
-                                <button id="open-training" class="w-full inline-block bg-yellow-400 text-black font-semibold py-2 px-4 rounded-md hover:brightness-95">إعداد المساعد</button>
-                                <button id="clear-training" class="w-full inline-block bg-red-100 text-red-700 font-semibold py-2 px-4 rounded-md">مسح البيانات</button>
-                                <button id="show-kb" class="w-full inline-block bg-gray-100 text-gray-800 font-semibold py-2 px-4 rounded-md">عرض/تعديل الإجابات المضافة</button>
+                                <div class="mt-4 space-y-3">
+                                <button id="open-training" class="w-full inline-block bg-yellow-400 text-black font-semibold py-2 px-4 rounded-md hover:brightness-95 admin-only" style="display:none">إعداد المساعد</button>
+                                <button id="clear-training" class="w-full inline-block bg-red-100 text-red-700 font-semibold py-2 px-4 rounded-md admin-only" style="display:none">مسح البيانات</button>
+                                <button id="show-kb" class="w-full inline-block bg-gray-100 text-gray-800 font-semibold py-2 px-4 rounded-md admin-only" style="display:none">عرض/تعديل الإجابات المضافة</button>
                             </div>
-                            <div id="ai-settings" class="mt-6 text-sm text-gray-600">
+                            <div id="ai-settings" class="mt-6 text-sm text-gray-600 admin-only" style="display:none">
                                 <label class="font-semibold">نقطة نهاية AI (اختياري)</label>
                                 <input id="ai-endpoint" placeholder="https://example.com/api/ai" class="w-full mt-2 p-2 border rounded-md text-sm" />
                                 <p class="text-xs text-gray-400 mt-2">أدخل نقطة نهاية الخادم التي تستدعي نموذج LLM بأمان (الخادم يجب أن يحمل مفتاح الـ API).</p>
@@ -546,11 +551,11 @@
                             </div>
 
                             <div class="p-4 border-t bg-white">
-                                <div class="flex gap-3">
+                                    <div class="flex gap-3">
                                     <textarea id="qa-input" rows="2" class="flex-1 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" placeholder="اكتب سؤالك هنا... مثال: كيف أراجع قبل الاختبار بأسبوع؟"></textarea>
                                     <div class="flex flex-col gap-2">
                                         <button id="qa-submit" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-md">أرسل</button>
-                                        <button id="add-answer" class="bg-green-600 text-white font-bold py-2 px-4 rounded-md" title="أضف إجابة مخصصة للسؤال الحالي">أضف إجابة</button>
+                                        <button id="add-answer" class="bg-green-600 text-white font-bold py-2 px-4 rounded-md admin-only" title="أضف إجابة مخصصة للسؤال الحالي" style="display:none">أضف إجابة</button>
                                     </div>
                                 </div>
                                 <div id="chat-sources" class="mt-3 text-xs text-gray-500"></div>
@@ -957,14 +962,24 @@
             const trainingForm = document.getElementById('training-form');
             const clearBtn = document.getElementById('clear-training');
 
-            // If admin mode is not enabled at code-level, hide/disable admin-only controls.
-            if (!ADMIN_ENABLED) {
+            // Admin code-level toggle: reveal admin-only elements only when enabled in code
+            if (ADMIN_ENABLED) {
+                // show admin-only elements
+                document.querySelectorAll('.admin-only').forEach(el => {
+                    el.style.display = '';
+                    el.removeAttribute('aria-hidden');
+                    if (el.tagName === 'BUTTON') el.disabled = false;
+                });
+                // enable training textareas
+                if (trainingForm) trainingForm.querySelectorAll('textarea[data-q-index]').forEach(t=>t.removeAttribute('disabled'));
+            } else {
+                // hide/disable admin-only controls for visitors
+                document.querySelectorAll('.admin-only').forEach(el => {
+                    el.style.display = 'none';
+                    el.setAttribute('aria-hidden','true');
+                    if (el.tagName === 'BUTTON') el.disabled = true;
+                });
                 if (trainingForm) trainingForm.querySelectorAll('textarea[data-q-index]').forEach(t=>t.setAttribute('disabled','disabled'));
-                if (openBtn) { openBtn.classList.add('hidden'); openBtn.setAttribute('aria-hidden','true'); openBtn.disabled = true; }
-                if (clearBtn) { clearBtn.classList.add('hidden'); clearBtn.setAttribute('aria-hidden','true'); clearBtn.disabled = true; }
-                // hide add-answer button if present
-                const addAnswerBtnHide = document.getElementById('add-answer');
-                if (addAnswerBtnHide) { addAnswerBtnHide.classList.add('hidden'); addAnswerBtnHide.setAttribute('aria-hidden','true'); addAnswerBtnHide.disabled = true; }
                 // ensure the training modal is not visible
                 if (trainingModal) { trainingModal.classList.add('hidden'); trainingModal.classList.remove('flex'); }
             }
