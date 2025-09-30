@@ -505,32 +505,56 @@
                 <h2 class="section-title">
                     <div class="flex items-center gap-4">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-blue-600" aria-hidden="true" role="img"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M9.09 9a3 3 0 1 1 5.82 0c0 1.657-3 2.5-3 4" /></svg>
-                        <span>مساعدك الذكي لشرح القدرات</span>
+                        <span>مساعدك الذكي — دردشة مدعومة بمحتوى الموقع</span>
                     </div>
                 </h2>
 
-                <p class="text-center text-gray-600 mb-6 max-w-3xl mx-auto">هذا المساعد يجيب فقط استنادًا إلى معلومات الموقع وبياناتك التي تضيفها هنا. رجاءً أكمل نموذج الإعداد الأولي لتدريب المساعد على الإجابة بشكل أدق.</p>
+                <p class="text-center text-gray-600 mb-6 max-w-3xl mx-auto">مساعد ذكي مُعاد تصميمه: يتفحص محتوى الموقع والإجابات التي تضيفها ثم يولّد إجابات ذكية. لمزامنة مع نموذج قوي عبر الإنترنت، قم بتوصيل نقطة نهاية خوادم (لن يتم تضمين أي مفاتيح في الكود).</p>
 
-                <div class="max-w-4xl mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-2xl border border-gray-200">
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="text-sm text-gray-700">اضغط على "إعداد المساعد" لملء 20 سؤالًا شائعًا لدى طلاب القدرات. يمكن تعديل الإجابات لاحقًا.</div>
-                        <div class="flex gap-3">
-                            <button id="open-training" class="inline-block bg-yellow-400 text-black font-semibold py-2 px-4 rounded-md hover:brightness-95">إعداد المساعد</button>
-                            <button id="clear-training" class="inline-block bg-red-100 text-red-700 font-semibold py-2 px-4 rounded-md">مسح البيانات</button>
+                <div class="max-w-6xl mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-2xl border border-gray-200">
+                    <div class="grid lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-1 p-4 border rounded-lg">
+                            <h3 class="font-bold text-lg mb-3">عن المساعد</h3>
+                            <p class="text-sm text-gray-600 mb-4">يجمع المساعد الأدلة من صفحات الموقع والإجابات التي تضيفها. لإجابات أعمق وذكاء محادثي متقدم، اربط خدمة AI آمنة عبر الخادم.</p>
+                            <div class="mt-4 space-y-3">
+                                <button id="open-training" class="w-full inline-block bg-yellow-400 text-black font-semibold py-2 px-4 rounded-md hover:brightness-95">إعداد المساعد</button>
+                                <button id="clear-training" class="w-full inline-block bg-red-100 text-red-700 font-semibold py-2 px-4 rounded-md">مسح البيانات</button>
+                                <button id="show-kb" class="w-full inline-block bg-gray-100 text-gray-800 font-semibold py-2 px-4 rounded-md">عرض/تعديل الإجابات المضافة</button>
+                            </div>
+                            <div id="ai-settings" class="mt-6 text-sm text-gray-600">
+                                <label class="font-semibold">نقطة نهاية AI (اختياري)</label>
+                                <input id="ai-endpoint" placeholder="https://example.com/api/ai" class="w-full mt-2 p-2 border rounded-md text-sm" />
+                                <p class="text-xs text-gray-400 mt-2">أدخل نقطة نهاية الخادم التي تستدعي نموذج LLM بأمان (الخادم يجب أن يحمل مفتاح الـ API).</p>
+                                <button id="save-endpoint" class="mt-3 w-full bg-blue-600 text-white py-2 rounded-md">حفظ الإعداد</button>
+                            </div>
                         </div>
-                    </div>
 
-                    <div id="qa-ui">
-                        <p class="text-sm text-gray-500 mb-4">اسأل أي شيء عن اختبار القدرات؛ المساعد سيبحث أولاً في إجاباتك المضافة ثم في محتوى الموقع.</p>
-                        <textarea id="qa-input" class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" rows="3" placeholder="مثال: ما الفرق بين الاختبار المحوسب والورقي؟"></textarea>
-                        <div class="flex gap-3 mt-4">
-                            <button id="qa-submit" class="flex-1 bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700">احصل على إجابة</button>
-                            <button id="add-answer" class="bg-green-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700" title="أضف إجابة مخصصة للسؤال الحالي">أضف إجابة</button>
-                        </div>
+                        <div class="lg:col-span-2 p-0 rounded-lg overflow-hidden flex flex-col" style="min-height:420px;">
+                            <div class="flex items-center justify-between p-4 border-b bg-white">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">م</div>
+                                    <div>
+                                        <div class="font-bold">مساعد القدرات</div>
+                                        <div class="text-xs text-gray-500">يجيب اعتماداً على محتوى الموقع وبياناتك المضافة</div>
+                                    </div>
+                                </div>
+                                <div class="text-sm text-gray-500">مصدر: الموقع المحلي + KB</div>
+                            </div>
 
-                        <div id="ai-response-area" class="mt-6 border-t border-gray-200 pt-6">
-                            <h4 class="font-bold text-lg mb-4">إجابة المساعد الذكي:</h4>
-                            <div id="ai-response-content" class="bg-gray-50 p-4 rounded-md min-h-[120px] text-gray-700 whitespace-pre-wrap">...ستظهر الإجابة هنا</div>
+                            <div id="chat-messages" class="flex-1 p-4 overflow-auto bg-gray-50 space-y-4">
+                                <!-- messages go here -->
+                            </div>
+
+                            <div class="p-4 border-t bg-white">
+                                <div class="flex gap-3">
+                                    <textarea id="qa-input" rows="2" class="flex-1 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" placeholder="اكتب سؤالك هنا... مثال: كيف أراجع قبل الاختبار بأسبوع؟"></textarea>
+                                    <div class="flex flex-col gap-2">
+                                        <button id="qa-submit" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-md">أرسل</button>
+                                        <button id="add-answer" class="bg-green-600 text-white font-bold py-2 px-4 rounded-md" title="أضف إجابة مخصصة للسؤال الحالي">أضف إجابة</button>
+                                    </div>
+                                </div>
+                                <div id="chat-sources" class="mt-3 text-xs text-gray-500"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -685,82 +709,192 @@
                 } catch (err) { /* ignore */ }
             });
 
-            // --- AI assistant: improved rule-based QA handler (client-side fallback) ---
+            // --- AI assistant: Hybrid retrieval + optional remote AI scaffold ---
             try {
+                const chatMessages = document.getElementById('chat-messages');
                 const qaSubmit = document.getElementById('qa-submit');
                 const qaInput = document.getElementById('qa-input');
-                const aiResponseContent = document.getElementById('ai-response-content');
-                const loader = qaSubmit ? qaSubmit.querySelector('.loader') : null;
+                const addAnswerBtn = document.getElementById('add-answer');
+                const showKbBtn = document.getElementById('show-kb');
+                const aiEndpointInput = document.getElementById('ai-endpoint');
+                const saveEndpointBtn = document.getElementById('save-endpoint');
+                const chatSources = document.getElementById('chat-sources');
 
-                const canned = [
-                    {
-                        patterns: [/\bمتى\b|\bمواعيد\b|\bمتى يفتح/i],
-                        answer: 'التسجيل للاختبار المحوسب متاح طوال العام حسب توفر المقاعد في المراكز. الاختبار الورقي يُعلن عنه بفترات محددة. تابع موقع هيئة تقويم التعليم والتدريب (قياس) لمعرفة المواعيد والمراكز.'
-                    },
-                    {
-                        patterns: [/مصادر|المصادر|كتب|دورات|تجميعات/i],
-                        answer: 'ابدأ بالتجميعات الحديثة ونماذج المحوسب، وراجع شروحات القواعد الأساسية في القسم اللفظي (تناظر، استيعاب) والقواعد الحسابية في الكمي. دورات قصيرة مركزة وحل نماذج فعّال جداً.'
-                    },
-                    {
-                        patterns: [/فرق بين|الفرق بين|محوسب و?ورقي|محوسب و ورقي/i],
-                        answer: 'الاختبار المحوسب يُعقد في مراكز مع أجهزة حاسوب وهو أكثر مرونة في المواعيد والنتائج أسرع، أما الاختبار الورقي فله مواعيد محددة ونتائجه قد تستغرق وقتاً أطول. صعوبة الأسئلة موحدة.'
-                    },
-                    {
-                        patterns: [/ماذا أحضر|ماذا احضر|ماذا آخذ|ما أحضر/i],
-                        answer: 'أحضر الأصل من الهوية الوطنية أو جواز السفر ونسخة من تأكيد التسجيل إن طُلب، واحضر أدواتك الشخصية وكن في المركز مبكراً.'
-                    },
-                    {
-                        patterns: [/نسبة|موزونة|حساب الموزونة|النسبة الموزونة/i],
-                        answer: 'اضرب كل درجة في وزنها (مثلاً 40% للقسم الكمي، 60% للقسم اللفظي) ثم اجمع النتائج لتحصل على الدرجة الموزونة. تأكد من أن مجموع النسب يساوي 100%.'
-                    },
-                    {
-                        patterns: [/استيعاب|تناظر|الكلمات المفتاحية|خطأ سياقي/i],
-                        answer: 'اقرأ الفقرة بالكامل، حدّد الجملة أو العبارة التي يرتبط بها السؤال، وابحث عن دلائل في النص تدعم الإجابة. تدرّب على اختصار الفقرة للعثور على الكلمات المفتاحية.'
-                    },
-                    {
-                        patterns: [/تسريبات|تسريب/i],
-                        answer: 'التسريبات غير موثوقة وغير قانونية. ركز على التحضير الصحيح بالمواد الموثوقة والتدريب على نماذج سابقة.'
-                    },
-                    {
-                        patterns: [/أحسن|أفضل طريقة|كيف أذاكر|كيف أراجع/i],
-                        answer: 'قسم وقتك، ابدأ بالتأسيس ثم حلّ نماذج محوسب؛ راجع الأخطاء، ركّز على إدارة الوقت، واستخدم ملخصات القواعد ونماذج المحوسب للتدريب.'
-                    }
-                ];
+                // local storage helpers (KB)
+                function kbKey() { return 'qudratksa_kb_v1'; }
+                function loadKB() { try { return JSON.parse(localStorage.getItem(kbKey()) || '{}'); } catch(e){ return {}; } }
+                function saveKB(kb){ localStorage.setItem(kbKey(), JSON.stringify(kb)); }
+                function clearKB(){ localStorage.removeItem(kbKey()); }
 
-                function findCannedAnswer(q) {
-                    const normalized = q.replace(/[\u064B-\u0652]/g, '').trim(); // remove Arabic diacritics
-                    for (const item of canned) {
-                        for (const pat of item.patterns) {
-                            try {
-                                if (pat.test(normalized)) return item.answer;
-                            } catch (e) { /* ignore */ }
-                        }
+                // endpoint persistence (client-side only)
+                const endpointKey = 'qudratksa_ai_endpoint_v1';
+                function saveEndpoint(url){ localStorage.setItem(endpointKey, url || ''); }
+                function loadEndpoint(){ return localStorage.getItem(endpointKey) || ''; }
+                // initialize endpoint input
+                if (aiEndpointInput) aiEndpointInput.value = loadEndpoint();
+                if (saveEndpointBtn && aiEndpointInput) saveEndpointBtn.addEventListener('click', ()=>{ saveEndpoint(aiEndpointInput.value.trim()); alert('تم حفظ نقطة النهاية محلياً. تأكد من أن الخادم يحتوي مفتاح API ولا تكشفه في المتصفح.'); });
+
+                // utility: render a message into chat
+                function appendMessage({role='assistant', text='', sources=[]}){
+                    const container = document.createElement('div');
+                    container.className = role === 'user' ? 'text-right' : 'text-left';
+                    const bubble = document.createElement('div');
+                    bubble.className = role === 'user' ? 'inline-block bg-blue-600 text-white p-3 rounded-lg max-w-[80%]' : 'inline-block bg-white p-3 rounded-lg border max-w-[80%]';
+                    bubble.textContent = text;
+                    container.appendChild(bubble);
+                    if (sources && sources.length){
+                        const src = document.createElement('div');
+                        src.className = 'text-xs text-gray-500 mt-1';
+                        src.textContent = 'المصادر: ' + sources.join(' • ');
+                        container.appendChild(src);
                     }
-                    // try simple keyword matching
-                    const low = normalized.toLowerCase();
-                    if (low.includes('متى') || low.includes('مواعيد')) return canned[0].answer;
-                    if (low.includes('مصادر') || low.includes('كتب')) return canned[1].answer;
-                    if (low.includes('محوسب') && low.includes('ورقي')) return canned[2].answer;
+                    chatMessages.appendChild(container);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+
+                // Retrieval: KB then site
+                function findInKB(question){
+                    const kb = loadKB();
+                    const normQ = question.replace(/\s+/g,'').toLowerCase();
+                    // exact or substring
+                    for (const k of Object.keys(kb)){
+                        try{
+                            const normK = k.replace(/\s+/g,'').toLowerCase();
+                            if (normK === normQ || normQ.includes(normK) || normK.includes(normQ)) return {answer: kb[k], source: 'KB'};
+                        }catch(e){}
+                    }
                     return null;
                 }
 
-                if (qaSubmit && qaInput && aiResponseContent) {
-                    qaSubmit.addEventListener('click', async function() {
-                        const q = qaInput.value.trim();
-                        if (!q) {
-                            aiResponseContent.textContent = 'الرجاء كتابة سؤالك أولاً.';
+                function findInSite(question){
+                    const text = document.body.innerText || '';
+                    const qWords = question.split(/\s+/).slice(0,6).join(' ');
+                    let idx = text.indexOf(qWords);
+                    if (idx>-1){
+                        const start = Math.max(0, idx-120);
+                        const snippet = text.substring(start, Math.min(text.length, idx+300)).trim();
+                        return {answer: snippet, source: 'الموقع'};
+                    }
+                    // fallback: keyword sentences
+                    const kws = question.split(/\s+/).slice(0,3);
+                    for (const kw of kws){
+                        const pos = text.indexOf(kw);
+                        if (pos>-1){
+                            const start = Math.max(0, pos-120);
+                            const snippet = text.substring(start, Math.min(text.length, pos+300)).trim();
+                            return {answer: snippet, source: 'الموقع'};
+                        }
+                    }
+                    return null;
+                }
+
+                // optional remote call: server should accept JSON { question, context } and return { answer }
+                async function callRemoteAI(question, contextText){
+                    const endpoint = loadEndpoint();
+                    if (!endpoint) return null;
+                    try{
+                        const res = await fetch(endpoint, {
+                            method: 'POST',
+                            headers: {'Content-Type':'application/json'},
+                            body: JSON.stringify({ question, context: contextText })
+                        });
+                        if (!res.ok) throw new Error('Server returned ' + res.status);
+                        const data = await res.json();
+                        if (data && data.answer) return {answer: data.answer, source: 'نموذج'};
+                    }catch(e){ console.warn('AI endpoint error', e); }
+                    return null;
+                }
+
+                // Chat submit
+                if (qaSubmit && qaInput){
+                    qaSubmit.addEventListener('click', async ()=>{
+                        const q = qaInput.value && qaInput.value.trim();
+                        if (!q) return;
+                        appendMessage({role:'user', text:q});
+                        appendMessage({role:'assistant', text:'...جاري البحث والتوليد', sources:[]});
+
+                        // first: KB
+                        const kbHit = findInKB(q);
+                        if (kbHit){
+                            // replace last assistant placeholder
+                            chatMessages.lastElementChild.remove();
+                            appendMessage({role:'assistant', text: kbHit.answer, sources:[kbHit.source]});
                             return;
                         }
-                        if (loader) loader.classList.remove('hidden');
-                        aiResponseContent.textContent = '';
-                        // Small simulated processing delay
-                        await new Promise(r => setTimeout(r, 400));
-                        const answer = findCannedAnswer(q) || 'هذه إجابة عامة. لإجابة أدق أذكر سياق السؤال أو مثالاً محدداً (مثلاً: "كم يتبقى لي من الوقت للمذاكرة قبل الاختبار؟").';
-                        aiResponseContent.textContent = answer;
-                        if (loader) loader.classList.add('hidden');
+
+                        // second: site
+                        const siteHit = findInSite(q);
+                        if (siteHit){
+                            chatMessages.lastElementChild.remove();
+                            // offer to call remote AI for better phrasing if endpoint exists
+                            const endpoint = loadEndpoint();
+                            if (endpoint){
+                                // prepare context
+                                const aiRes = await callRemoteAI(q, siteHit.answer);
+                                if (aiRes){
+                                    appendMessage({role:'assistant', text: aiRes.answer, sources:[siteHit.source, aiRes.source]});
+                                    return;
+                                }
+                            }
+                            appendMessage({role:'assistant', text: siteHit.answer, sources:[siteHit.source]});
+                            return;
+                        }
+
+                        // third: fallback to remote AI if available
+                        const endpoint = loadEndpoint();
+                        if (endpoint){
+                            const aiRes = await callRemoteAI(q, '');
+                            chatMessages.lastElementChild.remove();
+                            if (aiRes){
+                                appendMessage({role:'assistant', text: aiRes.answer, sources:[aiRes.source]});
+                                return;
+                            }
+                        }
+
+                        // last resort: heuristic canned fallback
+                        chatMessages.lastElementChild.remove();
+                        appendMessage({role:'assistant', text: 'لم أجد إجابة محددة في الموقع أو في بياناتك. يمكنك إضافة إجابة مخصصة أو تزويد المساعد بسياق إضافي.'});
                     });
                 }
-            } catch (err) { /* ignore */ }
+
+                // add-answer quick flow (store to KB)
+                if (addAnswerBtn && qaInput){
+                    addAnswerBtn.addEventListener('click', ()=>{
+                        const q = qaInput.value && qaInput.value.trim();
+                        if (!q){ alert('الرجاء كتابة السؤال أولا'); return; }
+                        const ans = prompt('أضف الإجابة التي تريد أن يتعلمها المساعد لهذا السؤال:');
+                        if (ans && ans.trim()){
+                            const kb = loadKB(); kb[q] = ans.trim(); saveKB(kb);
+                            alert('تمت الإضافة. المساعد سيستخدم هذه الإجابة لاحقاً.');
+                        }
+                    });
+                }
+
+                if (showKbBtn){
+                    showKbBtn.addEventListener('click', ()=>{
+                        const kb = loadKB();
+                        const keys = Object.keys(kb);
+                        if (!keys.length){ alert('لا توجد إجابات محفوظة.'); return; }
+                        // open small editor modal (using prompt loop for simplicity)
+                        let idx = 0;
+                        function editNext(){
+                            if (idx >= keys.length) return alert('انتهى التحرير.');
+                            const k = keys[idx];
+                            const cur = kb[k];
+                            const updated = prompt(`سؤال:\n${k}\n\nالإجابة الحالية:\n${cur}\n\nضع الإجابة الجديدة أو اضغط إلغاء للحفاظ عليها`);
+                            if (updated === null){ idx++; editNext(); return; }
+                            kb[k] = updated.trim(); idx++; editNext();
+                        }
+                        editNext();
+                        saveKB(kb);
+                    });
+                }
+
+                // ensure chat scroll exists
+                if (!chatMessages) {
+                    console.warn('chat-messages container not found');
+                }
+            } catch (err) { console.error(err); }
 
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
