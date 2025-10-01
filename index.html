@@ -79,11 +79,11 @@
                         box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.3);
                 }
                 .loader {
-                        border: 4px solid rgba(255, 255, 255, 0.3);
+                        border: 5px solid rgba(0, 0, 0, 0.1);
                         border-radius: 50%;
-                        border-top: 4px solid #ffffff;
-                        width: 24px;
-                        height: 24px;
+                        border-top: 5px solid #3b82f6;
+                        width: 50px;
+                        height: 50px;
                         animation: spin 1s linear infinite;
                 }
                 @keyframes spin {
@@ -99,6 +99,41 @@
                     background-color: #3b82f6 !important;
                     color: white !important;
                     border-color: #1d4ed8;
+                }
+                #ai-response-content ul {
+                    list-style-type: disc;
+                    padding-right: 2rem;
+                    margin-top: 0.5rem;
+                    margin-bottom: 0.5rem;
+                }
+                 #ai-response-content p {
+                    margin-bottom: 0.75rem;
+                }
+                .image-preview-container {
+                    position: relative;
+                    display: inline-block;
+                    margin-bottom: 8px;
+                }
+                .image-preview-thumbnail {
+                    max-width: 80px;
+                    max-height: 80px;
+                    border-radius: 8px;
+                    border: 2px solid #ddd;
+                }
+                .remove-image-btn {
+                    position: absolute;
+                    top: -8px;
+                    right: -8px;
+                    background-color: rgba(0,0,0,0.7);
+                    color: white;
+                    border-radius: 50%;
+                    width: 24px;
+                    height: 24px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    font-weight: bold;
                 }
         </style>
 
@@ -506,11 +541,11 @@
                 <h2 class="section-title">
                     <div class="flex items-center gap-4">
                         <i data-lucide="sparkles" class="w-10 h-10 text-blue-600" alt="أيقونة مساعدك الذكي"></i>
-                        <span>مساعدك الذكي لشرح القدرات</span>
+                        <span>خبير القدرات AI</span>
                     </div>
                 </h2>
                 <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
-                    هل لديك سؤال محير؟ هل تحتاج إلى شرح لمفهوم صعب في الكمي أو اللفظي؟ استخدم مساعدنا الذكي للحصول على إجابات فورية ودعم مخصص في رحلة استعدادك.
+                    هل لديك سؤال محير؟ هل تحتاج إلى شرح لمفهوم صعب في الكمي أو اللفظي؟ استخدم خبيرنا الذكي للحصول على إجابات فورية ودعم مخصص في رحلة استعدادك.
                 </p>
 
                 <div class="max-w-4xl mx-auto bg-gradient-to-br from-gray-50 to-blue-100 p-4 sm:p-6 rounded-2xl shadow-2xl border border-gray-200 flex flex-col" style="height: 600px;">
@@ -518,20 +553,22 @@
                     <div id="ai-response-area" class="flex-1 overflow-y-auto mb-4 pr-2">
                         <div id="ai-response-content" class="h-full p-4 rounded-md text-gray-700 whitespace-pre-wrap flex items-center justify-center break-words">
                             <div class="text-center text-gray-500">
-                                <i data-lucide="bot" class="w-16 h-16 mx-auto mb-4"></i>
-                                <h4 class="font-bold text-lg mb-2">أهلاً بك! كيف يمكنني مساعدتك اليوم؟</h4>
-                                <p>اختر وضعاً من الأسفل وابدأ بطرح سؤالك.</p>
+                                <i data-lucide="brain-circuit" class="w-16 h-16 mx-auto mb-4"></i>
+                                <h4 class="font-bold text-lg mb-2">أهلاً بك! أنا خبير القدرات AI. كيف يمكنني مساعدتك اليوم؟</h4>
+                                <p>يمكنك طرح سؤال، طلب شرح، أو حتى إرفاق صورة لسؤال عبر أيقونة المشبك.</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Input Area -->
-                    <div class="mt-auto border-t border-gray-300 pt-4">
+                    <div id="ai-input-container" class="mt-auto border-t border-gray-300 pt-4">
+                         <!-- Image Preview -->
+                        <div id="ai-image-preview-container" class="hidden"></div>
                         <!-- Mode Selection -->
                         <div id="ai-mode-selector" class="flex items-center justify-center gap-2 mb-3">
                             <button data-mode="qa" class="ai-mode-button active flex items-center gap-2 bg-white text-gray-700 font-semibold py-2 px-4 rounded-full text-sm shadow-sm hover:bg-gray-100">
                                 <i data-lucide="help-circle" class="w-4 h-4"></i>
-                                <span>اسأل خبير</span>
+                                <span>اسأل عن القدرات</span>
                             </button>
                              <button data-mode="explain" class="ai-mode-button flex items-center gap-2 bg-white text-gray-700 font-semibold py-2 px-4 rounded-full text-sm shadow-sm hover:bg-gray-100">
                                 <i data-lucide="book-open-text" class="w-4 h-4"></i>
@@ -545,14 +582,17 @@
 
                         <!-- Text Input and Submit -->
                         <div class="flex items-center gap-2">
-                             <div id="ai-generate-options" class="hidden flex items-center gap-2">
+                            <input type="file" id="ai-image-input" class="hidden" accept="image/*">
+                            <div id="ai-generate-options" class="hidden flex items-center gap-2">
                                 <label for="ai-generate-count" class="text-sm font-semibold text-gray-600">العدد:</label>
                                 <input type="number" id="ai-generate-count" class="w-20 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" value="5" min="1" max="10">
                             </div>
                             <textarea id="ai-input" class="flex-1 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition resize-none" rows="1" placeholder="اطرح سؤالاً..."></textarea>
+                            <button id="ai-attach-button" class="bg-gray-200 text-gray-600 p-3 rounded-lg hover:bg-gray-300 transition-colors duration-300">
+                                <i data-lucide="paperclip" class="w-6 h-6"></i>
+                            </button>
                             <button id="ai-submit" class="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                                <span class="button-text"><i data-lucide="send" class="w-6 h-6"></i></span>
-                                <div class="loader hidden"></div>
+                                <i data-lucide="send" class="w-6 h-6"></i>
                             </button>
                         </div>
                     </div>
@@ -595,64 +635,55 @@
         </div>
     </footer>
     <script>
-        // --- AI Assistant Logic (NEW and REFACTORED) ---
-        let currentAIMode = 'qa'; // 'qa', 'explain', or 'generate'
+        // --- AI Assistant Logic ---
+        let currentAIMode = 'qa';
+        let uploadedImageBase64 = null;
         
-        const aiResponseContent = document.getElementById('ai-response-content');
-        const aiSubmitButton = document.getElementById('ai-submit');
-        const aiInputField = document.getElementById('ai-input');
-        const aiModeSelector = document.getElementById('ai-mode-selector');
-        const aiGenerateOptions = document.getElementById('ai-generate-options');
-        const aiGenerateCount = document.getElementById('ai-generate-count');
+        // Element cache
+        const aiElements = {
+            responseContent: document.getElementById('ai-response-content'),
+            submitButton: document.getElementById('ai-submit'),
+            inputField: document.getElementById('ai-input'),
+            modeSelector: document.getElementById('ai-mode-selector'),
+            generateOptions: document.getElementById('ai-generate-options'),
+            generateCount: document.getElementById('ai-generate-count'),
+            attachButton: document.getElementById('ai-attach-button'),
+            imageInput: document.getElementById('ai-image-input'),
+            imagePreviewContainer: document.getElementById('ai-image-preview-container'),
+        };
 
         const aiPlaceholders = {
-            qa: 'اطرح أي سؤال حول القدرات...',
+            qa: 'اطرح أي سؤال أو ارفق صورة...',
             explain: 'أدخل مفهوماً لشرحه، مثل "التناظر اللفظي"...',
             generate: 'أدخل موضوعاً لإنشاء أسئلة عنه، مثل "الهندسة"...'
         };
 
         function setupAIModeSwitcher() {
-            if (!aiModeSelector) return;
-            aiModeSelector.addEventListener('click', (e) => {
+            aiElements.modeSelector?.addEventListener('click', (e) => {
                 const button = e.target.closest('.ai-mode-button');
                 if (button && button.dataset.mode) {
                     currentAIMode = button.dataset.mode;
-                    
-                    // Update button styles
-                    aiModeSelector.querySelectorAll('.ai-mode-button').forEach(btn => btn.classList.remove('active'));
+                    aiElements.modeSelector.querySelectorAll('.ai-mode-button').forEach(btn => btn.classList.remove('active'));
                     button.classList.add('active');
-                    
-                    // Update placeholder
-                    if(aiInputField) aiInputField.placeholder = aiPlaceholders[currentAIMode];
-
-                    // Show/hide generate options
-                    if(aiGenerateOptions) {
-                        aiGenerateOptions.classList.toggle('hidden', currentAIMode !== 'generate');
-                    }
+                    if(aiElements.inputField) aiElements.inputField.placeholder = aiPlaceholders[currentAIMode];
+                    aiElements.generateOptions?.classList.toggle('hidden', currentAIMode !== 'generate');
                 }
             });
         }
         
         function showLoadingAI() {
-            if (!aiSubmitButton) return;
-            aiSubmitButton.disabled = true;
-            const buttonText = aiSubmitButton.querySelector('.button-text');
-            const loader = aiSubmitButton.querySelector('.loader');
-            if (buttonText) buttonText.classList.add('hidden');
-            if (loader) loader.classList.remove('hidden');
-            if (aiResponseContent && aiResponseContent.querySelector('.text-center')) {
-                // First time use, replace placeholder
-                aiResponseContent.innerHTML = '<div class="flex items-center justify-center h-full"><div class="loader" style="border-top-color: #3b82f6;"></div></div>';
+            if (aiElements.submitButton) {
+                aiElements.submitButton.disabled = true;
+            }
+            if (aiElements.responseContent) {
+                 aiElements.responseContent.innerHTML = '<div class="flex items-center justify-center h-full"><div class="loader"></div></div>';
             }
         }
 
         function hideLoadingAI() {
-            if (!aiSubmitButton) return;
-            aiSubmitButton.disabled = false;
-            const buttonText = aiSubmitButton.querySelector('.button-text');
-            const loader = aiSubmitButton.querySelector('.loader');
-            if (buttonText) buttonText.classList.remove('hidden');
-            if (loader) loader.classList.add('hidden');
+            if (aiElements.submitButton) {
+                aiElements.submitButton.disabled = false;
+            }
         }
         
         function getWebsiteContext() {
@@ -662,34 +693,63 @@
                 const section = document.getElementById(id);
                 if (section) {
                     const titleEl = section.querySelector('h2');
-                    const title = titleEl ? titleEl.innerText : 'قسم';
+                    const title = titleEl ? titleEl.innerText.trim() : 'قسم';
                     context += `\n\n--- قسم: ${title} ---\n`;
                     context += section.innerText;
+                    const links = Array.from(section.querySelectorAll('a[href]'));
+                    if (links.length > 0) {
+                        const linkTexts = links.map(link => {
+                            const href = link.href;
+                            const text = link.innerText.trim();
+                            if (text && href && !href.startsWith('mailto:')) return `(${text}: ${href})`;
+                            return null;
+                        }).filter(Boolean);
+                        if (linkTexts.length > 0) context += `\n[روابط حقيقية في هذا القسم: ${linkTexts.join(', ')}]`;
+                    }
                 }
             });
             return context;
         }
 
-       async function callApi(userPrompt, systemPromptText, fullUserPromptOverride = null) {
-            /*
-                ملاحظة هامة جداً لموقعك الخاص:
-                لكي يعمل هذا الكود على موقعك الحقيقي، يجب أن تحصل على مفتاح API من Google AI Studio
-                وتقوم بلصقه في السطر التالي مكان "ضع مفتاح API الخاص بك هنا".
-                
-                تحذير أمني: وضع المفتاح مباشرة هنا قد يعرضه للسرقة. 
-                هذا الحل هو للتبسيط فقط. الحل الأكثر أماناً يتطلب خادم وسيط.
-             */
-             const apiKey = "AIzaSyCqPjiiK0zAWFJWAf5rus8YOhxXPMSeY4k"; // <-- تم وضع مفتاحك هنا
+       function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
 
-             if (apiKey === "ضع مفتاح API الخاص بك هنا" || !apiKey) {
-                 return "خطأ: لم يتم العثور على مفتاح API. يرجى مراجعة الكود وإضافة المفتاح الخاص بك.";
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                uploadedImageBase64 = e.target.result;
+                if (aiElements.imagePreviewContainer) {
+                    aiElements.imagePreviewContainer.innerHTML = `
+                        <div class="image-preview-container">
+                            <img src="${uploadedImageBase64}" alt="معاينة الصورة" class="image-preview-thumbnail">
+                            <div class="remove-image-btn" onclick="removeUploadedImage()">×</div>
+                        </div>
+                    `;
+                    aiElements.imagePreviewContainer.classList.remove('hidden');
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeUploadedImage() {
+            uploadedImageBase64 = null;
+            if (aiElements.imageInput) aiElements.imageInput.value = '';
+            if (aiElements.imagePreviewContainer) {
+                aiElements.imagePreviewContainer.innerHTML = '';
+                aiElements.imagePreviewContainer.classList.add('hidden');
+            }
+        }
+
+       async function callApi(promptParts, systemPromptText) {
+             const apiKey = "AIzaSyCqPjiiK0zAWFJWAf5rus8YOhxXPMSeY4k";
+             if (!apiKey || apiKey === "ضع مفتاح API الخاص بك هنا") {
+                return "<p>خطأ: لم يتم العثور على مفتاح API. يرجى مراجعة الكود وإضافة المفتاح الخاص بك.</p>";
              }
              
              const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
              
-             const finalUserPrompt = fullUserPromptOverride || userPrompt;
              const payload = {
-                 contents: [{ parts: [{ text: finalUserPrompt }] }],
+                 contents: [{ parts: promptParts }],
                  systemInstruction: { parts: [{ text: systemPromptText }] }
              };
 
@@ -700,14 +760,9 @@
                     const errorText = await response.text();
                     let errorMessage = `API Error: ${response.status}`;
                     try {
-                        const errorJson = JSON.parse(errorText);
-                        if (errorJson.error && errorJson.error.message) {
-                            errorMessage += `: ${errorJson.error.message}`;
-                        } else {
-                            errorMessage += ' - حدث خطأ غير معروف من الخادم.';
-                        }
+                        errorMessage += `: ${JSON.parse(errorText).error.message}`;
                     } catch (e) {
-                        errorMessage += ` - استجابة غير صالحة من الخادم.`;
+                         errorMessage += ` - استجابة غير صالحة من الخادم.`;
                     }
                     throw new Error(errorMessage);
                  }
@@ -715,71 +770,95 @@
                  const result = await response.json();
                  const candidate = result.candidates?.[0];
 
-                 if (candidate && candidate.content?.parts?.[0]?.text) {
-                     let formattedText = candidate.content.parts[0].text;
-                     
-                     // Escape HTML to prevent injection, but do it carefully
-                     formattedText = formattedText.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                 if (candidate?.content?.parts?.[0]?.text) {
+                    let rawText = candidate.content.parts[0].text;
+                    const arabicNumerals = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+                    rawText = rawText.replace(/[0-9]/g, w => arabicNumerals[+w]);
+                    
+                    let formattedText = rawText.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                    formattedText = formattedText.replace(/`(.*?)`/g, '<code class="bg-gray-200 text-gray-800 rounded px-1 py-0.5 font-mono">$1</code>');
+                    formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    formattedText = formattedText.replace(/\*(.*?)\*/g, '<em>$1</em>');
 
-                     // Format Markdown (Bold and Italic)
-                     formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                     formattedText = formattedText.replace(/\*(.*?)\*/g, '<em>$1</em>');
+                    const urlRegex = /(https?:\/\/[^\s<>"'`]+)/g;
+                    formattedText = formattedText.replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">$1</a>');
+                    
+                    let html = '';
+                    let inList = false;
+                    for (const line of formattedText.split('\n')) {
+                        const trimmedLine = line.trim();
+                        if (trimmedLine.startsWith('* ') || trimmedLine.startsWith('- ')) {
+                            if (!inList) { html += '<ul>'; inList = true; }
+                            html += `<li>${trimmedLine.substring(2)}</li>`;
+                        } else {
+                            if (inList) { html += '</ul>'; inList = false; }
+                            if (trimmedLine) html += `<p>${line}</p>`;
+                        }
+                    }
+                    if (inList) html += '</ul>';
+                    return html || `<p>${formattedText.replace(/\n/g, '<br>')}</p>`;
 
-                     // Convert URLs to clickable links
-                     const urlRegex = /(https?:\/\/[^\s"'<>`]+)/g;
-                     formattedText = formattedText.replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">$1</a>');
-
-                     return formattedText;
-                 } else if (candidate && candidate.finishReason === 'SAFETY') {
-                    return "تم حظر الإجابة لأسباب تتعلق بالسلامة. يرجى تعديل سؤالك والمحاولة مرة أخرى.";
-                 } 
-                 else {
-                     return "لم أتمكن من العثور على إجابة. الرجاء المحاولة مرة أخرى.";
+                 } else if (candidate?.finishReason === 'SAFETY') {
+                    return "<p>تم حظر الإجابة لأسباب تتعلق بالسلامة. يرجى تعديل سؤالك والمحاولة مرة أخرى.</p>";
+                 } else {
+                     return "<p>لم أتمكن من العثور على إجابة. الرجاء المحاولة مرة أخرى.</p>";
                  }
              } catch (error) {
                  console.error("Gemini API call failed:", error);
-                 return `حدث خطأ أثناء الاتصال بالمساعد الذكي. الخطأ: ${error.message}`;
+                 return `<p>حدث خطأ أثناء الاتصال بالمساعد الذكي. الخطأ: ${error.message}</p>`;
              }
         }
         
         async function handleAISubmit() {
-            if (!aiInputField) return;
-            const input = aiInputField.value;
-            if (!input.trim()) return;
+            const input = aiElements.inputField?.value || '';
+            if (!input.trim() && !uploadedImageBase64) return;
 
             showLoadingAI();
-            aiInputField.value = ''; // Clear input field
+            if (aiElements.inputField) aiElements.inputField.value = '';
 
-            let userPrompt, systemPrompt, fullUserPrompt;
+            let systemPrompt;
+            const promptParts = [];
+            
+            // Add text part if available
+            if (input.trim()) {
+                promptParts.push({ text: input });
+            } else if (uploadedImageBase64) {
+                 promptParts.push({ text: "اشرح أو حل السؤال الموجود في هذه الصورة." });
+            }
+
+            // Add image part if available
+            if (uploadedImageBase64) {
+                const [media, base64] = uploadedImageBase64.split(',');
+                const mimeType = media.split(':')[1].split(';')[0];
+                promptParts.push({ inlineData: { mimeType, data: base64 } });
+            }
+
             const websiteContext = getWebsiteContext();
 
             switch (currentAIMode) {
                 case 'qa':
-                    systemPrompt = "أنت خبير في اختبار القدرات العامة السعودي. أجب على أسئلة الطلاب بشكل واضح ومختصر ومشجع. حلل المحتوى المقدم لك من الموقع واستخلص الإجابة الأكثر صلة بالسؤال. لا تقم بنسخ فقرات كاملة بشكل عشوائي، بل أعد صياغة الإجابة بأسلوبك لتركز على جوهر السؤال. **مهم جداً: عندما تذكر مصدراً (مثل كتاب، دورة، أو قناة) مذكوراً في الموقع وله رابط، يجب عليك دائماً تضمين الرابط مع اسم المصدر في إجابتك.** يجب أن تستند في إجاباتك حصراً وفقط على المحتوى المقدم. لا تستخدم أي معلومات خارجية. إذا لم تجد الإجابة في المحتوى، أجب بـ 'هذه المعلومة غير متوفرة حالياً في الدليل'.";
-                    fullUserPrompt = `--- محتوى الموقع ---\n${websiteContext}\n--- نهاية المحتوى ---\n\nبناءً على المحتوى أعلاه فقط، أجب على السؤال التالي: "${input}"`;
+                    systemPrompt = "أنت 'خبير القدرات AI'. يجب أن تظل إجاباتك دائمًا في نطاق اختبار القدرات السعودي والمواضيع التعليمية ذات الصلة. لا تخرج عن هذا الموضوع إطلاقًا. حافظ على نبرة احترافية وجادة. لا تستخدم الفكاهة أو المزاح. قدم إجابات مختصرة ومباشرة. إذا قدم المستخدم صورة، قم بتحليلها للإجابة على سؤاله. عند ذكر مصدر من الموقع، استخدم الرابط الحقيقي المرفق في السياق. عند شرح مفاهيم رياضية، استخدم الصيغ النصية الواضحة مثل `(أ + ب) / ٢` واستخدم الأرقام العربية الهندية (١، ٢، ٣).";
+                    promptParts[0].text = `--- سياق الموقع ---\n${websiteContext}\n--- نهاية السياق ---\n\nبناءً على السياق أعلاه ومعرفتك العامة بالقدرات، أجب على التالي: ${promptParts[0].text}`;
                     break;
-                
                 case 'explain':
-                    systemPrompt = "أنت معلم متخصص في تبسيط المفاهيم الصعبة لاختبار القدرات. عندما يعطيك الطالب مفهوماً، اشرحه له بطريقة سهلة الفهم مع أمثلة واضحة ومناسبة لمستوى طالب في المرحلة الثانوية. استخدم المعلومات المتوفرة في الموقع كأساس لشرحك، ولكن قدمه بأسلوب تعليمي مبسط خاص بك. **مهم جداً: عندما تذكر مصدراً (مثل كتاب، دورة، أو قناة) مذكوراً في الموقع وله رابط، يجب عليك دائماً تضمين الرابط مع اسم المصدر في إجابتك.** إذا كان المفهوم غير مشروح في الموقع، وضح ذلك.";
-                    fullUserPrompt = `--- محتوى الموقع ---\n${websiteContext}\n--- نهاية المحتوى ---\n\nبناءً على المحتوى أعلاه فقط، اشرح لي هذا المفهوم: "${input}"`;
+                    systemPrompt = "أنت 'خبير القدرات AI' متخصص في تبسيط المفاهيم الصعبة. اشرح المفهوم المطلوب بطريقة مفصلة ومبسطة مستخدماً معرفتك الواسعة، دون التقيد بمحتوى الموقع. حافظ على نبرة احترافية وجادة، وقدم إجابات مختصرة. إذا قدم المستخدم صورة، قم بتحليلها لشرح المفهوم أو السؤال فيها. عند شرح مفاهيم رياضية، استخدم الصيغ النصية الواضحة مثل `(أ + ب) / ٢` واستخدم الأرقام العربية الهندية (١، ٢، ٣).";
                     break;
-
                 case 'generate':
-                    const count = aiGenerateCount ? aiGenerateCount.value : 5;
-                    systemPrompt = "أنت متخصص في وضع أسئلة اختبار القدرات العامة السعودي. قم بإنشاء العدد المطلوب من الأسئلة حول الموضوع المحدد من قبل الطالب. يجب أن تكون الأسئلة بنفس نمط وصعوبة الاختبار الحقيقي. قدم الأسئلة أولاً، ثم قدم الإجابات الصحيحة مع شرح موجز في قسم منفصل بعنوان 'الإجابات والشرح'. استخدم Markdown للتنسيق.";
-                    userPrompt = `أنشئ لي ${count} أسئلة تدريبية في موضوع: "${input}"`;
+                    const count = aiElements.generateCount?.value || 5;
+                    systemPrompt = "أنت 'خبير القدرات AI' متخصص في وضع أسئلة الاختبار. قم بإنشاء العدد المطلوب من الأسئلة حول الموضوع المحدد. يجب أن تكون الأسئلة بنفس نمط وصعوبة الاختبار الحقيقي، مع شرح موجز للإجابات. حافظ على نبرة احترافية وجادة. عند كتابة مفاهيم رياضية، استخدم الصيغ النصية الواضحة مثل `(أ + ب) / ٢` واستخدم الأرقام العربية الهندية (١، ٢، ٣).";
+                    promptParts[0].text = `أنشئ لي ${count} أسئلة تدريبية في موضوع: "${input}"`;
                     break;
             }
 
-            const response = await callApi(userPrompt, systemPrompt, fullUserPrompt);
-            if(aiResponseContent) {
-                aiResponseContent.classList.remove('flex', 'items-center', 'justify-center');
-                aiResponseContent.innerHTML = response;
-                aiResponseContent.parentElement.scrollTop = 0; // Scroll to top of response
+            const response = await callApi(promptParts, systemPrompt);
+            if(aiElements.responseContent) {
+                aiElements.responseContent.classList.remove('flex', 'items-center', 'justify-center');
+                aiElements.responseContent.innerHTML = response;
+                aiElements.responseContent.parentElement.scrollTop = 0;
             }
             hideLoadingAI();
+            removeUploadedImage();
         }
-
 
         // --- General Page Logic ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -787,20 +866,19 @@
             
             // --- AI Assistant Listeners ---
             setupAIModeSwitcher();
-            if (aiSubmitButton) aiSubmitButton.addEventListener('click', handleAISubmit);
-            if (aiInputField) {
-                aiInputField.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault(); // Prevent new line
-                        handleAISubmit();
-                    }
-                });
-                 // Auto-resize textarea
-                aiInputField.addEventListener('input', () => {
-                    aiInputField.style.height = 'auto';
-                    aiInputField.style.height = (aiInputField.scrollHeight) + 'px';
-                });
-            }
+            aiElements.submitButton?.addEventListener('click', handleAISubmit);
+            aiElements.inputField?.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleAISubmit();
+                }
+            });
+            aiElements.inputField?.addEventListener('input', () => {
+                aiElements.inputField.style.height = 'auto';
+                aiElements.inputField.style.height = (aiElements.inputField.scrollHeight) + 'px';
+            });
+            aiElements.attachButton?.addEventListener('click', () => aiElements.imageInput?.click());
+            aiElements.imageInput?.addEventListener('change', handleImageUpload);
 
 
             // --- SPA-like Scrolling Logic ---
@@ -809,92 +887,15 @@
                     try {
                         const href = this.getAttribute('href');
                         if (!href || href === '#') return;
-
-                        let fragment = null;
-                        if (/^https?:\/\//i.test(href)) {
-                            const parsed = new URL(href, window.location.href);
-                            const stripWWW = h => h.replace(/^www\./i, '');
-                            if (stripWWW(parsed.hostname) !== stripWWW(window.location.hostname)) return;
-                            fragment = parsed.hash.replace('#', '').trim();
-                        } else {
-                            fragment = href.split('#').pop().trim();
-                        }
+                        let fragment = href.split('#').pop().trim();
                         if (!fragment) return;
                         const target = document.getElementById(fragment);
                         if (!target) return;
                         e.preventDefault();
                         target.scrollIntoView({ behavior: 'smooth' });
-                        try {
-                            const url = new URL(window.location.href);
-                            url.pathname = '/' + fragment;
-                            url.hash = '';
-                            if (history.replaceState) history.replaceState(null, '', url.pathname + url.search);
-                        } catch (err) {
-                            if (history.replaceState) history.replaceState(null, '', '/' + encodeURIComponent(fragment));
-                        }
                     } catch (err) { /* ignore */ }
                 });
             });
-
-            (function handleInitialHashOrPath() {
-                try {
-                    if (window.location.hash) {
-                        const frag = window.location.hash.replace('#', '').replace(/\/$/, '');
-                        if (frag) {
-                            const el = document.getElementById(frag);
-                            if (el) {
-                                try {
-                                    const url = new URL(window.location.href);
-                                    url.pathname = '/' + frag;
-                                    url.hash = '';
-                                    if (history.replaceState) history.replaceState(null, '', url.pathname + url.search);
-                                } catch (err) {
-                                    if (history.replaceState) history.replaceState(null, '', '/' + encodeURIComponent(frag));
-                                }
-                                setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 50);
-                                return;
-                            }
-                        }
-                    }
-                    try {
-                        const params = new URLSearchParams(window.location.search);
-                        const section = params.get('section');
-                        if (section) {
-                            const frag = section.replace(/\/$/, '');
-                            const el = document.getElementById(frag);
-                            if (el) {
-                                setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 50);
-                                return;
-                            }
-                        }
-                    } catch (err) { /* ignore */ }
-
-                    const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
-                    if (path) {
-                        const el = document.getElementById(path);
-                        if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 50);
-                    }
-                } catch (err) { /* ignore */ }
-            })();
-
-            window.addEventListener('popstate', () => {
-                try {
-                    const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
-                    if (path) {
-                        const el = document.getElementById(path);
-                        if (el) el.scrollIntoView({ behavior: 'smooth' });
-                    } else {
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }
-                } catch (err) { /* ignore */ }
-            });
-
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            if (mobileMenuButton && mobileMenu) {
-                mobileMenuButton.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
-                document.querySelectorAll('#mobile-menu a').forEach(link => { link.addEventListener('click', () => { mobileMenu.classList.add('hidden'); }); });
-            }
         });
 
         function calculateWeightedScore() {
@@ -905,45 +906,30 @@
             const quScore = parseFloat(document.getElementById('qu-score').value) || 0;
             const taScore = parseFloat(document.getElementById('ta-score').value) || 0;
             const totalPercent = hsPercent + quPercent + taPercent;
-            const percentWarning = document.getElementById('percent-warning');
-            if (percentWarning) {
-                if (Math.round(totalPercent) !== 100 && totalPercent > 0) {
-                    percentWarning.classList.remove('hidden');
-                } else {
-                    percentWarning.classList.add('hidden');
-                }
-            }
+            document.getElementById('percent-warning')?.classList.toggle('hidden', Math.round(totalPercent) === 100 || totalPercent === 0);
             const weightedScore = (hsScore * hsPercent / 100) + (quScore * quPercent / 100) + (taScore * taPercent / 100);
             const resultEl = document.getElementById('result');
             if (resultEl) resultEl.textContent = weightedScore.toFixed(2);
         }
 
         function filterResources(filter, clickedButton) {
-            const quantResourceCards = document.querySelectorAll('#quantitative-resources-grid .resource-card');
-            const quantFilterButtons = document.querySelectorAll('#resources .filter-button');
-            quantFilterButtons.forEach(button => button.classList.remove('active'));
-            if (clickedButton) clickedButton.classList.add('active');
-            quantResourceCards.forEach(card => {
-                const category = card.dataset.category;
-                card.style.display = (filter === 'all' || category === filter) ? 'flex' : 'none';
+            document.querySelectorAll('#quantitative-resources-grid .resource-card').forEach(card => {
+                card.style.display = (filter === 'all' || card.dataset.category === filter) ? 'flex' : 'none';
             });
+            document.querySelectorAll('#resources .filter-button').forEach(button => button.classList.remove('active'));
+            clickedButton?.classList.add('active');
         }
 
         function toggleNimrDetails(button) {
             const detailsDiv = button.nextElementSibling;
             if (!detailsDiv) return;
             const isHidden = detailsDiv.classList.contains('hidden');
-
-            if (isHidden) {
-                detailsDiv.classList.remove('hidden');
-                button.innerHTML = 'إخفاء التفاصيل <i data-lucide="arrow-up" class="inline-block w-4 h-4 transition-transform"></i>';
-            } else {
-                detailsDiv.classList.add('hidden');
-                button.innerHTML = 'اقرأ التفاصيل الكاملة <i data-lucide="arrow-down" class="inline-block w-4 h-4 transition-transform"></i>';
-            }
+            detailsDiv.classList.toggle('hidden');
+            button.innerHTML = isHidden ? 'إخفاء التفاصيل <i data-lucide="arrow-up" class="inline-block w-4 h-4"></i>' : 'اقرأ التفاصيل الكاملة <i data-lucide="arrow-down" class="inline-block w-4 h-4"></i>';
             if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
         }
     </script>
     </body>
 </html>
+
 
