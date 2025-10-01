@@ -236,6 +236,7 @@
             <div class="hidden lg:flex items-center space-x-6 space-x-reverse text-sm">
                 <a href="#basics" class="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors duration-300"><i data-lucide="graduation-cap" class="w-4 h-4" alt="أيقونة الأساسيات"></i><span>الأساسيات</span></a>
                 <a href="#grades" class="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors duration-300"><i data-lucide="bar-chart-3" class="w-4 h-4" alt="أيقونة الدرجات"></i><span>الدرجات</span></a>
+                <a href="#calculator-tool" class="flex items-center gap-2 text-green-600 font-bold hover:text-green-700 transition-colors duration-300"><i data-lucide="crown" class="w-4 h-4 text-yellow-500"></i><span>حساب الموزونة</span></a>
                 <a href="#resources" class="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors duration-300"><i data-lucide="book-marked" class="w-4 h-4" alt="أيقونة المصادر"></i><span>المصادر</span></a>
                 <a href="#planning" class="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors duration-300"><i data-lucide="calendar-check" class="w-4 h-4" alt="أيقونة الخطط"></i><span>الخطط</span></a>
                 <a href="#faq" class="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors duration-300">
@@ -975,6 +976,22 @@
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
             
+            // --- Mobile Menu Logic ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if(mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+
+                // Close menu when a link is clicked
+                document.querySelectorAll('#mobile-menu a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                    });
+                });
+            }
+            
             // --- AI Assistant Listeners ---
             setupAIModeSwitcher();
             loadChatHistory();
@@ -1046,4 +1063,5 @@
     </script>
     </body>
 </html>
+
 
