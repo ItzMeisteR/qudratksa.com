@@ -100,15 +100,6 @@
                     color: white !important;
                     border-color: #1d4ed8;
                 }
-                #ai-response-content ul {
-                    list-style-type: disc;
-                    padding-right: 2rem;
-                    margin-top: 0.5rem;
-                    margin-bottom: 0.5rem;
-                }
-                 #ai-response-content p {
-                    margin-bottom: 0.75rem;
-                }
                 .image-preview-container {
                     position: relative;
                     display: inline-block;
@@ -134,6 +125,32 @@
                     justify-content: center;
                     cursor: pointer;
                     font-weight: bold;
+                }
+                .chat-bubble {
+                    padding: 0.75rem 1rem;
+                    border-radius: 1rem;
+                    margin-bottom: 0.5rem;
+                    max-width: 80%;
+                    word-wrap: break-word;
+                }
+                .user-bubble {
+                    background-color: #3b82f6;
+                    color: white;
+                    border-bottom-right-radius: 0.25rem;
+                    align-self: flex-end;
+                }
+                .ai-bubble {
+                    background-color: #e5e7eb;
+                    color: #1f2937;
+                    border-bottom-left-radius: 0.25rem;
+                    align-self: flex-start;
+                }
+                .ai-bubble ul {
+                    list-style-type: disc;
+                    padding-right: 1.5rem;
+                }
+                .ai-bubble p {
+                    margin-bottom: 0.5rem;
                 }
         </style>
 
@@ -551,12 +568,8 @@
                 <div class="max-w-4xl mx-auto bg-gradient-to-br from-gray-50 to-blue-100 p-4 sm:p-6 rounded-2xl shadow-2xl border border-gray-200 flex flex-col" style="height: 600px;">
                     <!-- Response Area -->
                     <div id="ai-response-area" class="flex-1 overflow-y-auto mb-4 pr-2">
-                        <div id="ai-response-content" class="h-full p-4 rounded-md text-gray-700 whitespace-pre-wrap flex items-center justify-center break-words">
-                            <div class="text-center text-gray-500">
-                                <i data-lucide="brain-circuit" class="w-16 h-16 mx-auto mb-4"></i>
-                                <h4 class="font-bold text-lg mb-2">أهلاً بك! أنا خبير القدرات AI. كيف يمكنني مساعدتك اليوم؟</h4>
-                                <p>يمكنك طرح سؤال، طلب شرح، أو حتى إرفاق صورة لسؤال عبر أيقونة المشبك.</p>
-                            </div>
+                        <div id="ai-response-content" class="h-full p-4 rounded-md text-gray-700 flex flex-col space-y-4">
+                           <!-- Chat history will be rendered here -->
                         </div>
                     </div>
 
@@ -564,21 +577,27 @@
                     <div id="ai-input-container" class="mt-auto border-t border-gray-300 pt-4">
                          <!-- Image Preview -->
                         <div id="ai-image-preview-container" class="hidden"></div>
-                        <!-- Mode Selection -->
-                        <div id="ai-mode-selector" class="flex items-center justify-center gap-2 mb-3">
-                            <button data-mode="qa" class="ai-mode-button active flex items-center gap-2 bg-white text-gray-700 font-semibold py-2 px-4 rounded-full text-sm shadow-sm hover:bg-gray-100">
-                                <i data-lucide="help-circle" class="w-4 h-4"></i>
-                                <span>اسأل عن القدرات</span>
-                            </button>
-                             <button data-mode="explain" class="ai-mode-button flex items-center gap-2 bg-white text-gray-700 font-semibold py-2 px-4 rounded-full text-sm shadow-sm hover:bg-gray-100">
-                                <i data-lucide="book-open-text" class="w-4 h-4"></i>
-                                <span>اشرح لي</span>
-                            </button>
-                             <button data-mode="generate" class="ai-mode-button flex items-center gap-2 bg-white text-gray-700 font-semibold py-2 px-4 rounded-full text-sm shadow-sm hover:bg-gray-100">
-                                <i data-lucide="file-plus-2" class="w-4 h-4"></i>
-                                <span>أنشئ أسئلة</span>
+                        <!-- Mode Selection & Clear History -->
+                        <div class="flex justify-between items-center gap-2 mb-3">
+                            <div id="ai-mode-selector" class="flex items-center gap-2">
+                                <button data-mode="qa" class="ai-mode-button active flex items-center gap-2 bg-white text-gray-700 font-semibold py-2 px-4 rounded-full text-sm shadow-sm hover:bg-gray-100">
+                                    <i data-lucide="help-circle" class="w-4 h-4"></i>
+                                    <span>اسأل عن القدرات</span>
+                                </button>
+                                 <button data-mode="explain" class="ai-mode-button flex items-center gap-2 bg-white text-gray-700 font-semibold py-2 px-4 rounded-full text-sm shadow-sm hover:bg-gray-100">
+                                    <i data-lucide="book-open-text" class="w-4 h-4"></i>
+                                    <span>اشرح لي</span>
+                                </button>
+                                 <button data-mode="generate" class="ai-mode-button flex items-center gap-2 bg-white text-gray-700 font-semibold py-2 px-4 rounded-full text-sm shadow-sm hover:bg-gray-100">
+                                    <i data-lucide="file-plus-2" class="w-4 h-4"></i>
+                                    <span>أنشئ أسئلة</span>
+                                </button>
+                            </div>
+                             <button id="ai-clear-history" class="text-gray-500 hover:text-red-500 transition-colors p-2 rounded-full">
+                                <i data-lucide="trash-2" class="w-5 h-5"></i>
                             </button>
                         </div>
+
 
                         <!-- Text Input and Submit -->
                         <div class="flex items-center gap-2">
@@ -638,6 +657,7 @@
         // --- AI Assistant Logic ---
         let currentAIMode = 'qa';
         let uploadedImageBase64 = null;
+        let chatHistory = [];
         
         // Element cache
         const aiElements = {
@@ -650,6 +670,7 @@
             attachButton: document.getElementById('ai-attach-button'),
             imageInput: document.getElementById('ai-image-input'),
             imagePreviewContainer: document.getElementById('ai-image-preview-container'),
+            clearHistoryButton: document.getElementById('ai-clear-history'),
         };
 
         const aiPlaceholders = {
@@ -672,20 +693,16 @@
         }
         
         function showLoadingAI() {
-            if (aiElements.submitButton) {
-                aiElements.submitButton.disabled = true;
-            }
-            if (aiElements.responseContent) {
-                 aiElements.responseContent.innerHTML = '<div class="flex items-center justify-center h-full"><div class="loader"></div></div>';
-            }
+            if (aiElements.submitButton) aiElements.submitButton.disabled = true;
+            addMessageToUI('<div class="flex justify-center items-center p-4"><div class="loader"></div></div>', 'ai');
         }
 
         function hideLoadingAI() {
-            if (aiElements.submitButton) {
-                aiElements.submitButton.disabled = false;
-            }
+            if (aiElements.submitButton) aiElements.submitButton.disabled = false;
+            const loaderElement = aiElements.responseContent.querySelector('.loader')?.parentElement.parentElement;
+            if (loaderElement) loaderElement.remove();
         }
-        
+
         function getWebsiteContext() {
             const sectionIds = ['basics', 'resources', 'planning', 'grades', 'faq', 'motivation'];
             let context = '';
@@ -749,7 +766,7 @@
              const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
              
              const payload = {
-                 contents: [{ parts: promptParts }],
+                 contents: [...chatHistory, {role: "user", parts: promptParts}],
                  systemInstruction: { parts: [{ text: systemPromptText }] }
              };
 
@@ -759,11 +776,7 @@
                  if (!response.ok) {
                     const errorText = await response.text();
                     let errorMessage = `API Error: ${response.status}`;
-                    try {
-                        errorMessage += `: ${JSON.parse(errorText).error.message}`;
-                    } catch (e) {
-                         errorMessage += ` - استجابة غير صالحة من الخادم.`;
-                    }
+                    try { errorMessage += `: ${JSON.parse(errorText).error.message}`; } catch (e) { errorMessage += ` - استجابة غير صالحة من الخادم.`; }
                     throw new Error(errorMessage);
                  }
 
@@ -796,6 +809,10 @@
                         }
                     }
                     if (inList) html += '</ul>';
+                    
+                    chatHistory.push({role: "model", parts: [{text: rawText}]});
+                    saveChatHistory();
+
                     return html || `<p>${formattedText.replace(/\n/g, '<br>')}</p>`;
 
                  } else if (candidate?.finishReason === 'SAFETY') {
@@ -812,33 +829,37 @@
         async function handleAISubmit() {
             const input = aiElements.inputField?.value || '';
             if (!input.trim() && !uploadedImageBase64) return;
-
-            showLoadingAI();
-            if (aiElements.inputField) aiElements.inputField.value = '';
-
-            let systemPrompt;
-            const promptParts = [];
             
-            // Add text part if available
-            if (input.trim()) {
-                promptParts.push({ text: input });
-            } else if (uploadedImageBase64) {
-                 promptParts.push({ text: "اشرح أو حل السؤال الموجود في هذه الصورة." });
-            }
+            const userMessageContent = input.trim();
+            const userPromptParts = [];
+            let userMessageForUI = '';
 
-            // Add image part if available
+            if (userMessageContent) {
+                userPromptParts.push({ text: userMessageContent });
+                userMessageForUI += `<p>${userMessageContent}</p>`;
+            }
             if (uploadedImageBase64) {
+                 if (!userMessageContent) {
+                    userPromptParts.push({ text: "اشرح أو حل السؤال الموجود في هذه الصورة." });
+                }
                 const [media, base64] = uploadedImageBase64.split(',');
                 const mimeType = media.split(':')[1].split(';')[0];
-                promptParts.push({ inlineData: { mimeType, data: base64 } });
+                userPromptParts.push({ inlineData: { mimeType, data: base64 } });
+                userMessageForUI += `<img src="${uploadedImageBase64}" class="rounded-lg max-w-xs my-2" alt="صورة المستخدم">`;
             }
 
-            const websiteContext = getWebsiteContext();
+            addMessageToUI(userMessageForUI, 'user');
+            chatHistory.push({role: "user", parts: userPromptParts});
+            
+            showLoadingAI();
+            if (aiElements.inputField) aiElements.inputField.value = '';
+            removeUploadedImage();
 
+            let systemPrompt;
             switch (currentAIMode) {
                 case 'qa':
                     systemPrompt = "أنت 'خبير القدرات AI'. يجب أن تظل إجاباتك دائمًا في نطاق اختبار القدرات السعودي والمواضيع التعليمية ذات الصلة. لا تخرج عن هذا الموضوع إطلاقًا. حافظ على نبرة احترافية وجادة. لا تستخدم الفكاهة أو المزاح. قدم إجابات مختصرة ومباشرة. إذا قدم المستخدم صورة، قم بتحليلها للإجابة على سؤاله. عند ذكر مصدر من الموقع، استخدم الرابط الحقيقي المرفق في السياق. عند شرح مفاهيم رياضية، استخدم الصيغ النصية الواضحة مثل `(أ + ب) / ٢` واستخدم الأرقام العربية الهندية (١، ٢، ٣).";
-                    promptParts[0].text = `--- سياق الموقع ---\n${websiteContext}\n--- نهاية السياق ---\n\nبناءً على السياق أعلاه ومعرفتك العامة بالقدرات، أجب على التالي: ${promptParts[0].text}`;
+                    userPromptParts[0].text = `--- سياق الموقع ---\n${getWebsiteContext()}\n--- نهاية السياق ---\n\nبناءً على السياق أعلاه ومعرفتك العامة بالقدرات، أجب على التالي: ${userPromptParts[0].text}`;
                     break;
                 case 'explain':
                     systemPrompt = "أنت 'خبير القدرات AI' متخصص في تبسيط المفاهيم الصعبة. اشرح المفهوم المطلوب بطريقة مفصلة ومبسطة مستخدماً معرفتك الواسعة، دون التقيد بمحتوى الموقع. حافظ على نبرة احترافية وجادة، وقدم إجابات مختصرة. إذا قدم المستخدم صورة، قم بتحليلها لشرح المفهوم أو السؤال فيها. عند شرح مفاهيم رياضية، استخدم الصيغ النصية الواضحة مثل `(أ + ب) / ٢` واستخدم الأرقام العربية الهندية (١، ٢، ٣).";
@@ -846,18 +867,55 @@
                 case 'generate':
                     const count = aiElements.generateCount?.value || 5;
                     systemPrompt = "أنت 'خبير القدرات AI' متخصص في وضع أسئلة الاختبار. قم بإنشاء العدد المطلوب من الأسئلة حول الموضوع المحدد. يجب أن تكون الأسئلة بنفس نمط وصعوبة الاختبار الحقيقي، مع شرح موجز للإجابات. حافظ على نبرة احترافية وجادة. عند كتابة مفاهيم رياضية، استخدم الصيغ النصية الواضحة مثل `(أ + ب) / ٢` واستخدم الأرقام العربية الهندية (١، ٢، ٣).";
-                    promptParts[0].text = `أنشئ لي ${count} أسئلة تدريبية في موضوع: "${input}"`;
+                    userPromptParts[0].text = `أنشئ لي ${count} أسئلة تدريبية في موضوع: "${input}"`;
                     break;
             }
 
-            const response = await callApi(promptParts, systemPrompt);
-            if(aiElements.responseContent) {
-                aiElements.responseContent.classList.remove('flex', 'items-center', 'justify-center');
-                aiElements.responseContent.innerHTML = response;
-                aiElements.responseContent.parentElement.scrollTop = 0;
-            }
+            const response = await callApi(userPromptParts, systemPrompt);
             hideLoadingAI();
-            removeUploadedImage();
+            addMessageToUI(response, 'ai');
+        }
+
+        // --- Chat History Functions ---
+        function addMessageToUI(content, role) {
+            if (!aiElements.responseContent) return;
+            const bubble = document.createElement('div');
+            bubble.className = `chat-bubble ${role === 'user' ? 'user-bubble' : 'ai-bubble'}`;
+            bubble.innerHTML = content;
+            aiElements.responseContent.appendChild(bubble);
+            aiElements.responseContent.parentElement.scrollTop = aiElements.responseContent.parentElement.scrollHeight;
+        }
+
+        function saveChatHistory() {
+            localStorage.setItem('aiChatHistory', JSON.stringify(chatHistory));
+        }
+
+        function loadChatHistory() {
+            const savedHistory = localStorage.getItem('aiChatHistory');
+            if (savedHistory && aiElements.responseContent) {
+                chatHistory = JSON.parse(savedHistory);
+                aiElements.responseContent.innerHTML = '';
+                chatHistory.forEach(msg => {
+                    // For simplicity, we recreate the display from the raw text
+                    const contentPart = msg.parts.find(p => p.text);
+                    if (contentPart) {
+                         addMessageToUI(`<p>${contentPart.text}</p>`, msg.role === 'model' ? 'ai' : 'user');
+                    }
+                });
+            } else {
+                 aiElements.responseContent.innerHTML = `<div class="text-center text-gray-500 h-full flex flex-col justify-center items-center">
+                                <i data-lucide="brain-circuit" class="w-16 h-16 mx-auto mb-4"></i>
+                                <h4 class="font-bold text-lg mb-2">أهلاً بك! أنا خبير القدرات AI. كيف يمكنني مساعدتك اليوم؟</h4>
+                                <p>يمكنك طرح سؤال، طلب شرح، أو حتى إرفاق صورة لسؤال عبر أيقونة المشبك.</p>
+                            </div>`;
+                if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+            }
+        }
+        
+        function clearChatHistory() {
+            chatHistory = [];
+            localStorage.removeItem('aiChatHistory');
+            loadChatHistory();
         }
 
         // --- General Page Logic ---
@@ -866,7 +924,9 @@
             
             // --- AI Assistant Listeners ---
             setupAIModeSwitcher();
+            loadChatHistory();
             aiElements.submitButton?.addEventListener('click', handleAISubmit);
+            aiElements.clearHistoryButton?.addEventListener('click', clearChatHistory);
             aiElements.inputField?.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -874,8 +934,10 @@
                 }
             });
             aiElements.inputField?.addEventListener('input', () => {
-                aiElements.inputField.style.height = 'auto';
-                aiElements.inputField.style.height = (aiElements.inputField.scrollHeight) + 'px';
+                if(aiElements.inputField) {
+                    aiElements.inputField.style.height = 'auto';
+                    aiElements.inputField.style.height = (aiElements.inputField.scrollHeight) + 'px';
+                }
             });
             aiElements.attachButton?.addEventListener('click', () => aiElements.imageInput?.click());
             aiElements.imageInput?.addEventListener('change', handleImageUpload);
@@ -931,5 +993,4 @@
     </script>
     </body>
 </html>
-
 
